@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\ForgetPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,8 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 
 Route::post('/register',[RegisterController::class,'register'])->name('UserRegistrationAPI');
 Route::post('/login',[LoginController::class,'login'])->name('UserLoginAPI');
+Route::post('password/forgot-password',[ForgetPasswordController::class,'forgotPassword']);
+Route::post('password/reset',[ResetPasswordController::class,'passwordReset']);
 
 
 
