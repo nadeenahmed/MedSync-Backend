@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Http\Requests\Auth\RegisterationRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\RegisterationNotification;
+use App\Notifications\EmailVerificationNotification;
 
 class RegisterController extends Controller
 {
@@ -30,8 +31,9 @@ class RegisterController extends Controller
             'user' => $user,
             'token' => $token
         ];
-        
-        $user->notify(new RegisterationNotification());
+        $user->notify(new EmailVerificationNotification());
+        //$user->notify(new RegisterationNotification());
+
         return response()->json($response,200);
 
     }

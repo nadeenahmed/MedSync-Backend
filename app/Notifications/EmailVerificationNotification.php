@@ -7,16 +7,30 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+use Otp;
+
+
 class EmailVerificationNotification extends Notification
 {
     use Queueable;
+    public $message;
+    public $subject;
+    public $fromEmail;
+    public $mailer;
+    private $otp;
 
     /**
      * Create a new notification instance.
      */
     public function __construct()
     {
-        //
+       
+        $this->message = "use the code to verify your email";
+        $this->subject = "Welcome to MedSync! Verification needed";
+        $this->fromEmail = "medsync6@gmail.com";
+        $this->mailer = 'smtp';
+        $this->otp = new Otp;
+        
     }
 
     /**
@@ -34,10 +48,13 @@ class EmailVerificationNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $otp = $this->otp->generate($notifiable->email,4,60);
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                ->mailer('smtp')
+                ->subject($this->subject)
+                ->greeting('Hello '.$notifiable->name)
+                ->line($this->message)
+                ->line('code: '.$otp->token);
     }
 
     /**

@@ -1,9 +1,11 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +28,7 @@ Route::post('/login',[LoginController::class,'login'])->name('UserLoginAPI');
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('UserLogoutAPI');
+    Route::post('/email-verification',[EmailVerificationController::class,'email_verification'])->name('UserEmailVerificationrAPI');
+    Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification']);
+
 });

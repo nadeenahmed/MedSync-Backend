@@ -20,8 +20,8 @@ class RegisterationNotification extends Notification
      */
     public function __construct()
     {
-        $this->message = "Welcome to MedSync!";
-        $this->subject = "new register";
+        $this->message = "Thank you for joining MedSync! We're here to help you manage your healthcare easily and efficiently. Get started now.";
+        $this->subject = "Welcome to MedSync!";
         $this->fromEmail = "medsync6@gmail.com";
         $this->mailer = 'smtp';
     }
