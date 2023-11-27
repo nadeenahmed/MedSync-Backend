@@ -22,8 +22,8 @@ class EmailVerificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required' , 'email' , 'exists:users'],
-            'otp' => ['required' , 'max:4'],
+            'email' => ['exists:users'],
+            'otp' => ['max:4'],
         ];
     }
 }
