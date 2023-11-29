@@ -29,6 +29,11 @@ Route::post('password/reset',[ResetPasswordController::class,'passwordReset']);
 
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail']);
 
+
+Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('google-auth');
+Route::get('/auth/google/callback',[GoogleAuthController::class,'callback']);
+
+
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('UserLogoutAPI');
