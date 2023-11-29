@@ -22,3 +22,6 @@ Route::get('/', function () {
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('google-auth');
  
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback']);
+
+
+Route::post('/register',[RegisterController::class,'register'])->name('UserRegistrationAPI');
