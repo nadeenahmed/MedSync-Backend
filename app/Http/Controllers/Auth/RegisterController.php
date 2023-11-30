@@ -18,10 +18,10 @@ class RegisterController extends Controller
 
        $newuser = $request->validated();
        $newuser['password'] = Hash::make($newuser['password']);
+       $newuser['name'] = $request->name;
        $newuser['role'] = 'user';
        $newuser['status'] = 'active';
 
-       
 
         $user = User::create($newuser);
 
@@ -32,8 +32,6 @@ class RegisterController extends Controller
             'token' => $token
         ];
         $user->notify(new EmailVerificationNotification());
-        //$user->notify(new RegisterationNotification());
-
         return response()->json($response,200);
 
     }

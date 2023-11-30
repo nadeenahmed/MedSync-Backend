@@ -22,12 +22,9 @@ class RegisterationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string',
+            
             'email' => 'unique:users,email',
-            'password' => 'min:8|confirmed', // 'confirmed' checks if password and password_confirmation match
-            'phone' => [
-                'regex:/^(011|012|010|015)[0-9]{8}$/',
-            ],
+            'password' => 'confirmed', // 'confirmed' checks if password and password_confirmation match
 
         ];
     }
@@ -35,11 +32,8 @@ class RegisterationRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.email' => 'Please enter a valid email address.',
             'email.unique' => 'This email is already in use.',
-            'password.min' => 'The password must be at least 8 characters.',
             'password.confirmed' => 'The password confirmation does not match.',
-            'phone.regex' => 'Please enter a valid Egyptian phone number.',
            ];
     }
 }
