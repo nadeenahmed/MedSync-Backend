@@ -9,7 +9,7 @@ class ResetPasswordRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
@@ -19,10 +19,10 @@ class ResetPasswordRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'email' => ['exists:users'],
+            'email' => ['email','exists:users'],
             'otp' => ['max:4'],
             'password' => ['min:8'],
             

@@ -25,19 +25,24 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 Route::post('/register',[RegisterController::class,'register'])->name('User-Registration-API');
 Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 
-Route::post('password/forgot-password',[ForgetPasswordController::class,'forgotPassword']);
-Route::post('password/reset',[ResetPasswordController::class,'passwordReset']);
+Route::post('password/forgot-password',[ForgetPasswordController::class,'forgotPassword'])
+->name('User-ForgetPassword-API');
+Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp'])
+->name('User-verifyOtp-API');
+Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
+->name('User-ResetPassword-API');
 
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-login-API');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-login-callback-API');
 
-Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Cheacking-Email-API');
+Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
-    Route::post('/email-verification',[EmailVerificationController::class,'email_verification'])->name('User-EmailVerification-API');
-    Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])->name('Cheack-EmailVerification-API');
-
+    Route::post('/email-verification',[EmailVerificationController::class,'email_verification'])
+    ->name('User-EmailVerification-API');
+    Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
+    ->name('Check-EmailVerification-API');
 });
