@@ -11,6 +11,7 @@
         "laravel/framework": "^10.10",
         "laravel/passport": "^11.9",
         "laravel/sanctum": "^3.3",
+        "laravel/socialite": "^5.10",
         "laravel/tinker": "^2.8"
     },
     "require-dev": {
