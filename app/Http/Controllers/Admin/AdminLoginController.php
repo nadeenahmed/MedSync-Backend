@@ -17,8 +17,11 @@ class AdminLoginController extends Controller
         $admin = Admin::where('email', $email)->first();
     
         if (!$admin) {
-            // If the user with the provided email doesn't exist, return an unauthorized response
-            return response()->json(['error' => 'email not found'], 401);
+            $response = [
+                'message' => 'Email not found',
+                'errors' => $email,
+            ];
+            return response()->json($response,401);
         }
         //if ($user->email_verified_at !== null) {
             // User is logged in and email is verified
@@ -27,18 +30,18 @@ class AdminLoginController extends Controller
             if ((Hash::check($password, $admin->password))||($admin->password == null)) {
                 // Password is correct, generate a new token
                 $admin->tokens()->delete();
-                $token = $admin->createToken(request()->userAgent())->plainTextToken;
+                //$token = $admin->createToken(request()->userAgent())->plainTextToken;
         
-                // Return the user and token in the response
                 $response = [
-                    'admin' => $admin,
-                    'token' => $token,
+                    'message' => 'Logged in successfully',
                 ];
-        
-                return response()->json($response, 200);
+                return response()->json($response,200);
             } else {
-                // Password is incorrect, return an unauthorized response
-                return response()->json(['error' => 'Incorrect Password'], 401);
+                $response = [
+                    'message' => 'Incorrect Password',
+                    'errors' => $password,
+                ];
+                return response()->json($response,401);
             }
     }
 }
