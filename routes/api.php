@@ -9,6 +9,9 @@ use App\Http\Controllers\EmailCheckController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\ResetPasswordRequestController;
+use App\Http\Controllers\Admin\AdminLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,3 +49,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
     ->name('Check-EmailVerification-API');
 });
+Route::post('/admin/login',[AdminLoginController::class,'adminLogin'])->name('Admin-Login-API');
