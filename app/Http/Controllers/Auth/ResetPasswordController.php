@@ -77,7 +77,17 @@ class ResetPasswordController extends Controller
     $otpValidation = $this->otp->validate($request->email,$request->otp);
 
     if (!$otpValidation->status) {
-        return response()->json(['error' => $otpValidation], 401);
+        $response = [
+            'message' => 'Invalid Code',
+            'errors' => $otpValidation
+        ];
+        return response()->json($response,401);
+    }
+    else{
+        $response = [
+            'message' => 'Otp verified successfully',
+        ];
+        return response()->json($response,200);
     }
 }
 
@@ -86,7 +96,9 @@ public function resetPassword(ResetPasswordRequest $request)
     $user = User::where('email', $request->email)->first();
     $user->update(['password' => Hash::make($request->password)]);
     $user->tokens()->delete();
-
-    return response()->json(['success' => true, 'message' => 'Password reset successfully'], 200);
+    $response = [
+        'message' => 'Password reset successfully',
+    ];
+    return response()->json($response,200);
 }
 }

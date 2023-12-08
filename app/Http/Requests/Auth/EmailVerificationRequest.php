@@ -26,4 +26,12 @@ class EmailVerificationRequest extends FormRequest
             'otp' => ['max:4'],
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'email.exists' => 'Email not found',
+            'otp.max' => 'The code must be 4 numbers.',
+           ];
+    }
 }

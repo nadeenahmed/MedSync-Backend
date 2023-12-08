@@ -26,10 +26,14 @@ class EmailVerificationController extends Controller
 
 
     }
-    public function email_verification(EmailVerificationRequest $request){
+    public function EmailVerification(EmailVerificationRequest $request){
         $otp2 = $this->otp->validate($request->email,$request->otp);
         if(!$otp2->status){
-            return response()->json(['error' => $otp2],401);
+            $response = [
+                'message' => 'Invalid Code',
+                'errors' => $otp2
+            ];
+            return response()->json($response,401);
         }
         $user = User::where('email',$request->email)->first();
         $user->update(['email_verified_at' => now()]);
@@ -40,5 +44,16 @@ class EmailVerificationController extends Controller
         return response()->json($response,200);
 
 
+    }
+
+    public function ResendEmailVerification(Request $request)
+    {
+        $input = $request->only('email');
+        $user = User::where('email',$input)->first();
+        $user->notify(new EmailVerificationNotification());
+        $response = [
+            'message' => 'check your email',
+        ];
+        return response()->json($response, 200);
     }
 }

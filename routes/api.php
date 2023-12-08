@@ -21,10 +21,21 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 |
 */
 //Public Routs
-
+//----------------authentication---------------
 Route::post('/register',[RegisterController::class,'register'])->name('User-Registration-API');
 Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 
+Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
+Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
+
+Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
+
+Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
+Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
+    ->name('Check-EmailVerification-API');
+//----------------authentication---------------
+
+//----------------reser password---------------
 Route::post('password/forgot-password',[ForgetPasswordController::class,'forgotPassword'])
 ->name('User-ForgetPassword-API');
 Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp'])
@@ -32,17 +43,15 @@ Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp']
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 ->name('User-ResetPassword-API');
 
-Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-login-API');
-Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-login-callback-API');
+//----------------reser password---------------
 
-Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
-    Route::post('/email-verification',[EmailVerificationController::class,'email_verification'])
+    //----------------email verification---------------
+    Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])
     ->name('User-EmailVerification-API');
-    Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
-    ->name('Check-EmailVerification-API');
+    //----------------email verification---------------
 });
