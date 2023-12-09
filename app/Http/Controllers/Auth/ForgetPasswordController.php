@@ -14,7 +14,9 @@ class ForgetPasswordController extends Controller
         $input = $request->only('email');
         $user = User::where('email',$input)->first();
         $user->notify(new ResetPasswordVerificationNotification());
-        $response = 'check your email';
+        $response = [
+            'message' => 'check your email',
+        ];
         return response()->json($response, 200);
     }
 }

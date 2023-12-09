@@ -19,13 +19,21 @@ class ResetPasswordRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+
+    public function rules(): array
     {
         return [
-            'email' => ['email','exists:users'],
+            'email' => ['exists:users'],
             'otp' => ['max:4'],
             'password' => ['min:8'],
-            
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.exists' => 'Email not found',
+            'otp.max' => 'The code must be 4 numbers.',
+           ];
     }
 }

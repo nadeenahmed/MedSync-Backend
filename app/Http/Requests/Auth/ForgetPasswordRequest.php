@@ -19,10 +19,17 @@ class ForgetPasswordRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'email' => ['required', 'email','exists:users'],
+            'email' => ['exists:users'],
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.exists' => 'Email not found',
+           ];
     }
 }

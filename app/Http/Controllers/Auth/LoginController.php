@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use App\Models\Patient;
+use App\Models\Doctor;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
@@ -20,29 +22,39 @@ class LoginController extends Controller
         $user = User::where('email', $email)->first();
     
         if (!$user) {
-            // If the user with the provided email doesn't exist, return an unauthorized response
-            return response()->json(['error' => 'email not found'], 401);
+            $response = [
+                'message' => 'email not found',
+                'errors' => 'email not found'
+            ];
+            return response()->json($response, 401);
         }
         //if ($user->email_verified_at !== null) {
-            // User is logged in and email is verified
+        // User is logged in and email is verified
+        //check the password
+        if ((Hash::check($password, $user->password))||($user->password == null)) {
+            $user->tokens()->delete();
+            $token = $user->createToken(request()->userAgent())->plainTextToken;
+            $userData = [
+                'user' => $user,
+                'token' => $token,
+            ];
 
-            //check the password
-            if ((Hash::check($password, $user->password))||($user->password == null)) {
-                // Password is correct, generate a new token
-                $user->tokens()->delete();
-                $token = $user->createToken(request()->userAgent())->plainTextToken;
-        
-                // Return the user and token in the response
-                $response = [
-                    'user' => $user,
-                    'token' => $token,
-                ];
-        
-                return response()->json($response, 200);
-            } else {
-                // Password is incorrect, return an unauthorized response
-                return response()->json(['error' => 'Incorrect Password'], 401);
+            if ($user->role === 'patient') {
+                $patient = Patient::where('user_id', $user->id)->first();
+                $userData['patient'] = $patient;
+            } elseif ($user->role === 'doctor') {
+                $doctor = Doctor::where('user_id', $user->id)->first();
+                $userData['doctor'] = $doctor;
             }
+
+            return response()->json($userData, 200);
+        } else {
+            $response = [
+                'message' => 'Incorrect Password',
+                'errors' => 'Incorrect Password'
+            ];
+            return response()->json($response, 401);
+        }
             
         //}else{
             //return response()->json(['error' => 'Email Not Verified'], 401);

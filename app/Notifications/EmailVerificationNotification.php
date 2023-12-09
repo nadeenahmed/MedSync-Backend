@@ -25,7 +25,7 @@ class EmailVerificationNotification extends Notification
     public function __construct()
     {
        
-        $this->message = "use the code to verify your email";
+        $this->message = "use the code to verify your account";
         $this->subject = "Welcome to MedSync! Verification needed";
         $this->fromEmail = "medsync6@gmail.com";
         $this->mailer = 'smtp';
