@@ -47,13 +47,23 @@ class EmailVerificationController extends Controller
     }
 
     public function ResendEmailVerification(Request $request)
-    {
-        $input = $request->only('email');
-        $user = User::where('email',$input)->first();
-        $user->notify(new EmailVerificationNotification());
+{
+    $input = $request->only('email');
+    $user = User::where('email', $input['email'])->first();
+
+    if (!$user) {
         $response = [
-            'message' => 'check your email',
+            'message' => 'User not found with the provided email.',
         ];
-        return response()->json($response, 200);
+        return response()->json($response, 401);
     }
+
+    $user->notify(new EmailVerificationNotification());
+
+    $response = [
+        'message' => 'Check your email.',
+    ];
+    return response()->json($response, 200);
+}
+
 }
