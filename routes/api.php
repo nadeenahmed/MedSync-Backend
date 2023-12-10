@@ -46,7 +46,7 @@ Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp']
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 ->name('User-ResetPassword-API');
 
-//----------------reser password---------------
+//----------------reset password---------------
 
 
 
