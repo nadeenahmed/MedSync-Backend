@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Patient;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\User;
 class PatientController extends Controller
 {
     public function index()
@@ -21,12 +21,24 @@ class PatientController extends Controller
     }
     public function create(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
         ]);
-
-        $patient = Patient::create($validatedData);
-
+        // $validatedData = $request->validate([
+        //     'user_id' => 'required|exists:users,id',
+        // ]);
+        $newdata = [
+            'gender' => $request->input('gender'),
+            'age' => $request->input('age'),
+            'address' => $request->input('address'),
+            'phone' => $request->input('phone'),
+            'marital_status' => $request->input('marital_status'),
+            'user_id' => $user->id,
+        ];
+        $patientData = array_merge($newdata);
+        $patient = Patient::create($patientData);
+       // $user = $patient->user;
         return response()->json($patient, 201);
     }
     public function update(Request $request, $id)
@@ -34,10 +46,21 @@ class PatientController extends Controller
         $patient = Patient::findOrFail($id);
 
         $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'exists:users,id',
         ]);
-
-        $patient->update($validatedData);
+        $newdata = [
+            'gender' => $request->input('gender'),
+            'age' => $request->input('age'),
+            'address' => $request->input('address'),
+            'phone' => $request->input('phone'),
+            'marital_status' => $request->input('marital_status'),
+        ];
+        $updatedPatient = array_merge($validatedData, $newdata);
+        $patient->update($updatedPatient);
+        $user = $patient->user;
+        $user->update([
+            'name' => $request->input('name'),
+        ]);
 
         return response()->json($patient, 200);
     }
@@ -45,7 +68,9 @@ class PatientController extends Controller
     {
         $patient = Patient::findOrFail($id);
         $patient->delete();
-
-        return response()->json(null, 204);
+        $response = [
+            'message' => 'Deleted Successfully',
+        ];
+        return response()->json($response, 200);
     }
 }
