@@ -12,7 +12,11 @@ class Patient extends Model
 
     protected $fillable = [
         'user_id',
-
+        'gender',
+        'age',
+        'address',
+        'phone',
+        'marital_status'
     ];
 
     // Define the relationship with the User model
