@@ -40,7 +40,7 @@ Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->na
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
 Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])->name('Check-EmailVerification-API');  
-Route::post('/email-verif ication',[EmailVerificationController::class,'EmailVerification'])->name('User-EmailVerification-API');
+Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])->name('User-EmailVerification-API');
 //----------------email verification---------------
 //----------------authentication---------------
 
