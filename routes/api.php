@@ -31,11 +31,12 @@ Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
 
+//----------------email verification---------------
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
-
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
-Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
-    ->name('Check-EmailVerification-API');
+Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])->name('Check-EmailVerification-API');  
+Route::post('/email-verif ication',[EmailVerificationController::class,'EmailVerification'])->name('User-EmailVerification-API');
+//----------------email verification---------------
 //----------------authentication---------------
 
 //----------------reser password---------------
@@ -53,9 +54,5 @@ Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
-    //----------------email verification---------------
-    Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])
-    ->name('User-EmailVerification-API');
-    //----------------email verification---------------
 });
 Route::post('/admin/login',[AdminLoginController::class,'adminLogin'])->name('Admin-Login-API');
