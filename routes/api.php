@@ -15,6 +15,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\ResetPasswordRequestController;
 use App\Http\Controllers\Admin\AdminLoginController;
+use App\Http\Controllers\Patient\InitScreenController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +44,7 @@ Route::post('/email-verif ication',[EmailVerificationController::class,'EmailVer
 //----------------email verification---------------
 //----------------authentication---------------
 
-//----------------reser password---------------
+//----------------reset password---------------
 Route::post('password/forgot-password',[ForgetPasswordController::class,'forgotPassword'])
 ->name('User-ForgetPassword-API');
 Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp'])
@@ -50,20 +52,29 @@ Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp']
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 ->name('User-ResetPassword-API');
 
-//----------------reser password---------------
+//----------------reset password---------------
 
 
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
+
+    Route::post('/p',[InitScreenController::class,'store']);
 });
+
+
+
 Route::post('/admin/login',[AdminLoginController::class,'adminLogin'])->name('Admin-Login-API');
-Route::get('/admin/patients',[PatientController::class,'index'])->name('Get-Patients-API');
-Route::get('/admin/patients/{id}',[PatientController::class,'show'])->name('Get-Patient-API');
-Route::post('/admin/patients',[PatientController::class,'create'])->name('Create-Patients-API');
-Route::put('/admin/patients/{id}',[PatientController::class,'update'])->name('Update-Patients-API');
-Route::delete('/admin/patients/{id}',[PatientController::class,'destroy'])->name('Delete-Patients-API');
+
+
+Route::get('/admin/get-all-patients',[PatientController::class,'index'])->name('Get-Patients-API');
+Route::get('/admin/show-patient/{id}',[PatientController::class,'show'])->name('Get-Patient-API');
+Route::post('/admin/create-patient',[PatientController::class,'create'])->name('Create-Patients-API');
+Route::put('/admin/update-patient/{id}',[PatientController::class,'update'])->name('Update-Patients-API');
+Route::delete('/admin/delete-patient/{id}',[PatientController::class,'destroy'])->name('Delete-Patients-API');
+
+
 
 Route::get('/admin/drugs',[DrugController::class,'index'])->name('Get-Drugs-API');
 Route::get('/admin/drugs/{id}',[DrugController::class,'show'])->name('Get-Drug-API');
