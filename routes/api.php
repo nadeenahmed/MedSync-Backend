@@ -15,6 +15,12 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\ResetPasswordRequestController;
 use App\Http\Controllers\Admin\AdminLoginController;
+use App\Http\Controllers\Patient\BuildHomeController;
+use App\Http\Controllers\Patient\HomeController;
+use App\Models\Patient;
+use App\Models\Doctor;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -34,14 +40,15 @@ Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
 
+//----------------email verification---------------
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
-
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
-Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
-    ->name('Check-EmailVerification-API');
+Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])->name('Check-EmailVerification-API');  
+Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])->name('User-EmailVerification-API');
+//----------------email verification---------------
 //----------------authentication---------------
 
-//----------------reser password---------------
+//----------------reset password---------------
 Route::post('password/forgot-password',[ForgetPasswordController::class,'forgotPassword'])
 ->name('User-ForgetPassword-API');
 Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp'])
@@ -49,24 +56,52 @@ Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp']
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 ->name('User-ResetPassword-API');
 
-//----------------reser password---------------
+//----------------reset password---------------
 
 
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
-    //----------------email verification---------------
-    Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])
-    ->name('User-EmailVerification-API');
-    //----------------email verification---------------
+    Route::prefix('patient')->group(function () {
+        Route::post('build/home/screen',[BuildHomeController::class,'build']);
+        Route::get('home/screen',[HomeController::class,'view']);
+    });
+    
+    // Route::get('/profile',function(Request $request){
+    //     $user=$request->user();
+    //     if ( $user['role'] === 'patient') {
+    //         $patient = Patient::where('user_id', $user['id'])->first();
+    //         $response = [
+    //             'patient' => $patient,
+    //         ];
+    //         return response()->json($response,200);
+    //     } elseif ($user['role']  === 'doctor') {
+    //         $doctor = Doctor::where('user_id', $user['id'])->first();
+    //         $response = [
+    //             'doctor' => $doctor,
+    //         ];
+
+    //         return response()->json($response,200);
+    //     }
+    //     return $request->user();
+    // });
+
+    
 });
+
+
+
 Route::post('/admin/login',[AdminLoginController::class,'adminLogin'])->name('Admin-Login-API');
-Route::get('/admin/patients',[PatientController::class,'index'])->name('Get-Patients-API');
-Route::get('/admin/patients/{id}',[PatientController::class,'show'])->name('Get-Patient-API');
-Route::post('/admin/patients',[PatientController::class,'create'])->name('Create-Patients-API');
-Route::put('/admin/patients/{id}',[PatientController::class,'update'])->name('Update-Patients-API');
-Route::delete('/admin/patients/{id}',[PatientController::class,'destroy'])->name('Delete-Patients-API');
+
+
+Route::get('/admin/get-all-patients',[PatientController::class,'index'])->name('Get-Patients-API');
+Route::get('/admin/show-patient/{id}',[PatientController::class,'show'])->name('Get-Patient-API');
+Route::post('/admin/create-patient',[PatientController::class,'create'])->name('Create-Patients-API');
+Route::put('/admin/update-patient/{id}',[PatientController::class,'update'])->name('Update-Patients-API');
+Route::delete('/admin/delete-patient/{id}',[PatientController::class,'destroy'])->name('Delete-Patients-API');
+
+
 
 Route::get('/admin/drugs',[DrugController::class,'index'])->name('Get-Drugs-API');
 Route::get('/admin/drugs/{id}',[DrugController::class,'show'])->name('Get-Drug-API');

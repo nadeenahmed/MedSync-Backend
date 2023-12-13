@@ -10,7 +10,6 @@ class Drugs extends Model
     use HasFactory;
     protected $table = 'drugs'; // Update with your actual table name
     protected $primaryKey = 'drug_id';
-
     protected $fillable = [
         'drug_id',
         'name',
