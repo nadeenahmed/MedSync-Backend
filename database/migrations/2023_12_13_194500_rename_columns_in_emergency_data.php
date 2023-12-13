@@ -26,9 +26,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('emergency_data', function (Blueprint $table) {
-            $table->renameColumn('high_blood_pressure', 'systolic');
-            $table->renameColumn('low_blood_pressure', 'diastolic');
-            $table->renameColumn('sugar', 'blood_sugar');
+            $table->renameColumn('systolic', 'high_blood_pressure');
+            $table->renameColumn('diastolic', 'low_blood_pressure');
+            $table->renameColumn('blood_sugar', 'sugar');
         });
     }
 };
