@@ -18,7 +18,6 @@ class DrugController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'drug_id' => 'required',
         ]);
     
         $drugs = Drugs::create($validatedData);
@@ -36,7 +35,7 @@ class DrugController extends Controller
         $drugs = Drugs::findOrFail($id);
 
         $validatedData = $request->validate([
-            'drug_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
         ]);
 
         $drugs->update($validatedData);
@@ -47,6 +46,9 @@ class DrugController extends Controller
     {
         $drugs = Drugs::findOrFail($id);
         $drugs->delete();
-        return response()->json(null, 204);
+        $response = [
+            'message' => 'Deleted Successfully',
+        ];
+        return response()->json($response, 200);
     }
 }
