@@ -15,7 +15,11 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\ResetPasswordRequestController;
 use App\Http\Controllers\Admin\AdminLoginController;
-use App\Http\Controllers\Patient\InitScreenController;
+use App\Http\Controllers\Patient\BuildHomeController;
+use App\Http\Controllers\Patient\HomeController;
+use App\Models\Patient;
+use App\Models\Doctor;
+
 
 
 /*
@@ -59,8 +63,31 @@ Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
+    Route::prefix('patient')->group(function () {
+        Route::post('build/home/screen',[BuildHomeController::class,'build']);
+        Route::get('home/screen',[HomeController::class,'view']);
+    });
+    
+    // Route::get('/profile',function(Request $request){
+    //     $user=$request->user();
+    //     if ( $user['role'] === 'patient') {
+    //         $patient = Patient::where('user_id', $user['id'])->first();
+    //         $response = [
+    //             'patient' => $patient,
+    //         ];
+    //         return response()->json($response,200);
+    //     } elseif ($user['role']  === 'doctor') {
+    //         $doctor = Doctor::where('user_id', $user['id'])->first();
+    //         $response = [
+    //             'doctor' => $doctor,
+    //         ];
 
-    Route::post('/p',[InitScreenController::class,'store']);
+    //         return response()->json($response,200);
+    //     }
+    //     return $request->user();
+    // });
+
+    
 });
 
 

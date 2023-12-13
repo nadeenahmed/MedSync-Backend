@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Patient;
 use App\Models\Doctor;
 use App\Http\Requests\Auth\RegisterationRequest;
+use App\Models\EmergencyData;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\RegisterationNotification;
 use App\Notifications\EmailVerificationNotification;
@@ -39,7 +40,6 @@ class RegisterController extends Controller
                 $patient = Patient::create([
                     'user_id' => $user->id,
                 ]);
-
                 $response = [
                     'patient' => $patient,
                     'token' => $token

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Drugs extends Model
 {
     use HasFactory;
-    protected $table = 'drugs'; // Update with your actual table name
+    protected $table = 'drugs'; 
 
     protected $fillable = [
         'drug_id',

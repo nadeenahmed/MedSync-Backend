@@ -13,14 +13,13 @@ class EmergencyData extends Model
         'patient_id',
         'high_blood_pressure',
         'low_blood_pressure',
-        'high_sugar',
-        'low_sugar',
+        'sugar',
         'weight',
         'height',
         'blood_type',
-        'chronic_diseases',
-        'bad_habits',
+        'chronic_diseases_bad_habits',
     ];
+   
     public function patient()
     {
         return $this->belongsTo(Patient::class);
