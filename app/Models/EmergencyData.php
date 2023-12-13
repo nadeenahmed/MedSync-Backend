@@ -11,9 +11,9 @@ class EmergencyData extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
-        'high_blood_pressure',
-        'low_blood_pressure',
-        'sugar',
+        'systolic',
+        'diastolic',
+        'blood_sugar',
         'weight',
         'height',
         'blood_type',

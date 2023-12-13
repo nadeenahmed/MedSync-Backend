@@ -16,9 +16,9 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('patient_id');
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
-            $table->integer('high_blood_pressure')->nullable();
-            $table->integer('low_blood_pressure')->nullable();
-            $table->integer('sugar')->nullable();
+            $table->integer('systolic')->nullable();
+            $table->integer('diastolic')->nullable();
+            $table->integer('blood_sugar')->nullable();
             $table->integer('weight')->nullable();
             $table->integer('height')->nullable();
             $table->string('blood_type')->nullable();

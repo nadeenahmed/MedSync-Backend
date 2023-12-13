@@ -28,9 +28,9 @@ class BuildHomeController extends Controller
                 return response()->json(['emergencyData' => $emergencyData],200);
             } else { $emergencyData = EmergencyData::create([
                 'patient_id' => $patient->id,
-                'high_blood_pressure' => $request->input('high_blood_pressure'),
-                'low_blood_pressure' => $request->input('low_blood_pressure'),
-                'sugar' => $request->input('sugar'),
+                'systolic' => $request->input('systolic'),
+                'diastolic' => $request->input('diastolic'),
+                'blood_sugar' => $request->input('blood_sugar'),
                 'weight' => $request->input('weight'),
                 'height' => $request->input('height'),
                 'blood_type' => $request->input('blood_type'),
