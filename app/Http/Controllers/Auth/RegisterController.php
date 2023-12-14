@@ -29,6 +29,7 @@ class RegisterController extends Controller
             $newuser['password'] = Hash::make($newuser['password']);
             $newuser['name'] = $request->name;
             $newuser['role'] = $request->role;
+            $newuser['status'] = 'pending';
 
             $user = User::create($newuser);
 
@@ -41,6 +42,7 @@ class RegisterController extends Controller
                     'user_id' => $user->id,
                 ]);
                 $response = [
+                    'user' => $user,
                     'patient' => $patient,
                     'token' => $token
                 ];
@@ -51,6 +53,7 @@ class RegisterController extends Controller
                     'user_id' => $user->id,
                 ]);
                 $response = [
+                    'user' => $user,
                     'doctor' => $doctor,
                     'token' => $token
                 ];

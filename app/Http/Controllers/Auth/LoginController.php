@@ -31,30 +31,45 @@ class LoginController extends Controller
         //if ($user->email_verified_at !== null) {
         // User is logged in and email is verified
         //check the password
-        if ((Hash::check($password, $user->password))||($user->password == null)) {
-            $user->tokens()->delete();
-            $token = $user->createToken(request()->userAgent())->plainTextToken;
-            $userData = [
-                'user' => $user,
-                'token' => $token,
-            ];
+        if($user->status === "active"){
 
-            if ($user->role === 'patient') {
-                $patient = Patient::where('user_id', $user->id)->first();
-                $userData['patient'] = $patient;
-            } elseif ($user->role === 'doctor') {
-                $doctor = Doctor::where('user_id', $user->id)->first();
-                $userData['doctor'] = $doctor;
+            if ((Hash::check($password, $user->password))||($user->password == null)) {
+                $user->tokens()->delete();
+                $token = $user->createToken(request()->userAgent())->plainTextToken;
+                $userData = [
+                    'user' => $user,
+                    'token' => $token,
+                ];
+    
+                if ($user->role === 'patient') {
+                    $patient = Patient::where('user_id', $user->id)->first();
+                    $userData['patient'] = $patient;
+                } elseif ($user->role === 'doctor') {
+                    $doctor = Doctor::where('user_id', $user->id)->first();
+                    $userData['doctor'] = $doctor;
+                }
+    
+                return response()->json($userData, 200);
+            } else {
+                $response = [
+                    'message' => 'Incorrect Password',
+                    'errors' => 'Incorrect Password'
+                ];
+                return response()->json($response, 401);
             }
 
-            return response()->json($userData, 200);
-        } else {
+        }else{
+
             $response = [
-                'message' => 'Incorrect Password',
-                'errors' => 'Incorrect Password'
+                'message' => 'Verify Your Email First',
+                'errors' => 'Login Process Faild'
             ];
             return response()->json($response, 401);
+
+
+
         }
+        
             
         //}else{
             //return response()->json(['error' => 'Email Not Verified'], 401);

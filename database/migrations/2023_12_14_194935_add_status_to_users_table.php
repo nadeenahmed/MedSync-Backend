@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('drugs', function (Blueprint $table) {
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('status')->nullable();
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-        Schema::table('drugs', function (Blueprint $table) {
-            $table->dropTimestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 };
