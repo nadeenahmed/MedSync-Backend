@@ -133,11 +133,11 @@ Route::post('/admin/treatments',[TreatmentsController::class,'create'])->name('C
 Route::put('/admin/treatments/{id}',[TreatmentsController::class,'update'])->name('Update-Treatments-API');
 Route::delete('/admin/treatments/{id}',[TreatmentsController::class,'destroy'])->name('Delete-Treatments-API');
 
-Route::get('/admin/labtests',[LabTestsController::class,'index'])->name('Get-LabTests-API');
-Route::get('/admin/labtests/{id}',[LabTestsController::class,'show'])->name('Get-LabTest-API');
-Route::post('/admin/labtests',[LabTestsController::class,'create'])->name('Create-LabTests-API');
-Route::put('/admin/labtests/{id}',[LabTestsController::class,'update'])->name('Update-LabTests-API');
-Route::delete('/admin/labtests/{id}',[LabTestsController::class,'destroy'])->name('Delete-LabTests-API');
+Route::get('/admin/lab-tests',[LabTestsController::class,'index'])->name('Get-Lab-Tests-API');
+Route::get('/admin/lab-tests/{id}',[LabTestsController::class,'show'])->name('Get-Lab-Test-API');
+Route::post('/admin/lab-tests',[LabTestsController::class,'create'])->name('Create-Lab-Tests-API');
+Route::put('/admin/lab-tests/{id}',[LabTestsController::class,'update'])->name('Update-Lab-Tests-API');
+Route::delete('/admin/lab-tests/{id}',[LabTestsController::class,'destroy'])->name('Delete-Lab-Tests-API');
 
 Route::get('/admin/vaccines',[VaccinesController::class,'index'])->name('Get-Vaccines-API');
 Route::get('/admin/vaccines/{id}',[VaccinesController::class,'show'])->name('Get-Vaccine-API');

@@ -79,7 +79,7 @@ class RegisterController extends Controller
         auth()->user()->tokens()->delete();
 
         return [
-            'message' => 'logged out'
+            'message' => 'Logged out'
         ];
     }
 }

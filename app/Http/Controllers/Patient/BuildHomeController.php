@@ -62,7 +62,8 @@ class BuildHomeController extends Controller
         }
         $emergencyData->update($request->all());
 
-        return response()->json(['message' => 'Emergency data updated successfully', 'emergencyData' => $emergencyData]);
+        return response()->json(['message' => 'Emergency data updated successfully', 
+        'emergencyData' => $emergencyData]);
     }
 }
 
