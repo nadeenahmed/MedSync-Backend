@@ -40,6 +40,11 @@ class RegisterController extends Controller
             if ($newuser['role'] === 'patient') {
                 $patient = Patient::create([
                     'user_id' => $user->id,
+                    'gender' => $request->input('gender'),
+                    'age' => $request->input('age'),
+                    'address' => $request->input('address'),
+                    'phone' => $request->input('phone'),
+                    'marital_status' => $request->input('marital_status'),
                 ]);
                 $response = [
                     'user' => $user,

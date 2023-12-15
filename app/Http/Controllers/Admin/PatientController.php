@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Models\Patient;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterationRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 class PatientController extends Controller
@@ -23,12 +24,14 @@ class PatientController extends Controller
 
         return response()->json($mergedData);
     }
-    public function create(Request $request)
+    public function create(RegisterationRequest $request)
     {
+        $user=$request->validated();
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'role' => 'patient',
+            'status' => 'pending',
         ]);
         $PatientPersonalData = [
             'gender' => $request->input('gender'),
@@ -50,18 +53,8 @@ class PatientController extends Controller
     {
         $patient = Patient::findOrFail($id);
         $user = User::findOrFail($patient['user_id']);
-        $patient->update([
-            'gender' => $request->input('gender', $patient->gender),
-            'age' => $request->input('age', $patient->age),
-            'address' => $request->input('address', $patient->address),
-            'phone' => $request->input('phone', $patient->phone),
-            'marital_status' => $request->input('marital_status', $patient->marital_status),
-        ]);
-    
-        $user->update([
-            'name' => $request->input('name', $user->name),
-            'email' => $request->input('email', $user->email),
-        ]);
+        $patient->update($request->all());
+        $user->update($request->all());
         $response = [
             'patient' => $patient,
             'user' =>  $user
