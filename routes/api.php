@@ -19,7 +19,13 @@ use App\Http\Controllers\Patient\BuildHomeController;
 use App\Http\Controllers\Patient\HomeController;
 use App\Models\Patient;
 use App\Models\Doctor;
-
+use App\Http\Controllers\Admin\DiagnosesController;
+use App\Http\Controllers\Admin\TreatmentsController;
+use App\Http\Controllers\Admin\LabTestsController;
+use App\Http\Controllers\Admin\VaccinesController;
+use App\Http\Controllers\Admin\SpecialitiesController;
+use App\Http\Controllers\Admin\SymptomsController;
+use App\Http\Controllers\Admin\DoctorController;
 
 
 /*
@@ -43,8 +49,10 @@ Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->na
 //----------------email verification---------------
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
-Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])->name('Check-EmailVerification-API');  
-Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])->name('User-EmailVerification-API');
+Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
+->name('Check-EmailVerification-API');
+Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])
+->name('User-EmailVerification-API');
 //----------------email verification---------------
 //----------------authentication---------------
 
@@ -101,10 +109,50 @@ Route::post('/admin/create-patient',[PatientController::class,'create'])->name('
 Route::put('/admin/update-patient/{id}',[PatientController::class,'update'])->name('Update-Patients-API');
 Route::delete('/admin/delete-patient/{id}',[PatientController::class,'destroy'])->name('Delete-Patients-API');
 
-
+Route::get('/admin/doctors',[DoctorController::class,'index'])->name('Get-Doctors-API');
+Route::get('/admin/doctors/{id}',[DoctorController::class,'show'])->name('Get-Doctor-API');
+Route::post('/admin/doctors',[DoctorController::class,'create'])->name('Create-Doctors-API');
+Route::put('/admin/doctors/{id}',[DoctorController::class,'update'])->name('Update-Doctors-API');
+Route::delete('/admin/doctors/{id}',[DoctorController::class,'destroy'])->name('Delete-Doctors-API');
 
 Route::get('/admin/drugs',[DrugController::class,'index'])->name('Get-Drugs-API');
 Route::get('/admin/drugs/{id}',[DrugController::class,'show'])->name('Get-Drug-API');
 Route::post('/admin/drugs',[DrugController::class,'create'])->name('Create-Drugs-API');
 Route::put('/admin/drugs/{id}',[DrugController::class,'update'])->name('Update-Drugs-API');
 Route::delete('/admin/drugs/{id}',[DrugController::class,'destroy'])->name('Delete-Drugs-API');
+
+Route::get('/admin/diagnoses',[DiagnosesController::class,'index'])->name('Get-Diagnoses-API');
+Route::get('/admin/diagnoses/{id}',[DiagnosesController::class,'show'])->name('Get-Diagnose-API');
+Route::post('/admin/diagnoses',[DiagnosesController::class,'create'])->name('Create-Diagnoses-API');
+Route::put('/admin/diagnoses/{id}',[DiagnosesController::class,'update'])->name('Update-Diagnoses-API');
+Route::delete('/admin/diagnoses/{id}',[DiagnosesController::class,'destroy'])->name('Delete-Diagnoses-API');
+
+Route::get('/admin/treatments',[TreatmentsController::class,'index'])->name('Get-Treatments-API');
+Route::get('/admin/treatments/{id}',[TreatmentsController::class,'show'])->name('Get-Treatment-API');
+Route::post('/admin/treatments',[TreatmentsController::class,'create'])->name('Create-Treatments-API');
+Route::put('/admin/treatments/{id}',[TreatmentsController::class,'update'])->name('Update-Treatments-API');
+Route::delete('/admin/treatments/{id}',[TreatmentsController::class,'destroy'])->name('Delete-Treatments-API');
+
+Route::get('/admin/labtests',[LabTestsController::class,'index'])->name('Get-LabTests-API');
+Route::get('/admin/labtests/{id}',[LabTestsController::class,'show'])->name('Get-LabTest-API');
+Route::post('/admin/labtests',[LabTestsController::class,'create'])->name('Create-LabTests-API');
+Route::put('/admin/labtests/{id}',[LabTestsController::class,'update'])->name('Update-LabTests-API');
+Route::delete('/admin/labtests/{id}',[LabTestsController::class,'destroy'])->name('Delete-LabTests-API');
+
+Route::get('/admin/vaccines',[VaccinesController::class,'index'])->name('Get-Vaccines-API');
+Route::get('/admin/vaccines/{id}',[VaccinesController::class,'show'])->name('Get-Vaccine-API');
+Route::post('/admin/vaccines',[VaccinesController::class,'create'])->name('Create-Vaccines-API');
+Route::put('/admin/vaccines/{id}',[VaccinesController::class,'update'])->name('Update-Vaccines-API');
+Route::delete('/admin/vaccines/{id}',[VaccinesController::class,'destroy'])->name('Delete-Vaccines-API');
+
+Route::get('/admin/specialities',[SpecialitiesController::class,'index'])->name('Get-Specialities-API');
+Route::get('/admin/specialities/{id}',[SpecialitiesController::class,'show'])->name('Get-Speciality-API');
+Route::post('/admin/specialities',[SpecialitiesController::class,'create'])->name('Create-Specialities-API');
+Route::put('/admin/specialities/{id}',[SpecialitiesController::class,'update'])->name('Update-Specialities-API');
+Route::delete('/admin/specialities/{id}',[SpecialitiesController::class,'destroy'])->name('Delete-Specialities-API');
+
+Route::get('/admin/symptoms',[SymptomsController::class,'index'])->name('Get-Symptoms-API');
+Route::get('/admin/symptoms/{id}',[SymptomsController::class,'show'])->name('Get-Symptom-API');
+Route::post('/admin/symptoms',[SymptomsController::class,'create'])->name('Create-Symptoms-API');
+Route::put('/admin/symptoms/{id}',[SymptomsController::class,'update'])->name('Update-Symptoms-API');
+Route::delete('/admin/symptoms/{id}',[SymptomsController::class,'destroy'])->name('Delete-Symptoms-API');
