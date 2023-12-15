@@ -11,6 +11,6 @@ class LabTests extends Model
     protected $table = 'lab_tests';
     protected $fillable = [
         'arabic_name',
-        'englis_name',
+        'english_name',
     ];
 }
