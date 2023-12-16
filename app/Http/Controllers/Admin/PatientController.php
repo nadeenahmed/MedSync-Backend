@@ -4,70 +4,158 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Patient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterationRequest;
+use App\Models\EmergencyData;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Str;
+use App\Notifications\NewPatientNotification;
+use Illuminate\Support\Facades\Hash;
+
 class PatientController extends Controller
 {
     public function index()
     {
-        $patients = Patient::with('user')->get();
-        return response()->json($patients);
+        try{
+            $patients = Patient::with('user', 'EmergencyData')->get();
+            return response()->json($patients);
+            
+        }catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $response = [
+                'message' => 'No Patients in DB',
+                'errors' => $e,
+            ];
+            return response()->json($response, 404);
+        } catch (\Exception $e) {
+            $response = [
+                'message' => 'Internal Server Error',
+                'errors' => 'error : '.$e,
+            ];
+            return response()->json($response, 500);
+        }
+       
     }
     public function show($id)
     {
-        $patient = Patient::with('user')->find($id);
+        try{
+            $patient = Patient::findOrFail($id);
+            $patientEmergencyData = EmergencyData::where('patient_id', $id)->first();
+            $user = User::findOrFail($patient['user_id']);
+            
+            $response = [
+                'user' =>  $user,
+                'patient' => $patient,
+                'patient-emergency-data' => $patientEmergencyData,
+            ];
+            return response()->json($response,200);
+        }catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $response = [
+                'message' => 'Patient not found',
+                'errors' => $e,
+            ];
+            return response()->json($response, 404);
+        } catch (\Exception $e) {
+            $response = [
+                'message' => 'Internal Server Error',
+                'errors' => 'error : '.$e,
+            ];
+            return response()->json($response, 500);
+        }
         
-        $patientArray = $patient->toArray();
-        $userArray = $patient->user->toArray();
-        $mergedData = array_merge($patientArray, $userArray);
-        unset($mergedData['user']);
-
-        return response()->json($mergedData);
     }
     public function create(RegisterationRequest $request)
     {
-        $user=$request->validated();
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'role' => 'patient',
-            'status' => 'pending',
-        ]);
-        $PatientPersonalData = [
-            'gender' => $request->input('gender'),
-            'age' => $request->input('age'),
-            'address' => $request->input('address'),
-            'phone' => $request->input('phone'),
-            'marital_status' => $request->input('marital_status'),
-            'user_id' => $user->id,
-        ];
-        $patient = Patient::create($PatientPersonalData);
+        try{
+            $user=$request->validated();
+            $randomPassword = Str::random(8);
+            $user = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($randomPassword),
+                'role' => 'patient',
+                'status' => 'active',
+            ]);
+            $PatientPersonalData = [
+                'gender' => $request->input('gender'),
+                'age' => $request->input('age'),
+                'address' => $request->input('address'),
+                'phone' => $request->input('phone'),
+                'marital_status' => $request->input('marital_status'),
+                'user_id' => $user->id,
+            ];
+            $patient = Patient::create($PatientPersonalData);
+            $PatientEmergencyData = EmergencyData::create([
+                'patient_id' => $patient->id,
+                'systolic' => $request->input('systolic'),
+                'diastolic' => $request->input('diastolic'),
+                'blood_sugar' => $request->input('blood_sugar'),
+                'weight' => $request->input('weight'),
+                'height' => $request->input('height'),
+                'blood_type' => $request->input('blood_type'),
+                'chronic_diseases_bad_habits' => $request->input('chronic_diseases_bad_habits'),
+            ]);
+            $user->notify(new NewPatientNotification($randomPassword));
+            $response = [
+                'user' =>  $user,
+                'patient' => $patient,
+                'patient-emergency-data' => $PatientEmergencyData      
+            ];
+            return response()->json($response, 200);
+        }catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $response = [
+                'message' => 'Patient not found',
+                'errors' => 'error : '.$e,
+            ];
+            return response()->json($response, 404);
+        } catch (\Exception $e) {
+            $response = [
+                'message' => 'Internal Server Error',
+                'errors' => 'error : '.$e,
+            ];
+            return response()->json($response, 500);
+        }
         
-        $response = [
-            'patient' => $patient,
-            'user' =>  $user
-        ];
-        return response()->json($response, 200);
     }
     public function update(Request $request, $id)
     {
-        $patient = Patient::findOrFail($id);
-        $user = User::findOrFail($patient['user_id']);
-        $patient->update($request->all());
-        $user->update($request->all());
-        $response = [
-            'patient' => $patient,
-            'user' =>  $user
-        ];
-        return response()->json($response, 200);
+        try{
+            $patient = Patient::findOrFail($id);
+            $patientEmergencyData = EmergencyData::where('patient_id', $id)->first();
+            $user = User::findOrFail($patient['user_id']);
+            $patient->update($request->all());
+            $patientEmergencyData->update($request->all());
+            $user->update($request->all());
+            $response = [
+                'user' =>  $user,
+                'patient' => $patient,
+                'patient-emergency-data' => $patientEmergencyData,
+                
+            ];
+            return response()->json($response, 200);
+
+        }catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $response = [
+                'message' => 'Patient not found',
+                'errors' => 'error : '.$e,
+            ];
+            return response()->json($response, 404);
+        } catch (\Exception $e) {
+            $response = [
+                'message' => 'Internal Server Error',
+                'errors' => 'error : '.$e,
+            ];
+            return response()->json($response, 500);
+        }
+        
     }
     public function destroy($id)
     {
         try {
             $patient = Patient::findOrFail($id);
+            $patientEmergencyData = EmergencyData::where('patient_id', $id)->first();
             $user = User::findOrFail($patient->user_id);
 
             $patient->delete();
+            $patientEmergencyData->delete();
             $user->delete();
 
             $response = [
@@ -76,8 +164,8 @@ class PatientController extends Controller
             return response()->json($response, 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             $response = [
-                'message' => 'Record not found',
-                'errors' => $e,
+                'message' => 'Patient not found',
+                'errors' => 'error : '.$e,
             ];
             return response()->json($response, 404);
         } catch (\Exception $e) {

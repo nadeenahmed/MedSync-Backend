@@ -79,7 +79,8 @@ Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
+    Route::post('/user/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
+    Route::delete('/user/delete/account',[RegisterController::class,'DeleteAccount'])->name('User-Delete-Account-API');
     Route::prefix('patient')->group(function () {
         Route::post('build/home/screen',[BuildHomeController::class,'build']);
         Route::get('home/screen',[HomeController::class,'view']);
