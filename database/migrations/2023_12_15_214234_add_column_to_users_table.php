@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('drugs_2', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('status')->nullable();
+
         });
     }
 
@@ -22,9 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('drugs_2', function (Blueprint $table) {
-            $table->dropColumn('id');
-            $table->dropTimestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('status');
+
         });
     }
 };
