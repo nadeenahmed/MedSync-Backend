@@ -17,7 +17,16 @@ class PatientController extends Controller
     {
         try{
             $patients = Patient::with('user', 'EmergencyData')->get();
-            return response()->json($patients);
+            if($patients->isEmpty()){
+                $response = [
+                    'message' => "there is no patients"
+                ];
+                return response()->json($response,200);
+            }else{
+                return response()->json($patients);
+
+            }
+            
             
         }catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             $response = [
