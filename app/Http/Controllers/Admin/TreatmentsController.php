@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Drugs;
 use Illuminate\Http\Request;
-
-class DrugController extends Controller
+use App\Models\Treatments;
+class TreatmentsController extends Controller
 {
     public function index()
     {
-        $drugs = Drugs::all();
-        return response()->json($drugs);
+        $treatments = Treatments::all();
+        return response()->json($treatments);
     }
 
     public function create(Request $request)
@@ -20,32 +19,32 @@ class DrugController extends Controller
             'name' => 'required|string|max:255',
         ]);
     
-        $drugs = Drugs::create($validatedData);
+        $treatments = Treatments::create($validatedData);
     
-        return response()->json($drugs, 201);
+        return response()->json($treatments, 201);
     }
 
     public function show($id)
     {
-        $drugs = Drugs::find($id);
-        return response()->json($drugs);    }
+        $treatments = Treatments::find($id);
+        return response()->json($treatments);    }
 
     public function update(Request $request, $id)
     {
-        $drugs = Drugs::findOrFail($id);
+        $treatments = Treatments::findOrFail($id);
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $drugs->update($validatedData);
+        $treatments->update($validatedData);
 
-        return response()->json($drugs, 200);
+        return response()->json($treatments, 200);
     }
     public function destroy($id)
     {
-        $drugs = Drugs::findOrFail($id);
-        $drugs->delete();
+        $treatments = Treatments::findOrFail($id);
+        $treatments->delete();
         $response = [
             'message' => 'Deleted Successfully',
         ];

@@ -36,7 +36,11 @@ class EmailVerificationController extends Controller
             return response()->json($response,401);
         }
         $user = User::where('email',$request->email)->first();
-        $user->update(['email_verified_at' => now()]);
+        $user->update([
+            'email_verified_at' => now(),
+            'status' => "active",
+        ]);
+        
        
         $response = [
             'message' => 'Your email verified Successfully',

@@ -11,16 +11,15 @@ class EmergencyData extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
-        'high_blood_pressure',
-        'low_blood_pressure',
-        'high_sugar',
-        'low_sugar',
+        'systolic',
+        'diastolic',
+        'blood_sugar',
         'weight',
         'height',
         'blood_type',
-        'chronic_diseases',
-        'bad_habits',
+        'chronic_diseases_bad_habits',
     ];
+   
     public function patient()
     {
         return $this->belongsTo(Patient::class);
