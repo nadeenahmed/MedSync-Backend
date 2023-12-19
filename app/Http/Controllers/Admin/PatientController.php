@@ -23,7 +23,50 @@ class PatientController extends Controller
                 ];
                 return response()->json($response,200);
             }else{
-                return response()->json($patients);
+                $formattedPatients = [];
+
+            foreach ($patients as $patient) {
+                $user = $patient->user;
+                $emergencyData = $patient->emergencyData;
+
+                $formattedPatients[] = [
+                    'id' => $patient->id,
+                    'created_at' => $patient->created_at,
+                    'updated_at' => $patient->updated_at,
+                    'user_id' => $patient->user_id,
+                    'gender' => $patient->gender,
+                    'age' => $patient->age,
+                    'address' => $patient->address,
+                    'phone' => $patient->phone,
+                    'marital_status' => $patient->marital_status,
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'email_verified_at' => $user->email_verified_at,
+                        'role' => $user->role,
+                        'google_id' => $user->google_id,
+                        'status' => $user->status,
+                        'created_at' => $user->created_at,
+                        'updated_at' => $user->updated_at,
+                    ],
+                    'emergency_data' => [
+                        'id' => $emergencyData->id,
+                        'created_at' => $emergencyData->created_at,
+                        'updated_at' => $emergencyData->updated_at,
+                        'patient_id' => $emergencyData->patient_id,
+                        'systolic' => $emergencyData->systolic,
+                        'diastolic' => $emergencyData->diastolic,
+                        'blood_sugar' => $emergencyData->blood_sugar,
+                        'weight' => $emergencyData->weight,
+                        'height' => $emergencyData->height,
+                        'blood_type' => $emergencyData->blood_type,
+                        'chronic_diseases_bad_habits' => json_decode($emergencyData->chronic_diseases_bad_habits),
+                    ],
+                ];
+            }
+
+            return response()->json($formattedPatients,200);
 
             }
             
