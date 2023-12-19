@@ -12,9 +12,13 @@ class Doctor extends Model
 
     protected $fillable = [
         'user_id',
+        'gender',
+        'years_of_exp',
+        'clinic_address',
+        'clinic_phone',
+        'medical_speciality',
     ];
 
-    // Define the relationship with the User model
     public function user()
     {
         return $this->belongsTo(User::class);
