@@ -49,11 +49,40 @@ class PatientController extends Controller
             $patient = Patient::findOrFail($id);
             $patientEmergencyData = EmergencyData::where('patient_id', $id)->first();
             $user = User::findOrFail($patient['user_id']);
-            
             $response = [
-                'user' =>  $user,
-                'patient' => $patient,
-                'patient-emergency-data' => $patientEmergencyData,
+                'id' => $patient->id,
+                'created_at' => $patient->created_at,
+                'updated_at' => $patient->updated_at,
+                'user_id' => $patient->user_id,
+                'gender' => $patient->gender,
+                'age' => $patient->age,
+                'address' => $patient->address,
+                'phone' => $patient->phone,
+                'marital_status' => $patient->marital_status,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'email_verified_at' => $user->email_verified_at,
+                    'role' => $user->role,
+                    'google_id' => $user->google_id,
+                    'status' => $user->status,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                ],
+                'emergency_data' => [
+                    'id' => $patientEmergencyData->id,
+                    'created_at' => $patientEmergencyData->created_at,
+                    'updated_at' => $patientEmergencyData->updated_at,
+                    'patient_id' => $patientEmergencyData->patient_id,
+                    'systolic' => $patientEmergencyData->systolic,
+                    'diastolic' => $patientEmergencyData->diastolic,
+                    'blood_sugar' => $patientEmergencyData->blood_sugar,
+                    'weight' => $patientEmergencyData->weight,
+                    'height' => $patientEmergencyData->height,
+                    'blood_type' => $patientEmergencyData->blood_type,
+                    'chronic_diseases_bad_habits' => json_decode($patientEmergencyData->chronic_diseases_bad_habits),
+                ],
             ];
             return response()->json($response,200);
         }catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -104,9 +133,39 @@ class PatientController extends Controller
             ]);
             $user->notify(new NewPatientNotification($randomPassword));
             $response = [
-                'user' =>  $user,
-                'patient' => $patient,
-                'patient-emergency-data' => $PatientEmergencyData      
+                'id' => $patient->id,
+                'created_at' => $patient->created_at,
+                'updated_at' => $patient->updated_at,
+                'user_id' => $patient->user_id,
+                'gender' => $patient->gender,
+                'age' => $patient->age,
+                'address' => $patient->address,
+                'phone' => $patient->phone,
+                'marital_status' => $patient->marital_status,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'email_verified_at' => $user->email_verified_at,
+                    'role' => $user->role,
+                    'google_id' => $user->google_id,
+                    'status' => $user->status,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                ],
+                'emergency_data' => [
+                    'id' => $PatientEmergencyData->id,
+                    'created_at' => $PatientEmergencyData->created_at,
+                    'updated_at' => $PatientEmergencyData->updated_at,
+                    'patient_id' => $PatientEmergencyData->patient_id,
+                    'systolic' => $PatientEmergencyData->systolic,
+                    'diastolic' => $PatientEmergencyData->diastolic,
+                    'blood_sugar' => $PatientEmergencyData->blood_sugar,
+                    'weight' => $PatientEmergencyData->weight,
+                    'height' => $PatientEmergencyData->height,
+                    'blood_type' => $PatientEmergencyData->blood_type,
+                    'chronic_diseases_bad_habits' => json_decode($PatientEmergencyData->chronic_diseases_bad_habits),
+                ],
             ];
             return response()->json($response, 200);
         }catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -134,10 +193,39 @@ class PatientController extends Controller
             $patientEmergencyData->update($request->all());
             $user->update($request->all());
             $response = [
-                'user' =>  $user,
-                'patient' => $patient,
-                'patient-emergency-data' => $patientEmergencyData,
-                
+                'id' => $patient->id,
+                'created_at' => $patient->created_at,
+                'updated_at' => $patient->updated_at,
+                'user_id' => $patient->user_id,
+                'gender' => $patient->gender,
+                'age' => $patient->age,
+                'address' => $patient->address,
+                'phone' => $patient->phone,
+                'marital_status' => $patient->marital_status,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'email_verified_at' => $user->email_verified_at,
+                    'role' => $user->role,
+                    'google_id' => $user->google_id,
+                    'status' => $user->status,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                ],
+                'emergency_data' => [
+                    'id' => $patientEmergencyData->id,
+                    'created_at' => $patientEmergencyData->created_at,
+                    'updated_at' => $patientEmergencyData->updated_at,
+                    'patient_id' => $patientEmergencyData->patient_id,
+                    'systolic' => $patientEmergencyData->systolic,
+                    'diastolic' => $patientEmergencyData->diastolic,
+                    'blood_sugar' => $patientEmergencyData->blood_sugar,
+                    'weight' => $patientEmergencyData->weight,
+                    'height' => $patientEmergencyData->height,
+                    'blood_type' => $patientEmergencyData->blood_type,
+                    'chronic_diseases_bad_habits' => json_decode($patientEmergencyData->chronic_diseases_bad_habits),
+                ],
             ];
             return response()->json($response, 200);
 
