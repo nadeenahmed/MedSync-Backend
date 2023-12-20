@@ -19,13 +19,13 @@ class HomeController extends Controller
             $user = $this->index($request);
             $patient = Patient::where('user_id', $user->id)->first();
             if (!$patient) {
-                return response()->json(['errors' => 'Patient not found'], 404);
+                return response()->json(['message' => 'Patient not found','errors' => 'Patient not found'], 404);
             }
             $patientName = $user->name;
             $emergencyData = EmergencyData::where('patient_id', $patient->id)->first();
             $emergencyData->chronic_diseases_bad_habits = json_decode($emergencyData->chronic_diseases_bad_habits);
             if (!$emergencyData) {
-                return response()->json(['errors' => 'Emergency data not found for the patient'], 404);
+                return response()->json(['message' => 'Emergency data not found for the patient','errors' => 'Emergency data not found for the patient'], 404);
             }
             return response()->json([
                 'patient_name' => $patientName,
