@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Drugs extends Model
 {
     use HasFactory;
-    protected $table = 'drugs'; // Update with your actual table name
-    protected $primaryKey = 'drug_id';
+    protected $table = 'drugs';
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'drug_id',
+        'id',
         'name',
     ];
 }

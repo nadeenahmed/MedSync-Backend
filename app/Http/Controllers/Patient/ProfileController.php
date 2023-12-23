@@ -20,6 +20,7 @@ class ProfileController extends Controller
             if (!$patient) {
                 return response()->json(['errors' => 'Patient not found'], 404);
             }
+            $user->update($request->all());
             $patient->update($request->all());
             $response=[
                 'user' => $user,

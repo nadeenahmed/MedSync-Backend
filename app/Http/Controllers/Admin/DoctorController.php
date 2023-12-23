@@ -33,12 +33,11 @@ class DoctorController extends Controller
         ]);
         $DoctorPersonalData = [
             'gender' => $request->input('gender'),
-            'age' => $request->input('age'),
-            'address' => $request->input('address'),
-            'phone' => $request->input('phone'),
-            'marital_status' => $request->input('marital_status'),
+            'years_of_exp' => $request->input('years_of_exp'),
+            'clinic_address' => $request->input('clinic_address'),
+            'clinic_phone' => $request->input('clinic_phone'),
+            'medical_speciality' => $request->input('medical_speciality'),
             'user_id' => $user->id,
-            //years of experience, speciality, clinic or hospital
         ];
         $doctor = Doctor::create($DoctorPersonalData);
         
@@ -52,18 +51,8 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::findOrFail($id);
         $user = User::findOrFail($doctor['user_id']);
-        $doctor->update([
-            'gender' => $request->input('gender', $doctor->gender),
-            'age' => $request->input('age', $doctor->age),
-            'address' => $request->input('address', $doctor->address),
-            'phone' => $request->input('phone', $doctor->phone),
-            'marital_status' => $request->input('marital_status', $doctor->marital_status),
-        ]);
-    
-        $user->update([
-            'name' => $request->input('name', $user->name),
-            'email' => $request->input('email', $user->email),
-        ]);
+        $doctor->update($request->all());
+        $user->update($request->all());
         $response = [
             'doctor' => $doctor,
             'user' =>  $user
