@@ -17,6 +17,7 @@ class BuildHomeController extends Controller
     {
         try{
             $user = $this->get_patient($request);
+            $patientName = $user->name;
             $patient = Patient::where('user_id', $user->id)->first();
             if (!$patient) {
                 return response()->json(['errors' => 'Patient not found'], 404);
@@ -25,7 +26,7 @@ class BuildHomeController extends Controller
             if ($existingEmergencyData) {
                 $existingEmergencyData->update($request->all());
                 $emergencyData = $existingEmergencyData;
-                return response()->json(['emergencyData' => $emergencyData],200);
+                return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);
             } else { $emergencyData = EmergencyData::create([
                 'patient_id' => $patient->id,
                 'systolic' => $request->input('systolic'),
@@ -37,7 +38,7 @@ class BuildHomeController extends Controller
                 'chronic_diseases_bad_habits' => $request->input('chronic_diseases_bad_habits'),
 
             ]);
-            return response()->json(['emergencyData' => $emergencyData],200);}
+            return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);}
 
            
         }catch (\Exception $e) {
