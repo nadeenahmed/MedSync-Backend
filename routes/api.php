@@ -55,8 +55,6 @@ Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
-Route::post('/auth/recaptcha',[RegisterController::class,'recaptcha'])->name('Recaptcha-API');
-
 //----------------email verification---------------
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
