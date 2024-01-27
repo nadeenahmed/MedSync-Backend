@@ -25,6 +25,7 @@ use App\Http\Controllers\Auth\{
 use App\Http\Controllers\Patient\{
     BuildHomeController,
     HomeController,
+    PatientSatisticsController,
     ProfileController,
     SettingsController,
 };
@@ -85,6 +86,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('build/home/screen',[BuildHomeController::class,'build']);
         Route::get('home/screen',[HomeController::class,'view']);
         Route::put('edit/profile',[ProfileController::class,'EditProfile']);
+        Route::get('Blood/Pressure/History',[PatientSatisticsController::class,'getBloodPressureHistory']);
+        Route::get('Blood/Sugar/History',[PatientSatisticsController::class,'getBloodSugarHistory']);
+        Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);
+        
         
         
 
