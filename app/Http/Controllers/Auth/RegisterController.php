@@ -23,16 +23,6 @@ use Illuminate\Support\Facades\Http;
 class RegisterController extends Controller
 {
     public function register(RegisterationRequest $request){
-        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret'   => config('services.recaptcha.secret_key'),
-            'response' => $request->input('g-recaptcha-response'),
-            'remoteip' => $request->ip(),
-        ]);
-    
-        if (!$response['success']) {
-            // If reCAPTCHA validation fails, return an error response
-            return response()->json(['error' => 'reCAPTCHA verification failed'], 422);
-        }
         try{
 
             $newuser = $request->validated();
@@ -168,8 +158,18 @@ class RegisterController extends Controller
         }
 
     }
+    public function recaptcha(Request $request){
+    $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret'   => config('services.recaptcha.secret_key'),
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
 
-
+    if (!$response['success']) {
+        // If reCAPTCHA validation fails, return an error response
+        return response()->json(['error' => 'reCAPTCHA verification failed'], 422);
+    }
+}
     public function logout(Request $request){
         try{
             auth()->user()->tokens()->delete();
