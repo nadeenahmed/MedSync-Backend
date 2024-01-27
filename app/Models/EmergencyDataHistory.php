@@ -4,15 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Patient;
-use App\Models\EmergencyDataHistory;
-use Illuminate\Support\Carbon;
+use App\Models\EmergencyData;
 
-class EmergencyData extends Model
+class EmergencyDataHistory extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'patient_id',
+        'emergency_data_id',
         'systolic',
         'diastolic',
         'blood_sugar',
@@ -25,13 +23,8 @@ class EmergencyData extends Model
         'weightHeight_change_date',
     ];
 
-    public function patient()
+    public function emergencyData()
     {
-        return $this->belongsTo(Patient::class);
-    }
-
-    public function history()
-    {
-        return $this->hasMany(EmergencyDataHistory::class ,'emergency_data_id');
+        return $this->belongsTo(EmergencyData::class , 'emergency_data_id');
     }
 }
