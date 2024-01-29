@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\LabTests;
+use App\Models\LabTest;
 class LabTestsController extends Controller
 {
     public function index()
     {
-        $labTests = LabTests::all();
+        $labTests = LabTest::all();
         return response()->json($labTests);
     }
 
@@ -20,19 +20,19 @@ class LabTestsController extends Controller
             'english_name' => 'required|string|max:255',
         ]);
     
-        $labTests = LabTests::create($validatedData);
+        $labTests = LabTest::create($validatedData);
     
         return response()->json($labTests, 201);
     }
 
     public function show($id)
     {
-        $labTests = LabTests::find($id);
+        $labTests = LabTest::find($id);
         return response()->json($labTests);    }
 
     public function update(Request $request, $id)
     {
-        $labTests = LabTests::findOrFail($id);
+        $labTests = LabTest::findOrFail($id);
 
         $validatedData = $request->validate([
             'arabic_name' => 'required|string|max:255',
@@ -45,7 +45,7 @@ class LabTestsController extends Controller
     }
     public function destroy($id)
     {
-        $labTests = LabTests::findOrFail($id);
+        $labTests = LabTest::findOrFail($id);
         $labTests->delete();
         $response = [
             'message' => 'Deleted Successfully',

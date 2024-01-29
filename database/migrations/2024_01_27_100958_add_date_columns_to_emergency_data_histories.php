@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('emergency_data_histories', function (Blueprint $table) {
-            $table->dateTime('bloodPressure_change_date')->nullable();
-            $table->dateTime('bloodSugar_change_date')->nullable();
-            $table->dateTime('weightHeight_change_date')->nullable();
-        });
+        // Schema::table('emergency_data_histories', function (Blueprint $table) {
+        //     $table->dateTime('bloodPressure_change_date')->nullable();
+        //     $table->dateTime('bloodSugar_change_date')->nullable();
+        //     $table->dateTime('weightHeight_change_date')->nullable();
+        // });
     }
 
     /**
@@ -23,10 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('emergency_data_histories', function (Blueprint $table) {
-            $table->dropColumn('bloodPressure_change_date');
-            $table->dropColumn('bloodSugar_change_date');
-            $table->dropColumn('weightHeight_change_date');
-        });
+        // Schema::table('emergency_data_histories', function (Blueprint $table) {
+        //     $table->dropColumn('bloodPressure_change_date');
+        //     $table->dropColumn('bloodSugar_change_date');
+        //     $table->dropColumn('weightHeight_change_date');
+        // });
     }
 };
