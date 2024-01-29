@@ -9,8 +9,10 @@ class LabTests extends Model
 {
     use HasFactory;
     protected $table = 'lab_tests';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'arabic_name',
         'english_name',
+        'reference_range',
     ];
 }
