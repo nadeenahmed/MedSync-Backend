@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('medical_histories', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->unsignedBigInteger('patient_id');
-        //     $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
-        //     $table->unsignedBigInteger('medical_speciality_id'); 
-        //     $table->foreign('medical_speciality_id')->references('id')->on('specialities');
-        //     $table->string('diagnosis');
-        //     $table->string('prescription')->nullable();
-        //     $table->string('reports')->nullable();
-        //     $table->string('files')->nullable();
-        //     $table->string('notes')->nullable();
-        //     $table->timestamps();
-        // });
+        Schema::create('medical_histories', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('patient_id');
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
+            $table->unsignedBigInteger('medical_speciality_id'); 
+            $table->foreign('medical_speciality_id')->references('id')->on('specialities');
+            $table->string('diagnosis');
+            $table->string('prescription')->nullable();
+            $table->string('reports')->nullable();
+            $table->string('files')->nullable();
+            $table->string('notes')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

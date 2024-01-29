@@ -26,14 +26,16 @@ class PatientSatisticsController extends Controller
             if (!$patient) {
                 return response()->json(['error' => 'Patient not found'], 404);
             }
-            $bloodPressureHistory = DB::table('emergency_data_histories')
-                ->join('emergency_data', 'emergency_data_histories.emergency_data_id', '=', 'emergency_data.id')
+            $bloodPressureHistory = DB::table('blood_pressure_changes')
+                ->join('emergency_data', 'blood_pressure_changes.emergency_data_id', '=', 'emergency_data.id')
                 ->where('emergency_data.patient_id', $patient->id)
-                ->orderByDesc('emergency_data_histories.bloodPressure_change_date')
+                ->orderByDesc('blood_pressure_changes.date')
+                ->orderByDesc('blood_pressure_changes.time')
                 ->select(
-                    'emergency_data_histories.bloodPressure_change_date',
-                    'emergency_data_histories.systolic',
-                    'emergency_data_histories.diastolic'
+                    'blood_pressure_changes.date',
+                    'blood_pressure_changes.time',
+                    'blood_pressure_changes.systolic',
+                    'blood_pressure_changes.diastolic'
                 )
                 ->get();
     

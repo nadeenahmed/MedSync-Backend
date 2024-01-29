@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\MedicalHistory;
 use App\Models\Patient;
 use App\Models\Speciality;
-use App\Models\LabTests;
+use App\Models\LabTest;
 use App\Models\Specialities;
+use GuzzleHttp\Promise\Create;
 
 class MedicalHistoryController extends Controller
 {
@@ -36,9 +37,23 @@ class MedicalHistoryController extends Controller
             'files' => $request->input('files'),
             'notes' => $request->input('notes'),
         ]);
+        $medicalRecord["Medical Speciality"] = $medicalSpeciality->english_name;
+        if ($request->has('lab_tests')) {
+            $labTestIds = json_decode($request->input('lab_tests'), true);
+    
+            if (is_array($labTestIds)) {
+                foreach ($labTestIds as $labTestId) {
+                    LabTestMedicalHistory::create([
+                        'lab_test_id' => $labTestId,
+                        'medical_history_id' => $medicalRecord->id,
+                    ]);
+                }
+            } else {
+                return response()->json(['error' => 'Invalid lab_tests format'], 400);
+            }
+        }
         return response()->json([
             'message' => 'Medical record added successfully',
-            
             'data' => $medicalRecord
         ], 201);
     }

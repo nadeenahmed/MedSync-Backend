@@ -21,8 +21,11 @@ class EmergencyData extends Model
         'blood_type',
         'chronic_diseases_bad_habits',
         'bloodPressure_change_date',
+        'bloodPressure_change_time',
         'bloodSugar_change_date',
+        'bloodSugar_change_time',
         'weightHeight_change_date',
+        'weightHeight_change_time',
     ];
 
     public function patient()
@@ -30,8 +33,13 @@ class EmergencyData extends Model
         return $this->belongsTo(Patient::class);
     }
 
-    public function history()
+    public function bloodpressurechange()
     {
-        return $this->hasMany(EmergencyDataHistory::class ,'emergency_data_id');
+        return $this->hasMany(BloodPressureChange::class ,'emergency_data_id');
+    }
+
+    public function bloodsugarchange()
+    {
+        return $this->hasMany(BloodSugarChange::class ,'emergency_data_id');
     }
 }
