@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Models\LabTestMedicalHistory;
 use Illuminate\Http\Request;
 use App\Models\MedicalHistory;
 use App\Models\Patient;
@@ -25,13 +26,28 @@ class MedicalHistoryController extends Controller
         }
         $medicalRecord = MedicalHistory::create([
             'patient_id' => $patient->id,
-            'speciality_id' => $request->input('speciality_id'),
+            'medical_speciality_id' => $request->input('medical_speciality_id'),
             'diagnosis' => $request->input('diagnosis'),
             'prescription' => $request->input('prescription'),
             'reports' => $request->input('reports'),
             'files' => $request->input('files'),
             'notes' => $request->input('notes'),
         ]);
+
+
+        if ($request->has('lab_tests')) {
+            $labTestIds = $request->input('lab_tests');
+            $labTests = LabTestMedicalHistory::find($labTestIds);
+
+            if ($labTests) {
+                // Attach lab tests to the medical record
+                foreach ($labTests as $labTest) {
+                    $medicalRecord->labTests()->attach($labTest);
+                }
+            }
+        }
+
+        
 
         return response()->json([
             'message' => 'Medical record added successfully',

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Model;
 
-class LabTestsMedicalHistory extends Pivot
+class LabTestMedicalHistory extends Pivot
 {
     use HasFactory;
 }

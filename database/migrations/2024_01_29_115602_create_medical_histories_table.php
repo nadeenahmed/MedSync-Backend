@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('medical_history', function (Blueprint $table) {
+        Schema::create('medical_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id');
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
@@ -24,15 +24,13 @@ return new class extends Migration
             $table->string('notes')->nullable();
             $table->timestamps();
         });
-
-       
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('medical_history');
+        Schema::dropIfExists('medical_histories');
     }
 };

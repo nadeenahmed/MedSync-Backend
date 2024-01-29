@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Specialities;
+use App\Models\Patient;
+use App\Models\LabTestMedicalHistory;
 
 class MedicalHistory extends Model
 {
@@ -32,6 +35,6 @@ class MedicalHistory extends Model
 
     public function labTests()
     {
-        return $this->belongsToMany(LabTests::class, 'lab_test_medical_history');
+        return $this->belongsToMany(LabTestMedicalHistory::class, 'lab_test_medical_histories');
     }
 }

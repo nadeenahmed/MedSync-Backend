@@ -10,14 +10,14 @@ use App\Models\Patient;
 
 class BuildHomeController extends Controller
 {
-    public function get_patient(Request $request)
+    public function index(Request $request)
     {
         return $request->user();
     }
     public function build(Request $request)
     {
         try{
-            $user = $this->get_patient($request);
+            $user = $this->index($request);
             $patientName = $user->name;
             $patient = Patient::where('user_id', $user->id)->first();
             if (!$patient) {
@@ -69,7 +69,7 @@ class BuildHomeController extends Controller
     }
 
     public function update(Request $request){
-        $user = $this->get_patient($request);
+        $user = $this->index($request);
         $patient = Patient::where('user_id', $user->id)->first();
         if (!$patient) {
             return response()->json(['error' => 'Patient not found'], 404);

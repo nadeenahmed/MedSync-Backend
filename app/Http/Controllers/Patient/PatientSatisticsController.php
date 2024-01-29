@@ -11,23 +11,25 @@ use Illuminate\Support\Facades\DB;
 
 class PatientSatisticsController extends Controller
 {
-    public function get_patient(Request $request)
+    public function index(Request $request)
     {
         return $request->user();
     }
     public function getBloodPressureHistory(Request $request)
     {
         try {
-            $user = $this->get_patient($request);
+            $user = $this->index($request);
+            if (!$user){
+                return response()->json(['error' => 'User not found'], 404);
+            }
             $patient = Patient::where('user_id', $user->id)->first();
-    
             if (!$patient) {
                 return response()->json(['error' => 'Patient not found'], 404);
             }
             $bloodPressureHistory = DB::table('emergency_data_histories')
                 ->join('emergency_data', 'emergency_data_histories.emergency_data_id', '=', 'emergency_data.id')
                 ->where('emergency_data.patient_id', $patient->id)
-                ->orderBy('emergency_data_histories.bloodPressure_change_date')
+                ->orderByDesc('emergency_data_histories.bloodPressure_change_date')
                 ->select(
                     'emergency_data_histories.bloodPressure_change_date',
                     'emergency_data_histories.systolic',
@@ -48,16 +50,18 @@ class PatientSatisticsController extends Controller
     public function getBWeightHistory(Request $request)
     {
         try {
-            $user = $this->get_patient($request);
+            $user = $this->index($request);
+            if (!$user){
+                return response()->json(['error' => 'User not found'], 404);
+            }
             $patient = Patient::where('user_id', $user->id)->first();
-    
             if (!$patient) {
                 return response()->json(['error' => 'Patient not found'], 404);
             }
             $weightHistory = DB::table('emergency_data_histories')
                 ->join('emergency_data', 'emergency_data_histories.emergency_data_id', '=', 'emergency_data.id')
                 ->where('emergency_data.patient_id', $patient->id)
-                ->orderBy('emergency_data_histories.weightHeight_change_date')
+                ->orderByDesc('emergency_data_histories.weightHeight_change_date')
                 ->select(
                     'emergency_data_histories.weightHeight_change_date',
                     'emergency_data_histories.weight',
@@ -77,16 +81,18 @@ class PatientSatisticsController extends Controller
     public function getBloodSugarHistory(Request $request)
     {
         try {
-            $user = $this->get_patient($request);
+            $user = $this->index($request);
+            if (!$user){
+                return response()->json(['error' => 'User not found'], 404);
+            }
             $patient = Patient::where('user_id', $user->id)->first();
-    
             if (!$patient) {
                 return response()->json(['error' => 'Patient not found'], 404);
             }
             $bloodSugarHistory = DB::table('emergency_data_histories')
                 ->join('emergency_data', 'emergency_data_histories.emergency_data_id', '=', 'emergency_data.id')
                 ->where('emergency_data.patient_id', $patient->id)
-                ->orderBy('emergency_data_histories.bloodSugar_change_date')
+                ->orderByDesc('emergency_data_histories.bloodSugar_change_date')
                 ->select(
                     'emergency_data_histories.bloodSugar_change_date',
                     'emergency_data_histories.blood_sugar',

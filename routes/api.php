@@ -91,7 +91,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('Blood/Pressure/History',[PatientSatisticsController::class,'getBloodPressureHistory']);
         Route::get('Blood/Sugar/History',[PatientSatisticsController::class,'getBloodSugarHistory']);
         Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);
-        Route::post('add/medical/record', [MedicalHistoryController::class, 'AddMedicalRecord']);
+        Route::post('add/medical/record', [MedicalHistoryController::class, 'AddMedicalHistory']);
         
         
 
