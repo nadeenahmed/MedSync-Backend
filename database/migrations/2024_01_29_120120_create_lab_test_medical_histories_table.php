@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lab_test_medical_histories', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('lab_test_id');
-            $table->unsignedBigInteger('medical_history_id');
-            $table->timestamps();
-            $table->foreign('lab_test_id')->references('id')->on('lab_tests')->onDelete('cascade');
-            $table->foreign('medical_history_id')->references('id')->on('medical_histories')->onDelete('cascade');
-        });
+        // Schema::create('lab_test_medical_histories', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('lab_test_id');
+        //     $table->unsignedBigInteger('medical_history_id');
+        //     $table->timestamps();
+        //     $table->foreign('lab_test_id')->references('id')->on('lab_tests')->onDelete('cascade');
+        //     $table->foreign('medical_history_id')->references('id')->on('medical_histories')->onDelete('cascade');
+        // });
 
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lab_test_medical_histories');
+        // Schema::dropIfExists('lab_test_medical_histories');
     }
 };

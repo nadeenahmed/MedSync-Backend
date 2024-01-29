@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('emergency_data_histories', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('emergency_data_id');
-            $table->foreign('emergency_data_id')->references('id')->on('emergency_data')->onDelete('cascade');
-            $table->timestamps();
-            $table->integer('systolic')->nullable();
-            $table->integer('diastolic')->nullable();
-            $table->integer('blood_sugar')->nullable();
-            $table->integer('weight')->nullable();
-            $table->integer('height')->nullable();
-            $table->string('blood_type')->nullable();
-            $table->json('chronic_diseases_bad_habits')->nullable();
-        });
+        // Schema::create('emergency_data_histories', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('emergency_data_id');
+        //     $table->foreign('emergency_data_id')->references('id')->on('emergency_data')->onDelete('cascade');
+        //     $table->timestamps();
+        //     $table->integer('systolic')->nullable();
+        //     $table->integer('diastolic')->nullable();
+        //     $table->integer('blood_sugar')->nullable();
+        //     $table->integer('weight')->nullable();
+        //     $table->integer('height')->nullable();
+        //     $table->string('blood_type')->nullable();
+        //     $table->json('chronic_diseases_bad_habits')->nullable();
+        // });
     }
 
     /**
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('emergency_data_histories');
+        // Schema::dropIfExists('emergency_data_histories');
     }
 };
