@@ -40,23 +40,38 @@ class MedicalHistoryController extends Controller
                 return response()->json(['error' => 'Medical speciality not found'], 404);
             }
             
-            $englishNames = json_decode($request->input('lab_tests_english'), true);
-            $arabicNames = json_decode($request->input('lab_tests_arabic'), true);
-            
-
-            $labTests = LabTest::where(function ($query) use ($englishNames, $arabicNames) {
-                foreach ($englishNames as $englishName) {
-                    $query->orWhere('english_name', $englishName);
-                }
-
-                foreach ($arabicNames as $arabicName) {
-                    $query->orWhere('arabic_name', $arabicName);
-                }
-            })->get();
-
+            $englishNames = json_decode($request->input('lab_tests_english'), true) ?? [];
+            $arabicNames = json_decode($request->input('lab_tests_arabic'), true) ?? [];
+    
+            $combinedLabTestNames = array_merge($englishNames, $arabicNames);
+            $combinedLabTestNames = array_filter($combinedLabTestNames);
+    
+            if (empty($combinedLabTestNames)) {
+                return response()->json(['error' => 'Lab tests not provided'], 400);
+            }
+    
+            $labTests = LabTest::whereIn('english_name', $combinedLabTestNames)
+                ->orWhereIn('arabic_name', $combinedLabTestNames)
+                ->get();
+    
             if ($labTests->isEmpty()) {
                 return response()->json(['error' => 'Lab tests not found'], 404);
             }
+            
+
+            // $labTests = LabTest::where(function ($query) use ($englishNames, $arabicNames) {
+            //     foreach ($englishNames as $englishName) {
+            //         $query->orWhere('english_name', $englishName);
+            //     }
+
+            //     foreach ($arabicNames as $arabicName) {
+            //         $query->orWhere('arabic_name', $arabicName);
+            //     }
+            // })->get();
+
+            // if ($labTests->isEmpty()) {
+            //     return response()->json(['error' => 'Lab tests not found'], 404);
+            // }
 
             $medicalRecord = MedicalHistory::create([
                 'patient_id' => $patient->id,
@@ -69,7 +84,7 @@ class MedicalHistoryController extends Controller
             ]);
             $medicalRecord["Medical Speciality en"] = $medicalSpeciality->english_name;
             $medicalRecord["Medical Speciality ar"] = $medicalSpeciality->arabic_name;
-            if ($request->has('lab_tests')) {
+            
                 $labTestIds = $labTests->pluck('id')->toArray();
                 //$labTestIds = json_decode($request->input('lab_tests'), true);
                 if (is_array($labTestIds)) {
@@ -80,12 +95,13 @@ class MedicalHistoryController extends Controller
                         ]);
                     }
                 } else {
-                    return response()->json(['error' => 'Invalid lab tests format'], 400);
+                     return response()->json(['error' => 'Invalid lab tests format'], 400);
                 }
-            }
+            
             return response()->json([
                 'message' => 'Medical Record Added Successfully',
-                'data' => $medicalRecord
+                'data' => $medicalRecord,
+                'lt' => $labTestIds
             ], 200);
 
         }catch (\Exception $e) {
