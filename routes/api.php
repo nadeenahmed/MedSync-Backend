@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
-    DrugController,
+    MedicationController,
     PatientController,
     AdminLoginController,
     DiagnosesController,
@@ -117,11 +117,11 @@ Route::prefix('admin')->group(function () {
     Route::put('update/doctor/{id}',[DoctorController::class,'update'])->name('Update-Doctors-API');
     Route::delete('delete/doctor/{id}',[DoctorController::class,'destroy'])->name('Delete-Doctors-API');
 
-    Route::get('get/all/drugs',[DrugController::class,'index'])->name('Get-Drugs-API');
-    Route::get('show/drug/{id}',[DrugController::class,'show'])->name('Get-Drug-API');
-    Route::post('create/drug',[DrugController::class,'create'])->name('Create-Drugs-API');
-    Route::put('update/drug/{id}',[DrugController::class,'update'])->name('Update-Drugs-API');
-    Route::delete('delete/drug/{id}',[DrugController::class,'destroy'])->name('Delete-Drugs-API');
+    Route::get('get/all/drugs',[MedicationController::class,'index'])->name('Get-Drugs-API');
+    Route::get('show/drug/{id}',[MedicationController::class,'show'])->name('Get-Drug-API');
+    Route::post('create/drug',[MedicationController::class,'create'])->name('Create-Drugs-API');
+    Route::put('update/drug/{id}',[MedicationController::class,'update'])->name('Update-Drugs-API');
+    Route::delete('delete/drug/{id}',[MedicationController::class,'destroy'])->name('Delete-Drugs-API');
 
     Route::get('get/all/diagnoses',[DiagnosesController::class,'index'])->name('Get-Diagnoses-API');
     Route::get('show/diagnose/{id}',[DiagnosesController::class,'show'])->name('Get-Diagnose-API');
