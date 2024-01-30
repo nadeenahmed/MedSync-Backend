@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Patient;
 use App\Http\Controllers\Controller;
 use App\Models\BloodPressureChange;
 use App\Models\BloodSugarChange;
+use App\Models\WeightHeightChange;
 use Illuminate\Http\Request;
 use App\Models\EmergencyData;
-use App\Models\EmergencyDataHistory;
 use App\Models\Patient;
+
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class BuildHomeController extends Controller
 {
@@ -39,12 +39,20 @@ class BuildHomeController extends Controller
                     'time' => $existingEmergencyData->bloodPressure_change_time,
                     'date' => $existingEmergencyData->bloodPressure_change_date,
                 ]);
-                // BloodSugarChange::create([
-                //     'emergency_data_id' => $existingEmergencyData->id,
-                //     'blood_sugar' => $existingEmergencyData->blood_sugar,
-                //     'time' => $existingEmergencyData->bloodSugar_change_time,
-                //     'date' => $existingEmergencyData->bloodSugar_change_date,
-                // ]);
+                BloodSugarChange::create([
+                    'emergency_data_id' => $existingEmergencyData->id,
+                    'blood_sugar' => $existingEmergencyData->blood_sugar,
+                    'time' => $existingEmergencyData->bloodSugar_change_time,
+                    'date' => $existingEmergencyData->bloodSugar_change_date,
+                ]);
+
+                WeightHeightChange::create([
+                    'emergency_data_id' => $existingEmergencyData->id,
+                    'weight' => $existingEmergencyData->weight,
+                    'height' => $existingEmergencyData->height,
+                    'time' => $existingEmergencyData->weightHeight_change_time,
+                    'date' => $existingEmergencyData->weightHeight_change_date,
+                ]);
                 $emergencyData = $existingEmergencyData;
                 return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);
             } else { $emergencyData = EmergencyData::create([
@@ -73,12 +81,20 @@ class BuildHomeController extends Controller
                 'date' => $emergencyData->bloodPressure_change_date,
             ]);
 
-            // BloodSugarChange::create([
-            //     'emergency_data_id' => $emergencyData->id,
-            //     'blood_sugar' => $emergencyData->blood_sugar,
-            //     'time' => $emergencyData->bloodSugar_change_time,
-            //     'date' => $emergencyData->bloodSugar_change_date,
-            // ]);
+            BloodSugarChange::create([
+                'emergency_data_id' => $emergencyData->id,
+                'blood_sugar' => $emergencyData->blood_sugar,
+                'time' => $emergencyData->bloodSugar_change_time,
+                'date' => $emergencyData->bloodSugar_change_date,
+            ]);
+
+            WeightHeightChange::create([
+                'emergency_data_id' => $emergencyData->id,
+                'weight' => $emergencyData->weight,
+                'height' => $emergencyData->height,
+                'time' => $emergencyData->weightHeight_change_time,
+                'date' => $emergencyData->weightHeight_change_date,
+            ]);
             return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);}
 
            
@@ -91,21 +107,21 @@ class BuildHomeController extends Controller
         }
     }
 
-    public function update(Request $request){
-        $user = $this->index($request);
-        $patient = Patient::where('user_id', $user->id)->first();
-        if (!$patient) {
-            return response()->json(['error' => 'Patient not found'], 404);
-        }
-        $emergencyData = EmergencyData::where('patient_id', $patient->id)->first();
+    // public function update(Request $request){
+    //     $user = $this->index($request);
+    //     $patient = Patient::where('user_id', $user->id)->first();
+    //     if (!$patient) {
+    //         return response()->json(['error' => 'Patient not found'], 404);
+    //     }
+    //     $emergencyData = EmergencyData::where('patient_id', $patient->id)->first();
 
-        if (!$emergencyData) {
-            return response()->json(['error' => 'Emergency data not found for the patient'], 404);
-        }
-        $emergencyData->update($request->all());
+    //     if (!$emergencyData) {
+    //         return response()->json(['error' => 'Emergency data not found for the patient'], 404);
+    //     }
+    //     $emergencyData->update($request->all());
 
-        return response()->json(['message' => 'Emergency data updated successfully', 
-        'emergencyData' => $emergencyData]);
-    }
+    //     return response()->json(['message' => 'Emergency data updated successfully', 
+    //     'emergencyData' => $emergencyData]);
+    // }
 }
 

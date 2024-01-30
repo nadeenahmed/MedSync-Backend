@@ -42,4 +42,9 @@ class EmergencyData extends Model
     {
         return $this->hasMany(BloodSugarChange::class ,'emergency_data_id');
     }
+
+    public function weightheightchange()
+    {
+        return $this->hasMany(WeightHeightChange::class ,'emergency_data_id');
+    }
 }
