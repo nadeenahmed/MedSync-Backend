@@ -15,4 +15,9 @@ class LabTest extends Model
         'english_name',
         'reference_range',
     ];
+
+    public function medicalHistories()
+    {
+        return $this->belongsToMany(MedicalHistory::class,'lab_test_medical_history', 'lab_test_id', 'medical_history_id');
+    }
 }

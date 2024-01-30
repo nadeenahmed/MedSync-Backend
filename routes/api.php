@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\{
     SpecialitiesController,
     SymptomsController,
     DoctorController,
+    MedicationController,
 };
 use App\Http\Controllers\Auth\{
     RegisterController,
@@ -93,6 +94,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('Blood/Sugar/History',[PatientSatisticsController::class,'getBloodSugarHistory']);
         Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);
         Route::post('add/medical/record', [MedicalHistoryController::class, 'AddMedicalHistory']);
+        Route::get('get/all/medical/record', [MedicalHistoryController::class, 'getAllMedicalRecords']);
         
         
 
