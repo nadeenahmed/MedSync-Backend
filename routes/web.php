@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Auth\FacebookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,16 @@ Route::get('/', function () {
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('google-auth');
  
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback']);
-
+Route::get('/auth/facebook',[FacebookController::class,'facebookpage'])->name('User-Facebook-API');
+Route::get('/auth/google/callback',[GoogleAuthController::class,'redirect'])->name('User-Facebook-callback-API');
 
 Route::post('/register',[RegisterController::class,'register'])->name('UserRegistrationAPI');
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
