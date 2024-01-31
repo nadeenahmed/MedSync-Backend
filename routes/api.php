@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
-    DrugController,
     PatientController,
     AdminLoginController,
     DiagnosesController,
@@ -12,6 +11,7 @@ use App\Http\Controllers\Admin\{
     SpecialitiesController,
     SymptomsController,
     DoctorController,
+    
 };
 use App\Http\Controllers\Auth\{
     RegisterController,
@@ -21,10 +21,12 @@ use App\Http\Controllers\Auth\{
     ResetPasswordController,
     GoogleAuthController,
     ResetPasswordRequestController,
+    FacebookController,
 };
 use App\Http\Controllers\Patient\{
     BuildHomeController,
     HomeController,
+    MedicalHistoryController,
     PatientSatisticsController,
     ProfileController,
     SettingsController,
@@ -55,8 +57,9 @@ Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
-
-//----------------email verification---------------
+Route::get('/auth/facebook',[FacebookController::class,'facebookpage'])->name('User-Facebook-API');
+Route::get('/auth/facebook/callback',[FacebookController::class,'facebookredirect'])->name('User-Facebook-callback-API');
+//----------------facebook verification---------------
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
 Route::get('/email-verification',[EmailVerificationController::class,'send_email_verification'])
@@ -89,7 +92,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('Blood/Pressure/History',[PatientSatisticsController::class,'getBloodPressureHistory']);
         Route::get('Blood/Sugar/History',[PatientSatisticsController::class,'getBloodSugarHistory']);
         Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);
-        
+        Route::post('add/medical/record', [MedicalHistoryController::class, 'AddMedicalHistory']);
+        Route::get('get/all/medical/record', [MedicalHistoryController::class, 'getAllMedicalRecords']);
         
         
 
@@ -117,11 +121,11 @@ Route::prefix('admin')->group(function () {
     Route::put('update/doctor/{id}',[DoctorController::class,'update'])->name('Update-Doctors-API');
     Route::delete('delete/doctor/{id}',[DoctorController::class,'destroy'])->name('Delete-Doctors-API');
 
-    Route::get('get/all/drugs',[DrugController::class,'index'])->name('Get-Drugs-API');
-    Route::get('show/drug/{id}',[DrugController::class,'show'])->name('Get-Drug-API');
-    Route::post('create/drug',[DrugController::class,'create'])->name('Create-Drugs-API');
-    Route::put('update/drug/{id}',[DrugController::class,'update'])->name('Update-Drugs-API');
-    Route::delete('delete/drug/{id}',[DrugController::class,'destroy'])->name('Delete-Drugs-API');
+    Route::get('get/all/drugs',[MedicationController::class,'index'])->name('Get-Drugs-API');
+    Route::get('show/drug/{id}',[MedicationController::class,'show'])->name('Get-Drug-API');
+    Route::post('create/drug',[MedicationController::class,'create'])->name('Create-Drugs-API');
+    Route::put('update/drug/{id}',[MedicationController::class,'update'])->name('Update-Drugs-API');
+    Route::delete('delete/drug/{id}',[MedicationController::class,'destroy'])->name('Delete-Drugs-API');
 
     Route::get('get/all/diagnoses',[DiagnosesController::class,'index'])->name('Get-Diagnoses-API');
     Route::get('show/diagnose/{id}',[DiagnosesController::class,'show'])->name('Get-Diagnose-API');
