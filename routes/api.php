@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\{
     SpecialitiesController,
     SymptomsController,
     DoctorController,
+    MedicationController,
     
 };
 use App\Http\Controllers\Auth\{
@@ -121,11 +122,11 @@ Route::prefix('admin')->group(function () {
     Route::put('update/doctor/{id}',[DoctorController::class,'update'])->name('Update-Doctors-API');
     Route::delete('delete/doctor/{id}',[DoctorController::class,'destroy'])->name('Delete-Doctors-API');
 
-    Route::get('get/all/drugs',[MedicationController::class,'index'])->name('Get-Drugs-API');
-    Route::get('show/drug/{id}',[MedicationController::class,'show'])->name('Get-Drug-API');
-    Route::post('create/drug',[MedicationController::class,'create'])->name('Create-Drugs-API');
-    Route::put('update/drug/{id}',[MedicationController::class,'update'])->name('Update-Drugs-API');
-    Route::delete('delete/drug/{id}',[MedicationController::class,'destroy'])->name('Delete-Drugs-API');
+    Route::get('get/all/medications',[MedicationController::class,'index'])->name('Get-Medications-API');
+    Route::get('show/medication/{id}',[MedicationController::class,'show'])->name('Get-Medication-API');
+    Route::post('create/medication',[MedicationController::class,'create'])->name('Create-Medication-API');
+    Route::put('update/medication/{id}',[MedicationController::class,'update'])->name('Update-Medication-API');
+    Route::delete('delete/medication/{id}',[MedicationController::class,'destroy'])->name('Delete-Medication-API');
 
     Route::get('get/all/diagnoses',[DiagnosesController::class,'index'])->name('Get-Diagnoses-API');
     Route::get('show/diagnose/{id}',[DiagnosesController::class,'show'])->name('Get-Diagnose-API');
