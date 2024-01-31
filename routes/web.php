@@ -24,9 +24,9 @@ Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('googl
  
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback']);
 Route::get('/auth/facebook',[FacebookController::class,'facebookpage'])->name('User-Facebook-API');
-Route::get('/auth/google/callback',[GoogleAuthController::class,'redirect'])->name('User-Facebook-callback-API');
+Route::get('/auth/facebook/callback',[FacebookController::class,'facebookredirect'])->name('User-Facebook-callback-API');
 
-Route::post('/register',[RegisterController::class,'register'])->name('UserRegistrationAPI');
+// Route::post('/register',[RegisterController::class,'register'])->name('UserRegistrationAPI');
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
