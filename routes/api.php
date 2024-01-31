@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\{
     SpecialitiesController,
     SymptomsController,
     DoctorController,
-    MedicationController,
+    
 };
 use App\Http\Controllers\Auth\{
     RegisterController,
