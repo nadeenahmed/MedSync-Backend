@@ -28,22 +28,21 @@ class MedicalHistoryController extends Controller
             if (!$patient) {
                 return response()->json(['error' => 'Patient not found'], 404);
             }
-            $englishName = $request->input('medical_speciality_english');
-            $arabicName = $request->input('medical_speciality_arabic');
+            $specialityEnglishName = $request->input('medical_speciality_english');
+            $specialityArabicName = $request->input('medical_speciality_arabic');
     
-            $medicalSpeciality = Specialities::where(function ($query) use ($englishName, $arabicName) {
-                $query->where('english_name', $englishName)
-                    ->orWhere('arabic_name', $arabicName);
+            $medicalSpeciality = Specialities::where(function ($query) use ($specialityEnglishName, $specialityArabicName) {
+                $query->where('english_name', $specialityEnglishName)
+                    ->orWhere('arabic_name', $specialityArabicName);
             })->first();
     
             if (!$medicalSpeciality) {
                 return response()->json(['error' => 'Medical speciality not found'], 404);
             }
             
-            $englishNames = json_decode($request->input('lab_tests_english'), true) ?? [];
-            $arabicNames = json_decode($request->input('lab_tests_arabic'), true) ?? [];
-    
-            $combinedLabTestNames = array_merge($englishNames, $arabicNames);
+            $labTestsEnglishNames = json_decode($request->input('lab_tests_english'), true) ?? [];
+            $labTestsArabicNames = json_decode($request->input('lab_tests_arabic'), true) ?? [];
+            $combinedLabTestNames = array_merge($labTestsEnglishNames, $labTestsArabicNames);
             $combinedLabTestNames = array_filter($combinedLabTestNames);
     
             if (empty($combinedLabTestNames)) {
@@ -58,21 +57,6 @@ class MedicalHistoryController extends Controller
                 return response()->json(['error' => 'Lab tests not found'], 404);
             }
             
-
-            // $labTests = LabTest::where(function ($query) use ($englishNames, $arabicNames) {
-            //     foreach ($englishNames as $englishName) {
-            //         $query->orWhere('english_name', $englishName);
-            //     }
-
-            //     foreach ($arabicNames as $arabicName) {
-            //         $query->orWhere('arabic_name', $arabicName);
-            //     }
-            // })->get();
-
-            // if ($labTests->isEmpty()) {
-            //     return response()->json(['error' => 'Lab tests not found'], 404);
-            // }
-
             $medicalRecord = MedicalHistory::create([
                 'patient_id' => $patient->id,
                 'medical_speciality_id' => $medicalSpeciality->id,
@@ -82,26 +66,23 @@ class MedicalHistoryController extends Controller
                 'files' => $request->input('files'),
                 'notes' => $request->input('notes'),
             ]);
-            $medicalRecord["Medical Speciality en"] = $medicalSpeciality->english_name;
-            $medicalRecord["Medical Speciality ar"] = $medicalSpeciality->arabic_name;
-            
-                $labTestIds = $labTests->pluck('id')->toArray();
-                //$labTestIds = json_decode($request->input('lab_tests'), true);
-                if (is_array($labTestIds)) {
-                    foreach ($labTestIds as $labTestId) {
-                        LabTestMedicalHistory::create([
-                            'lab_test_id' => $labTestId,
-                            'medical_history_id' => $medicalRecord->id,
-                        ]);
-                    }
-                } else {
-                     return response()->json(['error' => 'Invalid lab tests format'], 400);
+            $medicalRecord["Medical Speciality English"] = $medicalSpeciality->english_name;
+            $medicalRecord["Medical Speciality Arabic"] = $medicalSpeciality->arabic_name;
+            $labTestIds = $labTests->pluck('id')->toArray();
+            if (is_array($labTestIds)) {
+                foreach ($labTestIds as $labTestId) {
+                    LabTestMedicalHistory::create([
+                        'lab_test_id' => $labTestId,
+                        'medical_history_id' => $medicalRecord->id,
+                    ]);
                 }
-            
+            } else {
+                return response()->json(['error' => 'Invalid lab tests format'], 400);
+            }
+            $medicalRecord["Lab Tests"] = $labTests;
             return response()->json([
                 'message' => 'Medical Record Added Successfully',
                 'data' => $medicalRecord,
-                'lt' => $labTestIds
             ], 200);
 
         }catch (\Exception $e) {
@@ -127,33 +108,32 @@ class MedicalHistoryController extends Controller
 
            $medicalRecords = MedicalHistory::where('patient_id', $patient->id)->get();
 
-        // Fetch lab tests for each medical record using DB::table
-        foreach ($medicalRecords as $medicalRecord) {
-            $labTests = DB::table('lab_test_medical_history')
-                ->join('lab_tests', 'lab_test_medical_history.lab_test_id', '=', 'lab_tests.id')
-                ->where('lab_test_medical_history.medical_history_id', $medicalRecord->id)
-                ->select('lab_tests.*')
-                ->get();
+            foreach ($medicalRecords as $medicalRecord) {
+                $labTests = DB::table('lab_test_medical_history')
+                    ->join('lab_tests', 'lab_test_medical_history.lab_test_id', '=', 'lab_tests.id')
+                    ->where('lab_test_medical_history.medical_history_id', $medicalRecord->id)
+                    ->select('lab_tests.*')
+                    ->get();
 
-            // Add labTests property to the medical record
-            $medicalRecord->labTests = $labTests;
-        }
+                $medicalRecord->labTests = $labTests;
 
-        foreach ($medicalRecords as $medicalRecord) {
-            $labTests = DB::table('lab_test_medical_history')
-                ->join('lab_tests', 'lab_test_medical_history.lab_test_id', '=', 'lab_tests.id')
-                ->where('lab_test_medical_history.medical_history_id', $medicalRecord->id)
-                ->select('lab_tests.*')
-                ->get();
+                $speciality = DB::table('specialities')
+                ->join('medical_histories', 'medical_histories.medical_speciality_id', '=', 'specialities.id')
+                ->where('medical_histories.id', $medicalRecord->id)
+                ->select('english_name','arabic_name')
+                ->first();
 
-            // Add labTests property to the medical record
-            $medicalRecord->labTests = $labTests;
-        }
+                $medicalRecord["Medical Speciality English"]= $speciality ? $speciality->english_name : null;
+                $medicalRecord["Medical Speciality arabic"]= $speciality ? $speciality->arabic_name : null;
+            }
 
-            return response()->json([
-                'message' => 'Medical Records Retrieved Successfully',
-                'data' => $medicalRecords
-            ], 200);
+            
+            
+
+                return response()->json([
+                    'message' => 'Medical Records Retrieved Successfully',
+                    'data' => $medicalRecords
+                ], 200);
         } catch (\Exception $e) {
             $response = [
                 'message' => 'Failed to Retrieve Medical Records',
