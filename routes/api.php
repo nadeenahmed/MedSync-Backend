@@ -132,6 +132,7 @@ Route::prefix('admin')->group(function () {
     Route::post('create/diagnose',[DiagnosesController::class,'create'])->name('Create-Diagnoses-API');
     Route::put('update/diagnose/{id}',[DiagnosesController::class,'update'])->name('Update-Diagnoses-API');
     Route::delete('delete/diagnose/{id}',[DiagnosesController::class,'destroy'])->name('Delete-Diagnoses-API');
+    Route::delete('bulk-delete/diagnoses', [DiagnosesController::class, 'bulkDelete'])->name('Bulk-Delete-Diagnoses-API');;
 
     Route::get('get/all/treatments',[TreatmentsController::class,'index'])->name('Get-Treatments-API');
     Route::get('show/treatment/{id}',[TreatmentsController::class,'show'])->name('Get-Treatment-API');
