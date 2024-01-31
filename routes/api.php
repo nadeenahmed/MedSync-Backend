@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
-    MedicationController,
     PatientController,
     AdminLoginController,
     DiagnosesController,
@@ -59,7 +58,7 @@ Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
 Route::get('/auth/facebook',[FacebookController::class,'facebookpage'])->name('User-Facebook-API');
-Route::get('/auth/google/callback',[GoogleAuthController::class,'redirect'])->name('User-Facebook-callback-API');
+Route::get('/auth/facebook/callback',[FacebookController::class,'facebookredirect'])->name('User-Facebook-callback-API');
 //----------------facebook verification---------------
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
