@@ -64,12 +64,18 @@ class BuildHomeController extends Controller
                 'height' => $request->input('height'),
                 'blood_type' => $request->input('blood_type'),
                 'chronic_diseases_bad_habits' => $request->input('chronic_diseases_bad_habits'),
-                'bloodPressure_change_date' => Carbon::createFromFormat('d/m/y', $request->input('bloodPressure_change_date'))->format('Y-m-d'),
-                'bloodPressure_change_time' => Carbon::createFromFormat('H:i:s',$request->input('bloodPressure_change_time'))->format('h:i'),
-                'bloodSugar_change_date'=> Carbon::createFromFormat('d/m/Y', $request->input('bloodSugar_change_date'))->format('Y-m-d'),
-                'bloodSugar_change_time'=> Carbon::createFromFormat('H:i:s',$request->input('bloodSugar_change_time'))->format('h:i'),
-                'weightHeight_change_date'=> Carbon::createFromFormat('d/m/Y', $request->input('weightHeight_change_date'))->format('Y-m-d'),
-                'weightHeight_change_time'=> Carbon::createFromFormat('H:i:s',$request->input('weightHeight_change_time'))->format('h:i'),
+                'bloodPressure_change_date' => $request->input('bloodPressure_change_date'),
+                'bloodPressure_change_time' => $request->input('bloodPressure_change_time'),
+                'bloodSugar_change_date' => $request->input('bloodSugar_change_date'),
+                'bloodSugar_change_date' => $request->input('bloodSugar_change_date'),
+                'weightHeight_change_date' => $request->input('weightHeight_change_date'),
+                'weightHeight_change_time' => $request->input('weightHeight_change_time'),
+                // 'bloodPressure_change_date' => Carbon::createFromFormat('d/m/y', $request->input('bloodPressure_change_date'))->format('Y-m-d'),
+                // 'bloodPressure_change_time' => Carbon::createFromFormat('H:i:s',$request->input('bloodPressure_change_time'))->format('h:i'),
+                // 'bloodSugar_change_date'=> Carbon::createFromFormat('d/m/Y', $request->input('bloodSugar_change_date'))->format('Y-m-d'),
+                // 'bloodSugar_change_time'=> Carbon::createFromFormat('H:i:s',$request->input('bloodSugar_change_time'))->format('h:i'),
+                // 'weightHeight_change_date'=> Carbon::createFromFormat('d/m/Y', $request->input('weightHeight_change_date'))->format('Y-m-d'),
+                // 'weightHeight_change_time'=> Carbon::createFromFormat('H:i:s',$request->input('weightHeight_change_time'))->format('h:i'),
 
             ]);
 
@@ -95,6 +101,7 @@ class BuildHomeController extends Controller
                 'time' => $emergencyData->weightHeight_change_time,
                 'date' => $emergencyData->weightHeight_change_date,
             ]);
+
             return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);}
 
            
