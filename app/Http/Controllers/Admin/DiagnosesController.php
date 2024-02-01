@@ -50,4 +50,14 @@ class DiagnosesController extends Controller
         ];
         return response()->json($response, 200);
     }
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        Diagnoses::whereIn('id', $ids)->delete();
+        $response = [
+            'message' => 'Selected records deleted successfully',
+        ];
+        return response()->json($response, 200);
+    }
 }

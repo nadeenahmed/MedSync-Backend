@@ -43,6 +43,12 @@
                     {{ __('Log in') }}
                 </x-button>
             </div>
+            <div>
+                <a href="{{url('auth/facebook')}}">login with face</a>
+            </div>
+            <div>
+                <a href="{{url('auth/google')}}">login with google</a>
+            </div>
         </form>
     </x-authentication-card>
 </x-guest-layout>
