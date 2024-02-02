@@ -32,18 +32,19 @@ class GoogleAuthController extends Controller
             $user = User::where('email', $email)->first();
             if (!$user) {
                 // If the user doesn't exist, create a new user record
-                $user = new User();
-                $user->name = $name;
-                $user->email = $email;
                 $user = User::create([
-                    'email' => $user->getEmail(),
-                    'name' => $user->getName(),
-                    'password' => Hash::make($user->password),
+                    'email' => $email,
+                    'name' => $name,
                 ]);
+                Auth::login($user);
                  $user->save();
             }
-            
-            return response()->json(['user' => $user]);
+            $token = $user->createToken(request()->userAgent())->plainTextToken;
+            $response = [
+                'user' => $user,
+                'token' => $token
+            ];
+            return response()->json($response, 200);
         } else {
             return response()->json(['error' => 'Failed to fetch user information from Google'], 500);
  }
