@@ -36,7 +36,7 @@ class FacebookController extends Controller
                     'email' => $user->getEmail(),
                     'name' => $user->getName(),
                     'facebook_id' => $user->getId(),
-                    'password' => Hash::make($user->password), // Corrected password assignment
+                    'password' => Hash::make($user->password),
                 ]);
                 Auth::login($newUser);
                 $token = $newUser->createToken(request()->userAgent())->plainTextToken;
