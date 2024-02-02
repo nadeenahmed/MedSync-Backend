@@ -8,7 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\ValidationException;
-use App\Http\Controllers\Auth\Http;
+use Illuminate\Support\Facades\Http;
+
 
 class GoogleAuthController extends Controller
 {
