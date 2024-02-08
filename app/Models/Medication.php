@@ -14,4 +14,9 @@ class Medication extends Model
         'id',
         'name',
     ];
+
+    public function medicalHistories()
+    {
+        return $this->belongsToMany(MedicalHistory::class,'medication_medical_history', 'medication_id', 'medical_history_id');
+    }
 }
