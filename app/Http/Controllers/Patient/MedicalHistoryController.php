@@ -49,38 +49,41 @@ class MedicalHistoryController extends Controller
             }
 
             // patient provide lab tests     (optional)
-            $labTestsEnglishNames = json_decode($request->input('lab_tests_english'), true) ?? [];
-            $labTestsArabicNames = json_decode($request->input('lab_tests_arabic'), true) ?? [];
-            $combinedLabTestNames = array_merge($labTestsEnglishNames, $labTestsArabicNames);
+            $combinedLabTestNames = json_decode($request->input('lab_tests'), true) ?? [];
             $combinedLabTestNames = array_filter($combinedLabTestNames);
-            $labTests = LabTest::whereIn('english_name', $combinedLabTestNames)
-                ->orWhereIn('arabic_name', $combinedLabTestNames)
-                ->get();
+            
             // Check if any lab tests are not found
-            if (!empty($labTestsEnglishNames)) {
+            if (!empty($combinedLabTestNames)) {
+                $labTests = LabTest::whereIn('english_name', $combinedLabTestNames)
+                    ->orWhereIn('arabic_name', $combinedLabTestNames)
+                    ->get();
+    
                 $createdLabTests = [];
-                foreach ($labTestsEnglishNames as $labTestName) {
-                    $labTest = LabTest::firstOrCreate([
-                        'english_name' => $labTestName,
-                    ]);
-
-                    $createdLabTests[] = $labTest;
-                }
-            } elseif (!empty($labTestsArabicNames)) {
-                $createdLabTests = [];
-                foreach ($labTestsArabicNames as $labTestName) {
-                    $labTest = LabTest::firstOrCreate([
-                        'arabic_name' => $labTestName,
-                    ]);
-
+    
+                foreach ($combinedLabTestNames as $labTestName) {
+                    // Check if the lab test name is in English or Arabic
+                    $isEnglish = preg_match('/^[A-Za-z0-9\s]+$/', $labTestName);
+                    $isArabic = preg_match('/^[\p{Arabic}\s]+$/u', $labTestName);
+    
+                    // Create LabTest based on language
+                    if ($isEnglish) {
+                        $labTest = LabTest::firstOrCreate([
+                            'english_name' => $labTestName,
+                        ]);
+                    } elseif ($isArabic) {
+                        $labTest = LabTest::firstOrCreate([
+                            'arabic_name' => $labTestName,
+                        ]);
+                    } else {
+                        // Invalid lab test name format (neither English nor Arabic)
+                        return response()->json(['error' => 'Invalid lab test name format'], 400);
+                    }
+    
                     $createdLabTests[] = $labTest;
                 }
             }
 
-            $labTests = LabTest::whereIn('english_name', $labTestsEnglishNames)
-                ->orWhereIn('arabic_name', $labTestsArabicNames)
-                ->get();
-
+           
             // patient provide diagnosis     (required)
             $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
             $combinedDiagnosisNames = array_filter($diagnosisNames);
