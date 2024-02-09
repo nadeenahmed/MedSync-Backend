@@ -36,8 +36,11 @@ class MedicalHistoryController extends Controller
 
 
             // patient add medical speciality    *required*
-            $specialityEnglishName = $request->input('medical_speciality_english');
-            $specialityArabicName = $request->input('medical_speciality_arabic');
+            // $specialityEnglishName = $request->input('medical_speciality_english');
+            // $specialityArabicName = $request->input('medical_speciality_arabic');
+
+            $specialityEnglishName = str_replace('"', '', $request->input('medical_speciality_english'));
+            $specialityArabicName = str_replace('"', '', $request->input('medical_speciality_arabic'));
 
             // patient could provide arabic or english name but not both
             $medicalSpeciality = Specialities::where(function ($query) use ($specialityEnglishName, $specialityArabicName) {
