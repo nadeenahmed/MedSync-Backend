@@ -59,6 +59,7 @@ class RegisterController extends Controller
                 ];
 
                 return response()->json($response,200);
+                //$user->notify(new RegisterationNotification());
             } elseif ($newuser['role'] === 'doctor') {
                 $doctor = Doctor::create([
                     'user_id' => $user->id,
