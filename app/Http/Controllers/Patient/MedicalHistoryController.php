@@ -458,6 +458,60 @@ class MedicalHistoryController extends Controller
         }
     }
 
+    public function deleteMedicalRecord($id)
+    {
+        // Find the medical record by ID
+        $medicalRecord = MedicalHistory::find($id);
+
+        // Check if the medical record exists
+        if (!$medicalRecord) {
+            return response()->json(['message' => 'Medical record not found'], 404);
+        }
+
+        // Delete the medical record
+        $medicalRecord->delete();
+
+        // Respond with a success message
+        return response()->json(['message' => 'Medical record deleted successfully']);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $medicalHistory = MedicalHistory::find($id);
+
+        // Check if the medical history record exists
+        if (!$medicalHistory) {
+            return response()->json(['message' => 'Medical history record not found'], 404);
+        }
+
+
+        // Update the medical history record with the validated data
+        $medicalHistory->update($request->all());
+
+        if ($request->has('medications')) {
+            $medicalHistory->medications()->update($request->input('medications'));
+        }
+
+        // Update lab tests
+        if ($request->has('labTests')) {
+            $medicalHistory->labTests()->update($request->input('lab_tests'));
+        }
+
+        // Update diagnoses
+        if ($request->has('diagnosis')) {
+            $medicalHistory->diagnosis()->update($request->input('diagnosis'));
+        }
+
+        // Respond with the updated medical history record
+        return response()->json(['message' => 'Medical history record and related records updated successfully', 'data' => $medicalHistory]);
+    }
+
+       
+    
+
+
+
+
     // public function sendWhatsAppMessage()
     // {
 
