@@ -26,7 +26,7 @@ class MedicalHistoryController extends Controller
     }
     public function AddMedicalHistory(Request $request)
     {
-        try {
+       
 
             $user = $this->index($request);
             $patient = Patient::where('user_id', $user->id)->first();
@@ -199,13 +199,7 @@ class MedicalHistoryController extends Controller
                 'message' => 'Medical Record Added Successfully',
                 'data' => $medicalRecord,
             ], 200);
-        } catch (\Exception $e) {
-            $response = [
-                'message' => 'Faild to Add Medical Record',
-                'error' => $e->getMessage(),
-            ];
-            return response()->json($response, 500);
-        }
+       
     }
 
     public function getAllMedicalRecords(Request $request)
@@ -314,14 +308,15 @@ class MedicalHistoryController extends Controller
 
     public function filterMedicalHistoryBySpecialty(Request $request)
     {
-        try {
+        
             $user = $this->index($request);
             $patient = Patient::where('user_id', $user->id)->first();
             if (!$patient) {
                 return response()->json(['error' => 'Patient not found'], 404);
             }
-            $specialityEnglishName = $request->input('medical_speciality_english');
-            $specialityArabicName = $request->input('medical_speciality_arabic');
+            $specialityEnglishName = str_replace('"', '', $request->input('medical_speciality_english'));
+            $specialityArabicName = str_replace('"', '', $request->input('medical_speciality_arabic'));
+            
 
             $medicalSpeciality = Specialities::where(function ($query) use ($specialityEnglishName, $specialityArabicName) {
                 $query->where('english_name', $specialityEnglishName)
@@ -368,13 +363,7 @@ class MedicalHistoryController extends Controller
                 'message' => 'Medical History Filtered Successfully',
                 'data' => $filteredMedicalHistory,
             ], 200);
-        } catch (\Exception $e) {
-            $response = [
-                'message' => 'Failed to Filter Medical History',
-                'error' => $e->getMessage(),
-            ];
-            return response()->json($response, 500);
-        }
+        
     }
 
 
