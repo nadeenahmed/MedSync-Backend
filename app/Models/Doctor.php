@@ -13,14 +13,22 @@ class Doctor extends Model
     protected $fillable = [
         'user_id',
         'gender',
-        'years_of_exp',
-        'clinic_address',
-        'clinic_phone',
-        'medical_speciality',
+        'years_of_experience',
+        'medical_degree',
+        'university',
+        'speciality_id',
+        'medical_board_organization',
+        'licence_information',
+        'phone',
+        'profile_image',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function speciality() {
+        return $this->belongsTo(Specialities::class);
     }
 }
