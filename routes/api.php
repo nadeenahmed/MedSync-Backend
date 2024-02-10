@@ -56,10 +56,11 @@ use App\Http\Controllers\EmailCheckController;
 Route::post('/register',[RegisterController::class,'register'])->name('User-Registration-API');
 Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
 
-Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
-Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
-Route::get('/auth/facebook',[FacebookController::class,'facebookpage'])->name('User-Facebook-API');
-Route::get('/auth/facebook/callback',[FacebookController::class,'facebookredirect'])->name('User-Facebook-callback-API');
+Route::post('/auth/google-token',[GoogleAuthController::class,'handleGoogleCallback'])->name('User-Google-API');
+// Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
+// Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
+// Route::get('/auth/facebook',[FacebookController::class,'facebookpage'])->name('User-Facebook-API');
+// Route::get('/auth/facebook/callback',[FacebookController::class,'facebookredirect'])->name('User-Facebook-callback-API');
 //----------------facebook verification---------------
 Route::post('/check-email', [EmailCheckController::class, 'checkEmail'])->name('Checking-Email-API');
 Route::post('/resend-email-verification', [EmailVerificationController::class, 'ResendEmailVerification']);
@@ -80,7 +81,7 @@ Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 
 //----------------reset password---------------
 
-
+Route::get('/send-whatsapp', [MedicalHistoryController::class, 'sendWhatsAppMessage']);
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -95,6 +96,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);
         Route::post('add/medical/record', [MedicalHistoryController::class, 'AddMedicalHistory']);
         Route::get('get/all/medical/record', [MedicalHistoryController::class, 'getAllMedicalRecords']);
+        Route::post('filter/by/speciality',[MedicalHistoryController::class,'filterMedicalHistoryBySpecialty']);
+        Route::get('get/medical/record/{medicalRecordId}', [MedicalHistoryController::class,'getMedicalRecordDetails']);
+        
         
         
 
