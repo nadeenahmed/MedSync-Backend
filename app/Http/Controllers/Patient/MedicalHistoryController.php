@@ -56,7 +56,7 @@ class MedicalHistoryController extends Controller
             $combinedLabTestNames = array_filter($combinedLabTestNames);
             
             // Check if any lab tests are not found
-            if (!empty($combinedLabTestNames)) {
+            
                 $labTests = LabTest::whereIn('english_name', $combinedLabTestNames)
                     ->orWhereIn('arabic_name', $combinedLabTestNames)
                     ->get();
@@ -84,7 +84,7 @@ class MedicalHistoryController extends Controller
     
                     $createdLabTests[] = $labTest;
                 }
-            }
+            
 
            
             // patient provide diagnosis     (required)
