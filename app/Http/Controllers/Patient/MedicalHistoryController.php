@@ -93,7 +93,6 @@ class MedicalHistoryController extends Controller
             // if (empty($combinedDiagnosisNames)) {
             //     return response()->json(['error' => 'Diagnosis not provided'], 400);
             // }
-
             // if (!empty($combinedDiagnosisNames)) {
                 $createdDiagnosis = [];
 
