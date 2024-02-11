@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('emergency_data', function (Blueprint $table) {
-            $table->date('bloodPressure_change_date')->nullable();
-            $table->Time('bloodPressure_change_time')->nullable();
-            $table->date('bloodSugar_change_date')->nullable();
-            $table->Time('bloodSugar_change_time')->nullable();
-            $table->date('weightHeight_change_date')->nullable();
-            $table->Time('weightHeight_change_time')->nullable();
-        });
+        // Schema::table('emergency_data', function (Blueprint $table) {
+        //     $table->date('bloodPressure_change_date')->nullable();
+        //     $table->Time('bloodPressure_change_time')->nullable();
+        //     $table->date('bloodSugar_change_date')->nullable();
+        //     $table->Time('bloodSugar_change_time')->nullable();
+        //     $table->date('weightHeight_change_date')->nullable();
+        //     $table->Time('weightHeight_change_time')->nullable();
+        // });
     }
 
     /**
