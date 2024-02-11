@@ -88,27 +88,27 @@ class MedicalHistoryController extends Controller
 
            
             // patient provide diagnosis     (required)
-            // $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
-            // $combinedDiagnosisNames = array_filter($diagnosisNames);
+            $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
+            $combinedDiagnosisNames = array_filter($diagnosisNames);
             // if (empty($combinedDiagnosisNames)) {
             //     return response()->json(['error' => 'Diagnosis not provided'], 400);
             // }
 
             // if (!empty($combinedDiagnosisNames)) {
-            //     $createdDiagnosis = [];
+                $createdDiagnosis = [];
 
-            //     foreach ($combinedDiagnosisNames as $diagnosisName) {
-            //         $diagnosis = Diagnoses::firstOrCreate(['name' => $diagnosisName]);
-            //         $createdDiagnosis[] = $diagnosis;
-            //     }
-            // }
+                foreach ($combinedDiagnosisNames as $diagnosisName) {
+                    $diagnosis = Diagnoses::firstOrCreate(['name' => $diagnosisName]);
+                    $createdDiagnosis[] = $diagnosis;
+                }
+            //}
 
-            // $Diagnosis = Diagnoses::whereIn('name', $combinedDiagnosisNames)->get();
+            $Diagnosis = Diagnoses::whereIn('name', $combinedDiagnosisNames)->get();
 
-            // // Check if any diagnoses are not found
-            // if (count($combinedDiagnosisNames) !== count($Diagnosis)) {
-            //     return response()->json(['error' => 'Some Diagnoses not found or could not be created'], 404);
-            // }
+            // Check if any diagnoses are not found
+            if (count($combinedDiagnosisNames) !== count($Diagnosis)) {
+                return response()->json(['error' => 'Some Diagnoses not found or could not be created'], 404);
+            }
 
             // patient provide medication     (optional)
             $medicationNames = json_decode($request->input('medication_name'), true) ?? [];
@@ -140,23 +140,23 @@ class MedicalHistoryController extends Controller
                     "arabic name" => $medicalSpeciality->arabic_name,
                 ];
             //display diagnosis
-            // $DiagnosisIds = $Diagnosis->pluck('id')->toArray();
-            // if (is_array($DiagnosisIds)) {
-            //     foreach ($DiagnosisIds as $DiagnosisId) {
-            //         DiagnosesMedicalHistory::create([
-            //             'diagnosis_id' => $DiagnosisId,
-            //             'medical_history_id' => $medicalRecord->id,
-            //         ]);
-            //     }
-            // } else {
-            //     return response()->json(['error' => 'Invalid Diagnosis format'], 400);
-            // }
-            // $medicalRecord["Diagnosis"] = $Diagnosis->map(function ($Diagnoses) {
-            //     return [
-            //         'id' => $Diagnoses->id,
-            //         'name' => trim($Diagnoses->name),
-            //     ];
-            // })->toArray();
+            $DiagnosisIds = $Diagnosis->pluck('id')->toArray();
+            if (is_array($DiagnosisIds)) {
+                foreach ($DiagnosisIds as $DiagnosisId) {
+                    DiagnosesMedicalHistory::create([
+                        'diagnosis_id' => $DiagnosisId,
+                        'medical_history_id' => $medicalRecord->id,
+                    ]);
+                }
+            } else {
+                return response()->json(['error' => 'Invalid Diagnosis format'], 400);
+            }
+            $medicalRecord["Diagnosis"] = $Diagnosis->map(function ($Diagnoses) {
+                return [
+                    'id' => $Diagnoses->id,
+                    'name' => trim($Diagnoses->name),
+                ];
+            })->toArray();
             //display labtests
             $labTestIds = $labTests->pluck('id')->toArray();
             if (is_array($labTestIds)) {
