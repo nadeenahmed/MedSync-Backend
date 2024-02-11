@@ -24,6 +24,9 @@ use App\Http\Controllers\Auth\{
     ResetPasswordRequestController,
     FacebookController,
 };
+use App\Http\Controllers\Doctor\{
+    DoctorDataController ,
+};
 use App\Http\Controllers\Patient\{
     BuildHomeController,
     HomeController,
@@ -103,6 +106,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         
         
 
+    });
+
+
+    Route::prefix('doctor')->group(function () {
+        Route::post('fill/data',[DoctorDataController::class,'Create']);
     });
     
     
