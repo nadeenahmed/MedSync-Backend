@@ -46,6 +46,10 @@ class PatientSatisticsController extends Controller
                 )
                 ->distinct()
                 ->get();
+
+                if($bloodPressureHistory->isEmpty()){
+                    return response()->json(['message' => 'No blood pressure history available for this patient.'], 200);
+                }
     
             return response()->json(['Blood Pressure History' => $bloodPressureHistory], 200);
         } catch (\Exception $e) {
@@ -88,6 +92,9 @@ class PatientSatisticsController extends Controller
                 )
                 ->distinct()
                 ->get();
+                if($weightHistory->isEmpty()){
+                    return response()->json(['message' => 'No weight history available for this patient.'], 200);
+                }
     
             return response()->json(['Weight History' => $weightHistory], 200);
         } catch (\Exception $e) {
@@ -129,6 +136,9 @@ class PatientSatisticsController extends Controller
                 )
                 ->distinct()
                 ->get();
+                if($bloodSugarHistory->isEmpty()){
+                    return response()->json(['message' => 'No blood sugar history available for this patient.'], 200);
+                }
     
             return response()->json(['Blood Sugar History' => $bloodSugarHistory], 200);
         } catch (\Exception $e) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Patient\BuildEmergencyDataRequest;
 use App\Models\BloodPressureChange;
 use App\Models\BloodSugarChange;
 use App\Models\WeightHeightChange;
@@ -18,7 +19,7 @@ class BuildHomeController extends Controller
     {
         return $request->user();
     }
-    public function build(Request $request)
+    public function build(BuildEmergencyDataRequest $request)
     {
         try{
             $user = $this->index($request);
@@ -53,12 +54,22 @@ class BuildHomeController extends Controller
                     'time' => $existingEmergencyData->weightHeight_change_time,
                     'date' => $existingEmergencyData->weightHeight_change_date,
                 ]);
+                $systolic = $existingEmergencyData->systolic;
+                $diastolic = $existingEmergencyData->diastolic;
+                $results = $this->getColorBasedOnBloodPressure($systolic,$diastolic);
                 $emergencyData = $existingEmergencyData;
+                $emergencyData['color'] = $results['color'];
+                $emergencyData['color description'] = $results['description'];
+
+                
                 return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);
-            } else { $emergencyData = EmergencyData::create([
+            } else { 
+                $systolic = $request->input('systolic');
+                $diastolic = $request->input('diastolic');
+                $emergencyData = EmergencyData::create([
                 'patient_id' => $patient->id,
-                'systolic' => $request->input('systolic'),
-                'diastolic' => $request->input('diastolic'),
+                'systolic' => $systolic,
+                'diastolic' => $diastolic,
                 'blood_sugar' => $request->input('blood_sugar'),
                 'weight' => $request->input('weight'),
                 'height' => $request->input('height'),
@@ -67,7 +78,7 @@ class BuildHomeController extends Controller
                 'bloodPressure_change_date' => $request->input('bloodPressure_change_date'),
                 'bloodPressure_change_time' => $request->input('bloodPressure_change_time'),
                 'bloodSugar_change_date' => $request->input('bloodSugar_change_date'),
-                'bloodSugar_change_date' => $request->input('bloodSugar_change_date'),
+                'bloodSugar_change_time' => $request->input('bloodSugar_change_time'),
                 'weightHeight_change_date' => $request->input('weightHeight_change_date'),
                 'weightHeight_change_time' => $request->input('weightHeight_change_time'),
                 // 'bloodPressure_change_date' => Carbon::createFromFormat('d/m/y', $request->input('bloodPressure_change_date'))->format('Y-m-d'),
@@ -101,7 +112,9 @@ class BuildHomeController extends Controller
                 'time' => $emergencyData->weightHeight_change_time,
                 'date' => $emergencyData->weightHeight_change_date,
             ]);
-
+            $result = $this->getColorBasedOnBloodPressure($systolic,$diastolic);
+            $emergencyData['color'] = $result['color'];
+            $emergencyData['color description'] = $result['description'];
             return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);}
 
            
@@ -130,5 +143,61 @@ class BuildHomeController extends Controller
     //     return response()->json(['message' => 'Emergency data updated successfully', 
     //     'emergencyData' => $emergencyData]);
     // }
+
+    public function getColorBasedOnBloodPressure($systolic, $diastolic)
+    {
+        // Define the blood pressure ranges and stages
+        $ranges = [
+            'normal' => ['systolic' => [90, 120], 'diastolic' => [60, 80]],
+            'elevated' => ['systolic' => [120, 129], 'diastolic' => [60, 80]],
+            'stage1' => ['systolic' => [130, 139], 'diastolic' => [80, 89]],
+            'stage2' => ['systolic' => [140, 180], 'diastolic' => [90, 120]],
+        ];
+
+        // Check if it's in the Crisis range
+        $crisisSystolicInRange = $this->isInRange($systolic, [180, null]);
+        $crisisDiastolicInRange = $this->isInRange($diastolic, [120, null]);
+
+        if ($crisisSystolicInRange || $crisisDiastolicInRange) {
+            return $this->getColorForStage('crisis');
+        }
+
+        
+        foreach ($ranges as $stage => $range) {
+            $systolicInRange = $this->isInRange($systolic, $range['systolic']);
+            $diastolicInRange = $this->isInRange($diastolic, $range['diastolic']);
+
+            if ($systolicInRange && $diastolicInRange) {
+                return $this->getColorForStage($stage);
+            }
+        }
+
+        return $this->getColorForStage('less_than_normal');
+    }
+
+    public function isInRange($value, $range)
+    {
+        return ($range[0] === null || $value >= $range[0]) && ($range[1] === null || $value <= $range[1]);
+    }
+
+    public function getColorForStage($stage)
+    {
+        $stageInfo = [
+            'normal' => ['color' => 'green', 'description' => 'Normal'],
+            'elevated' => ['color' => 'yellow', 'description' => 'Elevated'],
+            'stage1' => ['color' => 'orange', 'description' => 'High Blood Pressure'],
+            'stage2' => ['color' => 'darkorange', 'description' => 'Very High Blood Pressure'],
+            'crisis' => ['color' => 'red', 'description' => 'Crisis'],
+            'less_than_normal' => ['color' => 'lightgreen', 'description' => 'Less than Normal'],
+        ];
+
+        
+        return $stageInfo[$stage] ?? $stageInfo['less_than_normal'];
+    }
+
+
+    
+
+
 }
 

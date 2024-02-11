@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Specialities;
 use App\Models\Patient;
 use App\Models\LabTest;
-use App\Models\LabTestMedicalHistory;
+use App\Models\Medication;
+
 
 class MedicalHistory extends Model
 {
@@ -16,11 +17,9 @@ class MedicalHistory extends Model
     protected $fillable = [
         'patient_id',
         'medical_speciality_id',
-        'diagnosis',
-        'prescription',
-        'reports',
-        'files',
+        'diagnosis_id',
         'notes',
+        'by_who',
     ];
 
     
@@ -37,5 +36,13 @@ class MedicalHistory extends Model
     public function labTests()
     {
         return $this->belongsToMany(LabTest::class , 'lab_test_medical_history', 'lab_test_id', 'medical_history_id');
+    }
+    public function diagnosis()
+    {
+        return $this->belongsToMany(Diagnoses::class , 'diagnosis_medical_history', 'diagnosis_id', 'medical_history_id');
+    }
+    public function medications()
+    {
+        return $this->belongsToMany(Medication::class , 'medication_medical_history', 'medication_id', 'medical_history_id');
     }
 }
