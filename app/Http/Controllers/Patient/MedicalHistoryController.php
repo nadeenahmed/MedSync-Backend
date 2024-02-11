@@ -47,13 +47,28 @@ class MedicalHistoryController extends Controller
                 $query->where('english_name', $specialityEnglishName)
                     ->orWhere('arabic_name', $specialityArabicName);
             })->first();
-            if (!$medicalSpeciality) {
-                return response()->json(['error' => 'Medical speciality not found'], 404);
-            }
+            // if (!$medicalSpeciality) {
+            //     return response()->json(['error' => 'Medical speciality not found'], 404);
+            // }
+           // Get the 'lab_tests' input from the request
 
-            // patient provide lab tests     (optional)
-            $combinedLabTestNames = json_decode($request->input('lab_tests'), true) ?? [];
-            $combinedLabTestNames = array_filter($combinedLabTestNames);
+            $labTestsInput = $request->input('lab_tests');
+
+            // Check if the input is not empty
+            if (!empty($labTestsInput)) {
+                // Trim whitespace and remove enclosing square brackets if present
+                $labTestsInput = trim($labTestsInput, '[]');
+            }
+            // Split the input into an array based on commas
+            $labTestsArray = explode(',', $labTestsInput);
+            // Remove any leading or trailing whitespaces from each element
+            $labTestsArray = array_map('trim', $labTestsArray);
+            // Filter out any empty values from the array
+            $combinedLabTestNames = array_filter($labTestsArray);
+
+
+
+
             
             // Check if any lab tests are not found
             
@@ -84,12 +99,27 @@ class MedicalHistoryController extends Controller
     
                     $createdLabTests[] = $labTest;
                 }
+
+
+            $diagnosisInput = $request->input('diagnosis_name');
+
+            // Check if the input is not empty
+            if (!empty($diagnosisInput)) {
+                // Trim whitespace and remove enclosing square brackets if present
+                $diagnosisInput = trim($diagnosisInput, '[]');
+            }
+            // Split the input into an array based on commas
+            $diagnosisArray = explode(',', $diagnosisInput);
+            // Remove any leading or trailing whitespaces from each element
+            $diagnosisArray = array_map('trim', $diagnosisArray);
+            // Filter out any empty values from the array
+            $combinedDiagnosisNames = array_filter($diagnosisArray);
             
 
            
             // patient provide diagnosis     (required)
-            $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
-            $combinedDiagnosisNames = array_filter($diagnosisNames);
+            // $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
+            // $combinedDiagnosisNames = array_filter($diagnosisNames);
             // if (empty($combinedDiagnosisNames)) {
             //     return response()->json(['error' => 'Diagnosis not provided'], 400);
             // }
@@ -110,15 +140,30 @@ class MedicalHistoryController extends Controller
             }
 
             // patient provide medication     (optional)
-            $medicationNames = json_decode($request->input('medication_name'), true) ?? [];
-            $combinedMedicationNames = array_filter($medicationNames);
-            if (!empty($combinedMedicationNames)) {
+            // $medicationNames = json_decode($request->input('medication_name'), true) ?? [];
+            // $combinedMedicationNames = array_filter($medicationNames);
+
+            $MedicationInput = $request->input('medication_name');
+
+            // Check if the input is not empty
+            if (!empty($MedicationInput)) {
+                // Trim whitespace and remove enclosing square brackets if present
+                $MedicationInput = trim($MedicationInput, '[]');
+            }
+            // Split the input into an array based on commas
+            $MedicationArray = explode(',', $MedicationInput);
+            // Remove any leading or trailing whitespaces from each element
+            $MedicationArray = array_map('trim', $MedicationArray);
+            // Filter out any empty values from the array
+            $combinedMedicationNames = array_filter($MedicationArray);
+
+           // if (!empty($combinedMedicationNames)) {
                 $createdMedications = [];
                 foreach ($combinedMedicationNames as $medicationName) {
                     $medication = Medication::firstOrCreate(['name' => $medicationName]);
                     $createdMedications[] = $medication;
                 }
-            }
+            //}
             $Medications = Medication::whereIn('name', $combinedMedicationNames)->get();
             // Check if any medications are not found
             if (count($combinedMedicationNames) !== count($Medications)) {
