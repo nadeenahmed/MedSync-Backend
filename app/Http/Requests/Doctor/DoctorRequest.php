@@ -22,13 +22,15 @@ class DoctorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'speciality_id' => 'required|exists:specialities,id',
-            'years_of_experience' => 'numeric',
+           // 'speciality_id' => 'required|exists:specialities,id',
+            'years_of_experience' => 'nullable|numeric',
             'medical_degree' => 'required|string',
             'university' => 'required|string',
-            'medical_board_organization' => 'string',
-            'licence_information' => 'required|string', // Adjust validation based on your file storage solution
-            
+            'medical_board_organization' => 'nullable|string',
+            'licence_information' => 'required|string',
+            'gender' => 'nullable|string', 
+            'phone' => 'nullable|string',
+            'profile_image' => 'nullable|string',  
         ];
     }
 }
