@@ -172,10 +172,11 @@ class MedicalHistoryController extends Controller
             }
 
             //create and display medical record
+            
             $medicalRecord = MedicalHistory::create([
                 'patient_id' => $patient->id,
                 'medical_speciality_id' => $medicalSpeciality->id,
-                'notes' => $request->input('notes'),
+                //'notes' => $request->input('notes'),
                 'by_who' => $user->role == 'patient' ? 'by me' : 'by ' . $user->name,
             ]);
             //display speciality
@@ -257,7 +258,8 @@ class MedicalHistoryController extends Controller
                 return response()->json(['error' => 'Patient not found'], 404);
             }
 
-            $medicalRecords = MedicalHistory::where('patient_id', $patient->id)->get();
+            $medicalRecords = MedicalHistory::where('patient_id', $patient->id)->orderBy('created_at', 'desc') // Add this line to order by created_at in descending order
+            ->get();
             $allSpecialities = [];
             foreach ($medicalRecords as $medicalRecord) {
                 $medicalRecord->notes = json_decode($medicalRecord->notes);
