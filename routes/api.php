@@ -81,7 +81,6 @@ Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 
 //----------------reset password---------------
 
-Route::get('/send-whatsapp', [MedicalHistoryController::class, 'sendWhatsAppMessage']);
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -94,10 +93,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('Blood/Pressure/History',[PatientSatisticsController::class,'getBloodPressureHistory']);
         Route::get('Blood/Sugar/History',[PatientSatisticsController::class,'getBloodSugarHistory']);
         Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);
-        Route::post('add/medical/record', [MedicalHistoryController::class, 'AddMedicalHistory']);
+        Route::put('add/medical/record', [MedicalHistoryController::class, 'AddMedicalHistory']);
         Route::get('get/all/medical/record', [MedicalHistoryController::class, 'getAllMedicalRecords']);
-        Route::post('filter/by/speciality',[MedicalHistoryController::class,'filterMedicalHistoryBySpecialty']);
+        Route::put('filter/by/speciality',[MedicalHistoryController::class,'filterMedicalHistoryBySpecialty']);
         Route::get('get/medical/record/{medicalRecordId}', [MedicalHistoryController::class,'getMedicalRecordDetails']);
+        Route::delete('delete/medical/record/{id}', [MedicalHistoryController::class, 'deleteMedicalRecord']);
+        Route::put('update/medical/record/{id}', [MedicalHistoryController::class, 'update']);
         
         
         
