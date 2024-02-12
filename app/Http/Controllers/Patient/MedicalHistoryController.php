@@ -84,13 +84,29 @@ class MedicalHistoryController extends Controller
 
         $diagnosisInput = $request->input('diagnosis_name');
 
-        if (!empty($diagnosisInput)) {
-            $diagnosisInput = trim($diagnosisInput, '[]');
-        }
-        $diagnosisArray = explode(',', $diagnosisInput);
-        $diagnosisArray = array_map('trim', $diagnosisArray);
-        $combinedDiagnosisNames = array_filter($diagnosisArray);
-        $createdDiagnosis = [];
+            // Check if the input is not empty
+            if (!empty($diagnosisInput)) {
+                // Trim whitespace and remove enclosing square brackets if present
+                $diagnosisInput = trim($diagnosisInput, '[]');
+            }
+            // Split the input into an array based on commas
+            $diagnosisArray = explode(',', $diagnosisInput);
+            // Remove any leading or trailing whitespaces from each element
+            $diagnosisArray = array_map('trim', $diagnosisArray);
+            // Filter out any empty values from the array
+            $combinedDiagnosisNames = array_filter($diagnosisArray);
+            
+
+           
+            // patient provide diagnosis     (required)
+            // $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
+            // $combinedDiagnosisNames = array_filter($diagnosisNames);
+            // if (empty($combinedDiagnosisNames)) {
+            //     return response()->json(['error' => 'Diagnosis not provided'], 400);
+            // }
+
+            // if (!empty($combinedDiagnosisNames)) {
+                $createdDiagnosis = [];
 
         foreach ($combinedDiagnosisNames as $diagnosisName) {
             $diagnosis = Diagnoses::firstOrCreate(['name' => $diagnosisName]);
