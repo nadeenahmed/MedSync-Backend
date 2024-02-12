@@ -342,14 +342,30 @@ class MedicalHistoryController extends Controller
         $medicalRecord->notes = json_decode($medicalRecord->notes);
 
         if (isset($medicalSpeciality)) {
-            $medicalRecord->medical_speciality = [
-                [
-                    'english_name' => $medicalSpeciality->english_name,
-                    'arabic_name' => $medicalSpeciality->arabic_name,
-                ],
-            ];
-        }
+            $medicalSpecialityInALL = null;
+            $medicalRecord->medical_speciality = [[
+                'english_name' => $medicalSpeciality->english_name,
+                'arabic_name' => $medicalSpeciality->arabic_name,
+            ]];
+        } else {
+            $medicalSpeciality = null;
+            $id = $medicalRecord->medical_speciality_id;
 
+            $medicalSpecialityInALL = DB::table('Specialities')->where('id', $id)->first();
+        
+            if ($medicalSpecialityInALL) {
+                $medicalRecord->medical_speciality = [[
+                    'english_name' => $medicalSpecialityInALL->english_name,
+                    'arabic_name' => $medicalSpecialityInALL->arabic_name,
+                ]];
+            } else {
+                // Handle the case where the speciality is not found
+                $medicalRecord->medical_speciality = [[
+                    'english_name' => 'Not Found',
+                    'arabic_name' => 'غير موجود',
+                ]];
+            }
+        }
         $diagnoses = DB::table('diagnosis_medical_history')
             ->join('diagnoses', 'diagnosis_medical_history.diagnosis_id', '=', 'diagnoses.id')
             ->where('diagnosis_medical_history.medical_history_id', $medicalRecord->id)

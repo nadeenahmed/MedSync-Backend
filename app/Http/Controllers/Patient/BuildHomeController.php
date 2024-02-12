@@ -19,7 +19,7 @@ class BuildHomeController extends Controller
     {
         return $request->user();
     }
-    public function build(BuildEmergencyDataRequest $request)
+    public function build(Request $request)
     {
         try{
             $user = $this->index($request);
@@ -32,6 +32,12 @@ class BuildHomeController extends Controller
             if ($existingEmergencyData) {
                
                 $existingEmergencyData->update($request->all());
+                $systolic = $existingEmergencyData->systolic;
+                $diastolic = $existingEmergencyData->diastolic;
+                $results = $this->getColorBasedOnBloodPressure($systolic,$diastolic);
+                $emergencyData = $existingEmergencyData;
+                $emergencyData['color'] = $results['color'];
+                $emergencyData['color description'] = $results['description'];
                 
                 BloodPressureChange::create([
                     'emergency_data_id' => $existingEmergencyData->id,
@@ -39,6 +45,8 @@ class BuildHomeController extends Controller
                     'diastolic' => $existingEmergencyData->diastolic,
                     'time' => $existingEmergencyData->bloodPressure_change_time,
                     'date' => $existingEmergencyData->bloodPressure_change_date,
+                    'color' =>  $results['color'],
+                    'color_description' => $results['description'],
                 ]);
                 BloodSugarChange::create([
                     'emergency_data_id' => $existingEmergencyData->id,
@@ -54,12 +62,7 @@ class BuildHomeController extends Controller
                     'time' => $existingEmergencyData->weightHeight_change_time,
                     'date' => $existingEmergencyData->weightHeight_change_date,
                 ]);
-                $systolic = $existingEmergencyData->systolic;
-                $diastolic = $existingEmergencyData->diastolic;
-                $results = $this->getColorBasedOnBloodPressure($systolic,$diastolic);
-                $emergencyData = $existingEmergencyData;
-                $emergencyData['color'] = $results['color'];
-                $emergencyData['color description'] = $results['description'];
+                
 
                 
                 return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);
@@ -89,13 +92,15 @@ class BuildHomeController extends Controller
                 // 'weightHeight_change_time'=> Carbon::createFromFormat('H:i:s',$request->input('weightHeight_change_time'))->format('h:i'),
 
             ]);
-
+            $result = $this->getColorBasedOnBloodPressure($systolic,$diastolic);
             BloodPressureChange::create([
                 'emergency_data_id' => $emergencyData->id,
                 'systolic' => $emergencyData->systolic,
                 'diastolic' => $emergencyData->diastolic,
                 'time' => $emergencyData->bloodPressure_change_time,
                 'date' => $emergencyData->bloodPressure_change_date,
+                'color' =>  $result['color'],
+                'color_description' => $result['description'],
             ]);
 
             BloodSugarChange::create([
@@ -112,7 +117,7 @@ class BuildHomeController extends Controller
                 'time' => $emergencyData->weightHeight_change_time,
                 'date' => $emergencyData->weightHeight_change_date,
             ]);
-            $result = $this->getColorBasedOnBloodPressure($systolic,$diastolic);
+            
             $emergencyData['color'] = $result['color'];
             $emergencyData['color description'] = $result['description'];
             return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);}

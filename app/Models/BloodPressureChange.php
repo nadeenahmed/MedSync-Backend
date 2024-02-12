@@ -15,6 +15,8 @@ class BloodPressureChange extends Model
         'diastolic',
         'time',
         'date',
+        'color',
+        'color_description',
     ];
 
     public function emergencyData()
