@@ -36,13 +36,17 @@ class PatientSatisticsController extends Controller
                     'blood_pressure_changes.time',
                     'blood_pressure_changes.systolic',
                     'blood_pressure_changes.diastolic',
+                    'blood_pressure_changes.color',
+                    'blood_pressure_changes.color_description',
                     'blood_pressure_changes.emergency_data_id'
                 )
                 ->select(
                     'blood_pressure_changes.date',
                     'blood_pressure_changes.time',
                     'blood_pressure_changes.systolic',
-                    'blood_pressure_changes.diastolic'
+                    'blood_pressure_changes.diastolic',
+                    'blood_pressure_changes.color',
+                    'blood_pressure_changes.color_description'
                 )
                 ->distinct()
                 ->get();
