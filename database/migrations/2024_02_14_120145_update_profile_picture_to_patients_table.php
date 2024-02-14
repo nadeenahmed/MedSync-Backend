@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::table('patients', function (Blueprint $table) {
-        //     $table->string('profile_picture')->nullable();
-        // });
+        Schema::table('patients', function (Blueprint $table) {
+            $table->string('profile_picture', 2000)->change();
+        });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Schema::table('patients', function (Blueprint $table) {
-        //     $table->dropColumn('profile_picture');
-        // });
+        Schema::table('patients', function (Blueprint $table) {
+            //
+        });
     }
 };
