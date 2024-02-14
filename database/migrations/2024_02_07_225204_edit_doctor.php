@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('doctors', function (Blueprint $table) {
+    //     Schema::table('doctors', function (Blueprint $table) {
 
-                $table->json('clinic_addresses')->nullable()->change();
-                $table->json('clinic_phones')->nullable()->change();
-                $table->string('license_path')->nullable();
-    });
+    //             $table->json('clinic_addresses')->nullable()->change();
+    //             $table->json('clinic_phones')->nullable()->change();
+    //             $table->string('license_path')->nullable();
+    // });
     }
 
     /**
@@ -24,8 +24,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('doctors', function (Blueprint $table) {
-            //
-        });
+        // Schema::table('doctors', function (Blueprint $table) {
+        //     //
+        // });
     }
 };

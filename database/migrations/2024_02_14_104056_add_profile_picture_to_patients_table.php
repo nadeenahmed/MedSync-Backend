@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::table('medical_histories', function (Blueprint $table) {
-        //     $table->string('by_who')->nullable();
-        // });
+        Schema::table('patients', function (Blueprint $table) {
+            $table->string('profile_picture')->nullable();
+        });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Schema::table('medical_histories', function (Blueprint $table) {
-        //     $table->dropColumn('by_who');
-        // });
+        Schema::table('patients', function (Blueprint $table) {
+            $table->dropColumn('profile_picture');
+        });
     }
 };

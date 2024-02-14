@@ -21,7 +21,14 @@ class ProfileController extends Controller
                 return response()->json(['errors' => 'Patient not found'], 404);
             }
             $user->update($request->all());
-            $patient->update($request->all());
+            $patient->update([
+                'gender' => $request->input('gender'),
+                'age' => $request->input('age'),
+                'address' => $request->input('address'),
+                'phone' => $request->input('phone'),
+                'marital_status' => $request->input('marital_status'),
+                'profile_picture' => $request->input('profile_picture'),
+            ]);
             $response=[
                 'user' => $user,
                 'patient' => $patient,

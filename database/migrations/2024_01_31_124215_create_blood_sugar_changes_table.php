@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blood_sugar_changes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('emergency_data_id');
-            $table->foreign('emergency_data_id')->references('id')->on('emergency_data')->onDelete('cascade');
-            $table->string('time')->nullable();
-            $table->string('date')->nullable();
-            $table->integer('blood_sugar')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('blood_sugar_changes', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('emergency_data_id');
+        //     $table->foreign('emergency_data_id')->references('id')->on('emergency_data')->onDelete('cascade');
+        //     $table->string('time')->nullable();
+        //     $table->string('date')->nullable();
+        //     $table->integer('blood_sugar')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blood_sugar_changes');
+        //Schema::dropIfExists('blood_sugar_changes');
     }
 };

@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('diagnosis_medical_history', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('diagnosis_id');
-            $table->unsignedBigInteger('medical_history_id');
-            $table->timestamps();
-            $table->foreign('diagnosis_id')->references('id')->on('diagnoses')->onDelete('cascade');
-            $table->foreign('medical_history_id')->references('id')->on('medical_histories')->onDelete('cascade');
-        });
+        // Schema::create('diagnosis_medical_history', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('diagnosis_id');
+        //     $table->unsignedBigInteger('medical_history_id');
+        //     $table->timestamps();
+        //     $table->foreign('diagnosis_id')->references('id')->on('diagnoses')->onDelete('cascade');
+        //     $table->foreign('medical_history_id')->references('id')->on('medical_histories')->onDelete('cascade');
+        // });
     }
 
     /**
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('diagnosis_medical_history');
+        //Schema::dropIfExists('diagnosis_medical_history');
     }
 };

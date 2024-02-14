@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('lab_tests', function (Blueprint $table) {
-            $table->id();
-        });
+        // Schema::table('lab_tests', function (Blueprint $table) {
+        //     $table->id();
+        // });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('lab_tests', function (Blueprint $table) {
-            //
-        });
+        // Schema::table('lab_tests', function (Blueprint $table) {
+        //     //
+        // });
     }
 };

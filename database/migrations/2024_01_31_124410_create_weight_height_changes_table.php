@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('weight_height_changes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('emergency_data_id');
-            $table->foreign('emergency_data_id')->references('id')->on('emergency_data')->onDelete('cascade');
-            $table->string('time')->nullable();
-            $table->string('date')->nullable();
-            $table->integer('weight')->nullable();
-            $table->integer('height')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('weight_height_changes', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('emergency_data_id');
+        //     $table->foreign('emergency_data_id')->references('id')->on('emergency_data')->onDelete('cascade');
+        //     $table->string('time')->nullable();
+        //     $table->string('date')->nullable();
+        //     $table->integer('weight')->nullable();
+        //     $table->integer('height')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('weight_height_changes');
+        //Schema::dropIfExists('weight_height_changes');
     }
 };
