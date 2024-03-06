@@ -7,28 +7,38 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Patient;
 use App\Models\Doctor;
+use Illuminate\Support\Facades\File;
 use App\Http\Requests\Auth\RegisterationRequest;
 use App\Models\EmergencyData;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\RegisterationNotification;
 use App\Notifications\EmailVerificationNotification;
 use Closure;
+use Illuminate\Support\Str;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Http;
-
-
-
-
+use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
     public function register(RegisterationRequest $request){
         try{
-
             $newuser = $request->validated();
             $newuser['password'] = Hash::make($newuser['password']);
             $newuser['name'] = $request->name;
-            $newuser['role'] = $request->role;
+            $newuser['role'] = $request->role;    
+            if ($request->hasFile('image')) {
+                $profilePicture = $request->file('image');
+                $uniqueFileName = Str::uuid() . '_' . $profilePicture->getClientOriginalName();
+                $uploadDirectory = 'public/profile-pictures';
+                $filePath = $profilePicture->storeAs($uploadDirectory, $uniqueFileName);
+                $relativePath = 'storage/profile-pictures/';
+                $imagePath = $relativePath . $uniqueFileName;
+                $fullImageUrl = url($imagePath);
+                $newuser['profile_photo_path'] = $fullImageUrl;
+            } else {
+                $newuser['profile_photo_path'] = null;
+            }
             $newuser['status'] = 'pending';
             $user = User::create($newuser);
             $token = $user->createToken('user',['app:all'])->plainTextToken;
@@ -54,11 +64,12 @@ class RegisterController extends Controller
                     'chronic_diseases_bad_habits' => $request->input('chronic_diseases_bad_habits'),
                 ]);
                 $response = [
+                    //'image_path' => $imagePath,
+                    //'profile_picture_url' => $profilePictureUrl,
                     'user' => $user,
                     'patient' => $patient,
                     'token' => $token
                 ];
-
                 return response()->json($response,200);
                 //$user->notify(new RegisterationNotification());
             } elseif ($newuser['role'] === 'doctor') {
@@ -121,6 +132,12 @@ class RegisterController extends Controller
             $doctor = Doctor::where('user_id' , $user['id'])->first();
             if($user)
             {
+                if ($user->profile_photo_path) {
+                    $path = storage_path('app/public/' . str_replace('storage/', '', $user->profile_photo_path));
+                    if (File::exists($path)) {
+                        File::delete($path);
+                    }
+                }
                 if($user['role']==='patient')
                 {
                     $user->delete();
