@@ -92,7 +92,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('patient')->group(function () {
         Route::post('build/home/screen',[BuildHomeController::class,'build']);
         Route::get('home/screen',[HomeController::class,'view']);
-        Route::put('edit/profile',[ProfileController::class,'EditProfile']);
+        Route::post('edit/profile',[ProfileController::class,'EditProfile']);
         Route::get('Blood/Pressure/History',[PatientSatisticsController::class,'getBloodPressureHistory']);
         Route::get('Blood/Sugar/History',[PatientSatisticsController::class,'getBloodSugarHistory']);
         Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);

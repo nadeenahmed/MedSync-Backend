@@ -51,7 +51,7 @@ class RegisterController extends Controller
                     'address' => $request->input('address'),
                     'phone' => $request->input('phone'),
                     'marital_status' => $request->input('marital_status'),
-                    'profile_picture' => $request->input('profile_picture'),
+                    //'profile_picture' => $request->input('profile_picture'),
                 ]);
                 $PatientEmergencyData = EmergencyData::create([
                     'patient_id' => $patient->id,

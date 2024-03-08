@@ -18,7 +18,6 @@ class Patient extends Model
         'address',
         'phone',
         'marital_status',
-        'profile_picture',
     ];
 
     // Define the relationship with the User model
