@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Patient;
 
-use Twilio\Rest\Client;
+
 use App\Http\Controllers\Controller;
 use App\Models\Diagnoses;
 use App\Models\DiagnosesMedicalHistory;
@@ -11,12 +11,13 @@ use Illuminate\Http\Request;
 use App\Models\MedicalHistory;
 use App\Models\Patient;
 use App\Models\LabTest;
+use App\Models\MedicalHistoryImage;
 use App\Models\Medication;
 use App\Models\MedicationMedicalHistory;
 use App\Models\Specialities;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
+
 
 class MedicalHistoryController extends Controller
 {
@@ -33,7 +34,7 @@ class MedicalHistoryController extends Controller
         if (!$patient) {
             return response()->json(['error' => 'Patient not found'], 404);
         }
-
+        $files = $request->file('files');
 
         // patient add medical speciality    *required*
         $specialityEnglishName = str_replace('"', '', $request->input('medical_speciality_english'));
@@ -44,7 +45,7 @@ class MedicalHistoryController extends Controller
             $query->where('english_name', $specialityEnglishName)
                 ->orWhere('arabic_name', $specialityArabicName);
         })->first();
-       
+
         $labTestsInput = $request->input('lab_tests');
         if (!empty($labTestsInput)) {
             $labTestsInput = trim($labTestsInput, '[]');
@@ -84,29 +85,27 @@ class MedicalHistoryController extends Controller
 
         $diagnosisInput = $request->input('diagnosis_name');
 
-            // Check if the input is not empty
-            if (!empty($diagnosisInput)) {
-                // Trim whitespace and remove enclosing square brackets if present
-                $diagnosisInput = trim($diagnosisInput, '[]');
-            }
-            // Split the input into an array based on commas
-            $diagnosisArray = explode(',', $diagnosisInput);
-            // Remove any leading or trailing whitespaces from each element
-            $diagnosisArray = array_map('trim', $diagnosisArray);
-            // Filter out any empty values from the array
-            $combinedDiagnosisNames = array_filter($diagnosisArray);
-            
+        // Check if the input is not empty
+        if (!empty($diagnosisInput)) {
+            // Trim whitespace and remove enclosing square brackets if present
+            $diagnosisInput = trim($diagnosisInput, '[]');
+        }
+        // Split the input into an array based on commas
+        $diagnosisArray = explode(',', $diagnosisInput);
+        // Remove any leading or trailing whitespaces from each element
+        $diagnosisArray = array_map('trim', $diagnosisArray);
+        // Filter out any empty values from the array
+        $combinedDiagnosisNames = array_filter($diagnosisArray);
 
-           
-            // patient provide diagnosis     (required)
-            // $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
-            // $combinedDiagnosisNames = array_filter($diagnosisNames);
-            // if (empty($combinedDiagnosisNames)) {
-            //     return response()->json(['error' => 'Diagnosis not provided'], 400);
-            // }
+        // patient provide diagnosis     (required)
+        // $diagnosisNames = json_decode($request->input('diagnosis_name'), true) ?? [];
+        // $combinedDiagnosisNames = array_filter($diagnosisNames);
+        // if (empty($combinedDiagnosisNames)) {
+        //     return response()->json(['error' => 'Diagnosis not provided'], 400);
+        // }
 
-            // if (!empty($combinedDiagnosisNames)) {
-                $createdDiagnosis = [];
+        // if (!empty($combinedDiagnosisNames)) {
+        $createdDiagnosis = [];
 
         foreach ($combinedDiagnosisNames as $diagnosisName) {
             $diagnosis = Diagnoses::firstOrCreate(['name' => $diagnosisName]);
@@ -132,7 +131,7 @@ class MedicalHistoryController extends Controller
             $medication = Medication::firstOrCreate(['name' => $medicationName]);
             $createdMedications[] = $medication;
         }
-        
+
         $Medications = Medication::whereIn('name', $combinedMedicationNames)->get();
         // Check if any medications are not found
         if (count($combinedMedicationNames) !== count($Medications)) {
@@ -144,6 +143,27 @@ class MedicalHistoryController extends Controller
             'medical_speciality_id' => $medicalSpeciality->id,
             'by_who' => $user->role == 'patient' ? 'by me' : 'by ' . $user->name,
         ]);
+
+        if ($request->hasFile('files')) {
+            $uploadedFiles = [];
+            foreach ($files as $key => $file) {
+                $uniqueFileName = Str::uuid() . '_' . $file->getClientOriginalName();
+                $uploadDirectory = 'public/medical-history-files';
+                $filePath = $file->storeAs($uploadDirectory, $uniqueFileName);
+                $filesPath = 'storage/medical-history-files/' . $uniqueFileName;
+                $fullFilesUrl = url($filesPath);
+
+                MedicalHistoryImage::create([
+                    'medical_history_id' => $medicalRecord->id,
+                    'image_path' => $fullFilesUrl,
+                ]);
+
+                $uploadedFiles[] = $fullFilesUrl;
+            }
+            $medicalRecord->makeHidden('files');
+        }
+
+
         //display speciality
         $medicalRecord["Medical Speciality"] =
             [
@@ -205,6 +225,8 @@ class MedicalHistoryController extends Controller
                 'name' => trim($Medication->name),
             ];
         })->toArray();
+
+        $medicalRecord["Files"] = $uploadedFiles;
         $medicalRecord->notes = json_decode($medicalRecord->notes);
         return response()->json([
             'message' => 'Medical Record Added Successfully',
@@ -301,6 +323,15 @@ class MedicalHistoryController extends Controller
             ];
 
 
+            $Files = DB::table('medical_history_images')
+                ->join('medical_histories', 'medical_history_images.medical_history_id', '=', 'medical_histories.id')
+                ->where('medical_history_images.medical_history_id', $medicalRecord->id)
+                ->select('image_path')
+                ->get();
+            $medicalRecord["Files"] = $Files->pluck('image_path')->map(function ($filePath) {
+                return trim($filePath);
+            })->toArray();
+
             return response()->json([
                 'message' => 'Medical Records Retrieved Successfully',
                 'Speciality Filters' => $uniqueSpecialitiesWithAll,
@@ -318,97 +349,107 @@ class MedicalHistoryController extends Controller
 
 
     public function filterMedicalHistoryBySpecialty(Request $request)
-{
-    $user = $this->index($request);
-    $patient = Patient::where('user_id', $user->id)->first();
-    
-    if (!$patient) {
-        return response()->json(['error' => 'Patient not found'], 404);
-    }
+    {
+        $user = $this->index($request);
+        $patient = Patient::where('user_id', $user->id)->first();
 
-    $specialityEnglishName = str_replace('"', '', $request->input('medical_speciality_english'));
-    $specialityArabicName = str_replace('"', '', $request->input('medical_speciality_arabic'));
-
-    $isAllSpecialityEnglish = in_array($specialityEnglishName, ['All']) && empty($specialityArabicName);
-    $isAllSpecialityArabic = in_array(strtoupper($specialityArabicName), ['الكل']) && empty($specialityEnglishName);
-
-    $filteredMedicalHistory = [];
-
-    if (!$isAllSpecialityEnglish && !$isAllSpecialityArabic) {
-        $medicalSpeciality = Specialities::where(function ($query) use ($specialityEnglishName, $specialityArabicName) {
-            $query->where('english_name', $specialityEnglishName)
-                ->orWhere('arabic_name', $specialityArabicName);
-        })->firstOrFail();
-
-        if (!$medicalSpeciality) {
-            return response()->json(['error' => 'Medical speciality not found'], 404);
+        if (!$patient) {
+            return response()->json(['error' => 'Patient not found'], 404);
         }
 
-        $filteredMedicalHistory = DB::table('medical_histories')
-            ->where('patient_id', $patient->id)
-            ->where('medical_speciality_id', $medicalSpeciality->id)
-            ->get();
-    } else {
-        $filteredMedicalHistory = DB::table('medical_histories')
-            ->where('patient_id', $patient->id)
-            ->get();
-    }
+        $specialityEnglishName = str_replace('"', '', $request->input('medical_speciality_english'));
+        $specialityArabicName = str_replace('"', '', $request->input('medical_speciality_arabic'));
 
-    foreach ($filteredMedicalHistory as $medicalRecord) {
-        $medicalRecord->notes = json_decode($medicalRecord->notes);
+        $isAllSpecialityEnglish = in_array($specialityEnglishName, ['All']) && empty($specialityArabicName);
+        $isAllSpecialityArabic = in_array(strtoupper($specialityArabicName), ['الكل']) && empty($specialityEnglishName);
 
-        if (isset($medicalSpeciality)) {
-            $medicalSpecialityInALL = null;
-            $medicalRecord->medical_speciality = [[
-                'english_name' => $medicalSpeciality->english_name,
-                'arabic_name' => $medicalSpeciality->arabic_name,
-            ]];
+        $filteredMedicalHistory = [];
+
+        if (!$isAllSpecialityEnglish && !$isAllSpecialityArabic) {
+            $medicalSpeciality = Specialities::where(function ($query) use ($specialityEnglishName, $specialityArabicName) {
+                $query->where('english_name', $specialityEnglishName)
+                    ->orWhere('arabic_name', $specialityArabicName);
+            })->firstOrFail();
+
+            if (!$medicalSpeciality) {
+                return response()->json(['error' => 'Medical speciality not found'], 404);
+            }
+
+            $filteredMedicalHistory = DB::table('medical_histories')
+                ->where('patient_id', $patient->id)
+                ->where('medical_speciality_id', $medicalSpeciality->id)
+                ->get();
         } else {
-            $medicalSpeciality = null;
-            $id = $medicalRecord->medical_speciality_id;
+            $filteredMedicalHistory = DB::table('medical_histories')
+                ->where('patient_id', $patient->id)
+                ->get();
+        }
 
-            $medicalSpecialityInALL = DB::table('Specialities')->where('id', $id)->first();
-        
-            if ($medicalSpecialityInALL) {
+        foreach ($filteredMedicalHistory as $medicalRecord) {
+            $medicalRecord->notes = json_decode($medicalRecord->notes);
+
+            if (isset($medicalSpeciality)) {
+                $medicalSpecialityInALL = null;
                 $medicalRecord->medical_speciality = [[
-                    'english_name' => $medicalSpecialityInALL->english_name,
-                    'arabic_name' => $medicalSpecialityInALL->arabic_name,
+                    'english_name' => $medicalSpeciality->english_name,
+                    'arabic_name' => $medicalSpeciality->arabic_name,
                 ]];
             } else {
-                // Handle the case where the speciality is not found
-                $medicalRecord->medical_speciality = [[
-                    'english_name' => 'Not Found',
-                    'arabic_name' => 'غير موجود',
-                ]];
+                $medicalSpeciality = null;
+                $id = $medicalRecord->medical_speciality_id;
+
+                $medicalSpecialityInALL = DB::table('Specialities')->where('id', $id)->first();
+
+                if ($medicalSpecialityInALL) {
+                    $medicalRecord->medical_speciality = [[
+                        'english_name' => $medicalSpecialityInALL->english_name,
+                        'arabic_name' => $medicalSpecialityInALL->arabic_name,
+                    ]];
+                } else {
+                    // Handle the case where the speciality is not found
+                    $medicalRecord->medical_speciality = [[
+                        'english_name' => 'Not Found',
+                        'arabic_name' => 'غير موجود',
+                    ]];
+                }
             }
+            $diagnoses = DB::table('diagnosis_medical_history')
+                ->join('diagnoses', 'diagnosis_medical_history.diagnosis_id', '=', 'diagnoses.id')
+                ->where('diagnosis_medical_history.medical_history_id', $medicalRecord->id)
+                ->select('diagnoses.*')
+                ->get();
+            $medicalRecord->diagnoses = $diagnoses;
+
+            $medications = DB::table('medication_medical_history')
+                ->join('medications', 'medication_medical_history.medication_id', '=', 'medications.id')
+                ->where('medication_medical_history.medical_history_id', $medicalRecord->id)
+                ->select('medications.*')
+                ->get();
+            $medicalRecord->medications = $medications;
+
+            $labTests = DB::table('lab_test_medical_history')
+                ->join('lab_tests', 'lab_test_medical_history.lab_test_id', '=', 'lab_tests.id')
+                ->where('lab_test_medical_history.medical_history_id', $medicalRecord->id)
+                ->select('lab_tests.*')
+                ->get();
+            $medicalRecord->lab_Tests = $labTests;
+
+            $Files = DB::table('medical_history_images')
+                ->join('medical_histories', 'medical_history_images.medical_history_id', '=', 'medical_histories.id')
+                ->where('medical_history_images.medical_history_id', $medicalRecord->id)
+                ->select('image_path')
+                ->get();
+        
+            $medicalRecord->Files= $Files->pluck('image_path')->map(function ($filePath) {
+                return trim($filePath);
+            })->toArray();
         }
-        $diagnoses = DB::table('diagnosis_medical_history')
-            ->join('diagnoses', 'diagnosis_medical_history.diagnosis_id', '=', 'diagnoses.id')
-            ->where('diagnosis_medical_history.medical_history_id', $medicalRecord->id)
-            ->select('diagnoses.*')
-            ->get();
-        $medicalRecord->diagnoses = $diagnoses;
 
-        $medications = DB::table('medication_medical_history')
-            ->join('medications', 'medication_medical_history.medication_id', '=', 'medications.id')
-            ->where('medication_medical_history.medical_history_id', $medicalRecord->id)
-            ->select('medications.*')
-            ->get();
-        $medicalRecord->medications = $medications;
-
-        $labTests = DB::table('lab_test_medical_history')
-            ->join('lab_tests', 'lab_test_medical_history.lab_test_id', '=', 'lab_tests.id')
-            ->where('lab_test_medical_history.medical_history_id', $medicalRecord->id)
-            ->select('lab_tests.*')
-            ->get();
-        $medicalRecord->lab_Tests = $labTests;
+        return response()->json([
+            'message' => 'Medical History Filtered Successfully',
+            'data' => $filteredMedicalHistory,
+        ], 200);
     }
-
-    return response()->json([
-        'message' => 'Medical History Filtered Successfully',
-        'data' => $filteredMedicalHistory,
-    ], 200);
-}
 
 
 
@@ -505,18 +546,11 @@ class MedicalHistoryController extends Controller
 
     public function deleteMedicalRecord($id)
     {
-        // Find the medical record by ID
         $medicalRecord = MedicalHistory::find($id);
-
-        // Check if the medical record exists
         if (!$medicalRecord) {
             return response()->json(['message' => 'Medical record not found'], 404);
         }
-
-        // Delete the medical record
         $medicalRecord->delete();
-
-        // Respond with a success message
         return response()->json(['message' => 'Medical record deleted successfully']);
     }
 
@@ -550,40 +584,4 @@ class MedicalHistoryController extends Controller
         // Respond with the updated medical history record
         return response()->json(['message' => 'Medical history record and related records updated successfully', 'data' => $medicalHistory]);
     }
-
-
-
-
-
-
-
-    // public function sendWhatsAppMessage()
-    // {
-
-    //     // Update the path below to your autoload.php,
-    //     // see https://getcomposer.org/doc/01-basic-usage.md
-
-    //     $twilioSid = env('TWILIO_SID');
-    //     $twilioToken = env('TWILIO_AUTH_TOKEN');
-    //     $twilioSWhatsAppNumber = env('TWILIO_WHATSAPP_NUMBER');
-    //     $recipientNumber = 'whatsapp:+201118566002';
-    //     $msg = "Hello from medsync";
-    //     //require_once '/path/to/vendor/autoload.php';
-
-
-
-    //     $twilio = new Client($twilioSid, $twilioToken);
-
-    //     $message = $twilio->messages
-    //         ->create(
-    //             "whatsapp:+201155813632", // to
-    //             array(
-    //                 "from" => "whatsapp:+14155238886",
-    //                 "body" => "Hello from medsync"
-    //             )
-    //         );
-
-    //     print($message->sid);
-    //     return response()->json(['message' => 'whatsapp meg sent successully']);
-    // }
 }

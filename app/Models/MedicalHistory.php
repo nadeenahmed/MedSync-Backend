@@ -20,6 +20,7 @@ class MedicalHistory extends Model
         'diagnosis_id',
         'notes',
         'by_who',
+        'images'
     ];
 
     
@@ -44,5 +45,10 @@ class MedicalHistory extends Model
     public function medications()
     {
         return $this->belongsToMany(Medication::class , 'medication_medical_history', 'medication_id', 'medical_history_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(MedicalHistoryImage::class);
     }
 }
