@@ -26,7 +26,7 @@ class RegisterController extends Controller
             $newuser = $request->validated();
             $newuser['password'] = Hash::make($newuser['password']);
             $newuser['name'] = $request->name;
-            $newuser['role'] = $request->role;    
+            $newuser['role'] = $request->role;
             if ($request->hasFile('image')) {
                 $profilePicture = $request->file('image');
                 $uniqueFileName = Str::uuid() . '_' . $profilePicture->getClientOriginalName();
@@ -73,13 +73,13 @@ class RegisterController extends Controller
                 return response()->json($response,200);
                 //$user->notify(new RegisterationNotification());
             } elseif ($newuser['role'] === 'doctor') {
-                // $doctor = Doctor::create([
-                //     'user_id' => $user->id,
+                $doctor = Doctor::create([
+                    'user_id' => $user->id,
 
-                // ]);
+                ]);
                 $response = [
                     'user' => $user,
-                    //'doctor' => $doctor,
+                    'doctor' => $doctor,
                     'token' => $token
                 ];
 

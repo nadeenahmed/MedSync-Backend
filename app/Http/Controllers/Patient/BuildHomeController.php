@@ -66,7 +66,7 @@ class BuildHomeController extends Controller
 
                 
                 return response()->json(['patient_name' => $patientName,'emergency_data' => $emergencyData],200);
-            } else { 
+            } else {
                 $systolic = $request->input('systolic');
                 $diastolic = $request->input('diastolic');
                 $emergencyData = EmergencyData::create([
