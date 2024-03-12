@@ -27,8 +27,6 @@ class MedicalHistoryController extends Controller
     }
     public function AddMedicalHistory(Request $request)
     {
-
-
         $user = $this->index($request);
         $patient = Patient::where('user_id', $user->id)->first();
         if (!$patient) {
@@ -143,9 +141,9 @@ class MedicalHistoryController extends Controller
             'medical_speciality_id' => $medicalSpeciality->id,
             'by_who' => $user->role == 'patient' ? 'by me' : 'by ' . $user->name,
         ]);
-
+        $uploadedFiles = [];
         if ($request->hasFile('files')) {
-            $uploadedFiles = [];
+            //$uploadedFiles = [];
             foreach ($files as $key => $file) {
                 $uniqueFileName = Str::uuid() . '_' . $file->getClientOriginalName();
                 $uploadDirectory = 'public/medical-history-files';
