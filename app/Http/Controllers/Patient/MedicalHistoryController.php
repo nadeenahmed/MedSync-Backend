@@ -244,6 +244,18 @@ class MedicalHistoryController extends Controller
 
             $medicalRecords = MedicalHistory::where('patient_id', $patient->id)->orderBy('created_at', 'desc') // Add this line to order by created_at in descending order
                 ->get();
+            if ($medicalRecords->isEmpty()) {
+                return response()->json([
+                    'message' => 'Medical Records Retrieved Successfully',
+                    'Speciality Filters' => [
+                        [
+                            'english_name' => 'All',
+                            'arabic_name' => 'الكل',
+                        ],
+                    ],
+                    'data' => [],
+                ], 200);
+            }
             $allSpecialities = [];
             foreach ($medicalRecords as $medicalRecord) {
                 $medicalRecord->notes = json_decode($medicalRecord->notes);

@@ -27,7 +27,7 @@ class DoctorRequest extends FormRequest
             'medical_degree' => 'required|string',
             'university' => 'required|string',
             'medical_board_organization' => 'nullable|string',
-            'licence_information' => 'required|string',
+            'licence_information' => 'required',
             'gender' => 'nullable|string', 
             'phone' => 'nullable|string',
             'profile_image' => 'nullable|string',  

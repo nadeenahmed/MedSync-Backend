@@ -75,7 +75,15 @@ class RegisterController extends Controller
             } elseif ($newuser['role'] === 'doctor') {
                 $doctor = Doctor::create([
                     'user_id' => $user->id,
-
+                    // 'gender' => $request->input('gender'),
+                    // 'years_of_experience' => $request->input('years_of_experience'),
+                    // 'medical_degree' => $request->input('medical_degree'),
+                    // 'university' => $request->input('university'),
+                    // 'speciality_id' => $request->input('speciality_id'),
+                    // 'medical_board_organization' =>$request->input('medical_board_organization'),
+                    // 'licence_information' => $$request->input('licence_information'),
+                    // 'phone' => $request->input('phone'),
+                    // 'profile_image' =>$request->input('profile_image'),
                 ]);
                 $response = [
                     'user' => $user,
