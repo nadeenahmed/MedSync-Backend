@@ -28,7 +28,7 @@ class LoginController extends Controller
                 return response()->json($response, 401);
             }
             
-            if($user->status === "active"){
+           // if($user->status === "active"){
 
                 if ((Hash::check($password, $user->password))||($user->password == null)) {
                     $user->tokens()->delete();
@@ -55,13 +55,13 @@ class LoginController extends Controller
                     return response()->json($response, 401);
                 }
 
-            }else{
-                $response = [
-                    'message' => 'Verify Your Email First',
-                    'errors' => 'Login Process Faild'
-                ];
-                return response()->json($response, 401);
-            }
+            //}else{
+            //     $response = [
+            //         'message' => 'Verify Your Email First',
+            //         'errors' => 'Login Process Faild'
+            //     ];
+            //     return response()->json($response, 401);
+            // }
             
         }catch (\Exception $e) {
             $response = [

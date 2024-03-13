@@ -7,39 +7,22 @@ use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Traits\FileUploadTrait;
 class ProfileController extends Controller
 {
-    public function get_patient(Request $request)
-    {
-        return $request->user();
-    }
+    use FileUploadTrait;
+
     public function EditProfile(Request $request)
     {
         try{
-            $user = $this->get_patient($request);
+            $user = $request->user();
             $patient = Patient::where('user_id', $user->id)->first();
             if (!$patient) {
                 return response()->json(['errors' => 'Patient not found'], 404);
             }
-            // if ($user->profile_photo_path) {
-            //     $previousPhotoPath = str_replace(url('storage'), 'public', $user->profile_photo_path);
-            //     if (Storage::exists($previousPhotoPath)) {
-            //         Storage::delete($previousPhotoPath);
-            //     }
-            // }
-    
-            if ($request->hasFile('image')) {
-                $profilePicture = $request->file('image');
-                $uniqueFileName = Str::uuid() . '_' . $profilePicture->getClientOriginalName();
-                $uploadDirectory = 'public/profile-pictures';
-                $filePath = $profilePicture->storeAs($uploadDirectory, $uniqueFileName);
-                $relativePath = 'storage/profile-pictures/';
-                $imagePath = $relativePath . $uniqueFileName;
-                $fullImageUrl = url($imagePath);
-                $user->profile_photo_path = $fullImageUrl;
-            } else {
-                $user->profile_photo_path = null;
-            }
+            $image = $this->handleFileUpload($request, 'image', 'public/profile-pictures', 'storage/profile-pictures/');
+            $user->profile_photo_path = $image;
+           
             $user->update($request->all());
             $patient->update([
                 'gender' => $request->gender,//$request->input('gender'), // Assuming 'gender' is also part of the 'patient' model

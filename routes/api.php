@@ -39,10 +39,7 @@ use App\Http\Controllers\Patient\{
 
 
 use App\Http\Controllers\EmailCheckController;
-
-
-
-
+use App\Http\Controllers\Payment\PayPalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +52,11 @@ use App\Http\Controllers\EmailCheckController;
 |
 */
 //Public Routs
+
+// Route::post('paypal/payment',[PayPalController::class,'payment'])->name('paypal');
+// Route::get('paypal/success',[PayPalController::class,'success'])->name('success');
+// Route::get('paypal/cancel',[PayPalController::class,'cancel'])->name('cancel');
+
 //----------------authentication---------------
 Route::post('/register',[RegisterController::class,'register'])->name('User-Registration-API');
 Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');

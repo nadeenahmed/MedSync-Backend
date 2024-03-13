@@ -4,6 +4,7 @@ namespace App\Http\Requests\Doctor;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
 class DoctorRequest extends FormRequest
 {
     /**
@@ -22,8 +23,7 @@ class DoctorRequest extends FormRequest
     public function rules(): array
     {
         return [
-           // 'speciality_id' => 'required|exists:specialities,id',
-            'years_of_experience' => 'nullable|numeric',
+            'years_of_experience' => 'nullable|numeric|max:80|min:0',
             'medical_degree' => 'required|string',
             'university' => 'required|string',
             'medical_board_organization' => 'nullable|string',
@@ -33,4 +33,18 @@ class DoctorRequest extends FormRequest
             'profile_image' => 'nullable|string',  
         ];
     }
+
+    // DoctorRequest.php
+    public function messages()
+    {
+        return [
+            // Other messages...
+            'years_of_experience.max' => 'The years of experience must not exceed 100.',
+        ];
+    }
+
+
 }
+
+
+

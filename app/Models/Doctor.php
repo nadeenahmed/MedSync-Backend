@@ -20,7 +20,7 @@ class Doctor extends Model
         'medical_board_organization',
         'licence_information',
         'phone',
-        'profile_image',
+        //'profile_image',
     ];
 
     public function user()
