@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Traits\FileUploadTrait;
 
 
-class DoctorDataController extends Controller
+class BuildProfileController extends Controller
 {
     use FileUploadTrait;
     public function Create(Request $request)

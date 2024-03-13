@@ -25,7 +25,7 @@ use App\Http\Controllers\Auth\{
     FacebookController,
 };
 use App\Http\Controllers\Doctor\{
-    DoctorDataController ,
+    BuildProfileController ,
 };
 use App\Http\Controllers\Patient\{
     BuildHomeController,
@@ -112,7 +112,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
     Route::prefix('doctor')->group(function () {
-        Route::post('fill/data',[DoctorDataController::class,'Create']);
+        Route::post('build/profile',[BuildProfileController::class,'Create']);
     });
     
     
