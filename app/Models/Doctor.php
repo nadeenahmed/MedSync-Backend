@@ -15,8 +15,9 @@ class Doctor extends Model
         'gender',
         'years_of_experience',
         'medical_degree',
-        'university',
+        'university_id',
         'speciality_id',
+        'medical_degree_id',
         'medical_board_organization',
         'licence_information',
         'phone',
@@ -30,5 +31,15 @@ class Doctor extends Model
 
     public function speciality() {
         return $this->belongsTo(Specialities::class);
+    }
+
+    public function workPlace()
+    {
+        return $this->hasMany(Workplace::class);
+    }
+
+    public function approvalRequests()
+    {
+        return $this->hasMany(DoctorApprovalRequest::class);
     }
 }
