@@ -172,6 +172,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
 
         Ichtrojan\Otp\OtpServiceProvider::class,
+        Srmklive\PayPal\Providers\PayPalServiceProvider::class,
     ])->toArray(),
 
     /*

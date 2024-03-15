@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\FacebookController;
-use App\Http\Controllers\Payment\PayPalController;
-use App\Http\Controllers\PaypalController as ControllersPaypalController;
+use App\Http\Controllers\PayPalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,9 +20,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('paypal', [ControllersPaypalController::class, 'paypal'])->name('paypal');
-Route::get('success', [ControllersPaypalController::class, 'success'])->name('success');
-Route::get('cancel', [ControllersPaypalController::class, 'cancel'])->name('cancel');
+Route::post('paypal', [PayPalController::class, 'paypal'])->name('paypal');
+Route::get('success', [PayPalController::class, 'success'])->name('success');
+Route::get('cancel', [PayPalController::class, 'cancel'])->name('cancel');
  
 Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('google-auth');
  

@@ -50,10 +50,13 @@ class BuildProfileController extends Controller
         }
 
 
-        $medicalSpeciality = Specialities::where('english_name', $specialityName)->first();
-        if (!$medicalSpeciality) {
-            return response()->json(['error' => 'Medical speciality not found'], 404);
-        }
+        $medicalSpeciality = Specialities::where(function ($query) use ($specialityName) {
+            $query->where('english_name', $specialityName)
+                ->orWhere('arabic_name', $specialityName);
+        })->first();
+        // if (!$medicalSpeciality) {
+        //     return response()->json(['error' => 'Medical speciality not found'], 404);
+        // }
 
         $university = MedicalCollege::where('english_name', $university)
             ->orWhere('arabic_name', $university)
