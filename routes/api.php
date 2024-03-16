@@ -5,12 +5,15 @@ use App\Http\Controllers\Admin\{
     PatientController,
     AdminLoginController,
     DiagnosesController,
+    DoctorApprovalRequestController,
     TreatmentsController,
     LabTestsController,
     VaccinesController,
     SpecialitiesController,
     SymptomsController,
     DoctorController,
+    MedicalCollagesController,
+    MedicalDegreesController,
     MedicationController,
     
 };
@@ -21,11 +24,10 @@ use App\Http\Controllers\Auth\{
     ForgetPasswordController,
     ResetPasswordController,
     GoogleAuthController,
-    ResetPasswordRequestController,
-    FacebookController,
 };
 use App\Http\Controllers\Doctor\{
     BuildProfileController ,
+    WorkPlacesController,
 };
 use App\Http\Controllers\Patient\{
     BuildHomeController,
@@ -33,14 +35,13 @@ use App\Http\Controllers\Patient\{
     MedicalHistoryController,
     PatientSatisticsController,
     ProfileController,
-    SettingsController,
 };
 
 
 
 use App\Http\Controllers\Payment\PaymobController;
 use App\Http\Controllers\EmailCheckController;
-use App\Http\Controllers\Payment\PayPalController;
+use App\Http\Controllers\PayPalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,10 +54,10 @@ use App\Http\Controllers\Payment\PayPalController;
 |
 */
 //Public Routs
-
-// Route::post('paypal/payment',[PayPalController::class,'payment'])->name('paypal');
-// Route::get('paypal/success',[PayPalController::class,'success'])->name('success');
-// Route::get('paypal/cancel',[PayPalController::class,'cancel'])->name('cancel');
+Route::post('paypal', [PayPalController::class, 'paypal'])->name('paypal');
+Route::get('success', [PayPalController::class, 'success'])->name('success');
+Route::get('cancel', [PayPalController::class, 'cancel'])->name('cancel');
+ 
 
 //----------------authentication---------------
 Route::post('/register',[RegisterController::class,'register'])->name('User-Registration-API');
@@ -114,6 +115,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('doctor')->group(function () {
         Route::post('build/profile',[BuildProfileController::class,'Create']);
+        Route::post('add/workplace',[WorkPlacesController::class,'AddWorkPlace']);
     });
     
     
@@ -126,6 +128,28 @@ Route::prefix('payment')->group(function () {
 Route::prefix('admin')->group(function () {
 
     Route::post('login',[AdminLoginController::class,'adminLogin'])->name('Admin-Login-API');
+
+    Route::get('get/all/approval/requests',[DoctorApprovalRequestController::class,'index']);
+    Route::get('show/approval/request/{id}',[DoctorApprovalRequestController::class,'show']);
+    Route::put('approve/request/{id}',[DoctorApprovalRequestController::class,'approve']);
+    Route::put('reject/request/{id}',[DoctorApprovalRequestController::class,'reject']);
+    Route::delete('delete/request/{id}',[DoctorApprovalRequestController::class,'destroy']);
+
+
+    
+    Route::get('get/all/colleges',[MedicalCollagesController::class,'index'])->name('Get-colleges-API');
+    Route::get('show/college/{id}',[MedicalCollagesController::class,'show'])->name('Get-college-API');
+    Route::post('create/college',[MedicalCollagesController::class,'create'])->name('Create-college-API');
+    Route::put('update/college/{id}',[MedicalCollagesController::class,'update'])->name('Update-college-API');
+    Route::delete('delete/college/{id}',[MedicalCollagesController::class,'destroy'])->name('Delete-college-API');
+
+    Route::get('get/all/degrees',[MedicalDegreesController::class,'index'])->name('Get-degrees-API');
+    Route::get('show/degree/{id}',[MedicalDegreesController::class,'show'])->name('Get-degree-API');
+    Route::post('create/degree',[MedicalDegreesController::class,'create'])->name('Create-degree-API');
+    Route::put('update/degree/{id}',[MedicalDegreesController::class,'update'])->name('Update-degree-API');
+    Route::delete('delete/degree/{id}',[MedicalDegreesController::class,'destroy'])->name('Delete-degree-API');
+
+
 
 
     Route::get('get/all/patients',[PatientController::class,'index'])->name('Get-Patients-API');
