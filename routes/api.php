@@ -38,6 +38,7 @@ use App\Http\Controllers\Patient\{
 
 
 
+use App\Http\Controllers\Payment\PaymobController;
 use App\Http\Controllers\EmailCheckController;
 use App\Http\Controllers\Payment\PayPalController;
 
@@ -116,8 +117,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
     
     
-
-    
+});
+Route::prefix('payment')->group(function () {
+    Route::post('/payment/initiate', [PaymobController::class, 'initiatePayment']);
+    Route::post('/payment/confirm', [PaymobController::class, 'confirmPayment']);
 });
 
 Route::prefix('admin')->group(function () {

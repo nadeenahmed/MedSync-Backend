@@ -17,7 +17,7 @@ class BuildProfileController extends Controller
     public function Create(Request $request)
     {
         $user = $request->user();
-        $doctor = Doctor::where('user_id', $user->id)->first();
+        $doctor = Doctor::Where('user_id', $user->id)->first();
         if (!$doctor) {
             return response()->json(['errors' => 'Doctor not found'], 404);
         }
@@ -34,7 +34,7 @@ class BuildProfileController extends Controller
                 'string',
                 'regex:/^(010|011|012|015)[0-9]{8}$/',
             ],
-            'profile_image' => 'nullable|string',  
+            'profile_image' => 'nullable|string',
         ]);
     
         if ($validator->fails()) {
@@ -49,8 +49,10 @@ class BuildProfileController extends Controller
             return response()->json(['error' => 'Medical speciality not found'], 404);
         }
         // Handle file uploads
-        $profileImagePath = $this->handleFileUpload($request, 'Profile_Picture', 'public/profile-pictures', 'storage/profile-pictures/');
-        $licenceInfoPath = $this->handleFileUpload($request, 'licence_information', 'public/doctor-licence-info-files', 'storage/doctor-licence-info-files/');
+        $profileImagePath = $this->handleFileUpload($request, 'Profile_Picture',
+         'public/profile-pictures', 'storage/profile-pictures/');
+        $licenceInfoPath = $this->handleFileUpload($request, 'licence_information',
+         'public/doctor-licence-info-files', 'storage/doctor-licence-info-files/');
     
         // Create doctor record
         $user->profile_photo_path = $profileImagePath;

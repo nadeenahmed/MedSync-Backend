@@ -45,5 +45,12 @@ return [
     //     'client_secret' => '6c3fdd2cc71189c54a84b6ea8168e33c',
     //     'redirect' => 'http://localhost:8000/auth/facebook/callback'
     // ],
+    'paymob' => [
+        'api_key' => 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2T1RZMU9EZzJMQ0p1WVcxbElqb2lhVzVwZEdsaGJDSjkuNUVWeHNUSHg3Q05tN3ZKR1BpQ2FfVjVwN2VpXzNnY0xvRUV1cGx6RGdiSURSb1N6RVY2b0dDY0hXczBCeEs2OWlvU2JiSllZVTduZ2pfdVV4czFlUVE=',
+        'integration_id' => '4539895',
+        'iframe_id' => '832385',
+        'currency' => 'EGP', 
+        'hmac' => '52FECA5EB581D5FED6D754FC7EC1ABD8',
+    ],
 
 ];
