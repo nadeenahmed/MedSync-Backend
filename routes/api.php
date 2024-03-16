@@ -57,7 +57,8 @@ use App\Http\Controllers\PayPalController;
 Route::post('paypal', [PayPalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PayPalController::class, 'success'])->name('success');
 Route::get('cancel', [PayPalController::class, 'cancel'])->name('cancel');
- 
+Route::post('paymob/initiate-payment', [PaymobController::class, 'initiatePayment']);
+Route::post('paymob/confirm-payment', [PaymobController::class, 'confirmPayment']);
 
 //----------------authentication---------------
 Route::post('/register',[RegisterController::class,'register'])->name('User-Registration-API');
@@ -119,10 +120,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
     
     
-});
-Route::prefix('payment')->group(function () {
-    Route::post('/payment/initiate', [PaymobController::class, 'initiatePayment']);
-    Route::post('/payment/confirm', [PaymobController::class, 'confirmPayment']);
 });
 
 Route::prefix('admin')->group(function () {
