@@ -24,6 +24,7 @@ use App\Http\Controllers\Auth\{
     ForgetPasswordController,
     ResetPasswordController,
     GoogleAuthController,
+    EmailCheckController,
 };
 use App\Http\Controllers\Doctor\{
     BuildProfileController ,
@@ -32,15 +33,18 @@ use App\Http\Controllers\Doctor\{
 use App\Http\Controllers\Patient\{
     BuildHomeController,
     HomeController,
-    MedicalHistoryController,
     PatientSatisticsController,
     ProfileController,
 };
 
-
+use App\Http\Controllers\MedicalHistory\{
+    CreateController,
+    GetController,
+    Filtercontroller,
+    DeleteController
+};
 
 use App\Http\Controllers\Payment\PaymobController;
-use App\Http\Controllers\EmailCheckController;
 use App\Http\Controllers\PayPalController;
 
 /*
@@ -54,18 +58,20 @@ use App\Http\Controllers\PayPalController;
 |
 */
 //Public Routs
+
+//---------------------------------------payment---------------------------------------
+//---------------------------------------paypal---------------------------------------
 Route::post('paypal', [PayPalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PayPalController::class, 'success'])->name('success');
 Route::get('cancel', [PayPalController::class, 'cancel'])->name('cancel');
-
-
+//---------------------------------------paymob---------------------------------------
 Route::post('paymob/initiate-payment', [PaymobController::class, 'initiatePayment']);
 Route::post('paymob/confirm-payment', [PaymobController::class, 'confirmPayment']);
+//---------------------------------------payment---------------------------------------
 
-//----------------authentication---------------
+//--------------------------------------authentication------------------------------------------
 Route::post('/register',[RegisterController::class,'register'])->name('User-Registration-API');
 Route::post('/login',[LoginController::class,'login'])->name('User-Login-API');
-
 Route::post('/auth/google-token',[GoogleAuthController::class,'handleGoogleCallback'])->name('User-Google-API');
 // Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('User-Google-API');
 // Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('User-Google-callback-API');
@@ -79,7 +85,6 @@ Route::get('/email-verification',[EmailVerificationController::class,'send_email
 Route::post('/email-verification',[EmailVerificationController::class,'EmailVerification'])
 ->name('User-EmailVerification-API');
 //----------------email verification---------------
-//----------------authentication---------------
 
 //----------------reset password---------------
 Route::post('password/forgot-password',[ForgetPasswordController::class,'forgotPassword'])
@@ -88,14 +93,18 @@ Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp']
 ->name('User-verifyOtp-API');
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 ->name('User-ResetPassword-API');
-
 //----------------reset password---------------
 
+//--------------------------------------authentication------------------------------------------
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    //--------------------------------------authentication------------------------------------------
     Route::post('/user/logout',[RegisterController::class,'logout'])->name('User-Logout-API');
     Route::delete('/user/delete/account',[RegisterController::class,'DeleteAccount'])->name('User-Delete-Account-API');
+    //--------------------------------------authentication------------------------------------------
+
+    //--------------------------------------patient------------------------------------------
     Route::prefix('patient')->group(function () {
         Route::post('build/home/screen',[BuildHomeController::class,'build']);
         Route::get('home/screen',[HomeController::class,'view']);
@@ -103,19 +112,21 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('Blood/Pressure/History',[PatientSatisticsController::class,'getBloodPressureHistory']);
         Route::get('Blood/Sugar/History',[PatientSatisticsController::class,'getBloodSugarHistory']);
         Route::get('Weight/History',[PatientSatisticsController::class,'getBWeightHistory']);
-        Route::post('add/medical/record', [MedicalHistoryController::class, 'AddMedicalHistory']);
-        Route::get('get/all/medical/record', [MedicalHistoryController::class, 'getAllMedicalRecords']);
-        Route::post('filter/by/speciality',[MedicalHistoryController::class,'filterMedicalHistoryBySpecialty']);
-        Route::get('get/medical/record/{medicalRecordId}', [MedicalHistoryController::class,'getMedicalRecordDetails']);
-        Route::delete('delete/medical/record/{id}', [MedicalHistoryController::class, 'deleteMedicalRecord']);
-        Route::put('update/medical/record/{id}', [MedicalHistoryController::class, 'update']);
+        Route::post('add/medical/record', [CreateController::class, 'AddMedicalHistory']);
+        Route::get('get/all/medical/record', [GetController::class, 'getAllMedicalRecords']);
+        Route::post('filter/by/speciality',[FilterController::class,'filterMedicalHistoryBySpecialty']);
+        Route::get('get/medical/record/{medicalRecordId}', [GetController::class,'getMedicalRecordDetails']);
+        Route::delete('delete/medical/record/{id}', [DeleteController::class, 'deleteMedicalRecord']);
+       // Route::put('update/medical/record/{id}', [MedicalHistoryController::class, 'update']);
         
         
         
 
     });
+    //--------------------------------------patient------------------------------------------
 
 
+    //--------------------------------------doctor------------------------------------------
     Route::prefix('doctor')->group(function () {
         Route::post('build/profile',[BuildProfileController::class,'Create']);
         Route::post('add/workplace',[WorkPlacesController::class,'AddWorkPlace']);
@@ -124,10 +135,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('get/workplaces/',[WorkPlacesController::class,'index']);
         
     });
+    //--------------------------------------doctor------------------------------------------
     
     
 });
 
+
+//--------------------------------------admin------------------------------------------
 Route::prefix('admin')->group(function () {
 
     Route::post('login',[AdminLoginController::class,'adminLogin'])->name('Admin-Login-API');
@@ -137,9 +151,6 @@ Route::prefix('admin')->group(function () {
     Route::put('approve/request/{id}',[DoctorApprovalRequestController::class,'approve']);
     Route::post('reject/request/{id}',[DoctorApprovalRequestController::class,'reject']);
 
-
-
-    
     Route::get('get/all/colleges',[MedicalCollagesController::class,'index'])->name('Get-colleges-API');
     Route::get('show/college/{id}',[MedicalCollagesController::class,'show'])->name('Get-college-API');
     Route::post('create/college',[MedicalCollagesController::class,'create'])->name('Create-college-API');
@@ -151,9 +162,6 @@ Route::prefix('admin')->group(function () {
     Route::post('create/degree',[MedicalDegreesController::class,'create'])->name('Create-degree-API');
     Route::put('update/degree/{id}',[MedicalDegreesController::class,'update'])->name('Update-degree-API');
     Route::delete('delete/degree/{id}',[MedicalDegreesController::class,'destroy'])->name('Delete-degree-API');
-
-
-
 
     Route::get('get/all/patients',[PatientController::class,'index'])->name('Get-Patients-API');
     Route::get('show/patient/{id}',[PatientController::class,'show'])->name('Get-Patient-API');
@@ -211,3 +219,4 @@ Route::prefix('admin')->group(function () {
     Route::delete('delete/symptom/{id}',[SymptomsController::class,'destroy'])->name('Delete-Symptoms-API');
     
 });
+//--------------------------------------admin------------------------------------------
