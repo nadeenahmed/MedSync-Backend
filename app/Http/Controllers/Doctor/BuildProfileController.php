@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Doctor\DoctorRequest;
+use App\Mail\DoctorApprovalMail;
 use App\Models\Doctor;
 use App\Models\DoctorApprovalRequest;
 use App\Models\MedicalCollege;
@@ -12,7 +13,7 @@ use App\Models\Specialities;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Traits\FileUploadTrait;
-
+use Illuminate\Support\Facades\Mail;
 
 class BuildProfileController extends Controller
 {
@@ -20,12 +21,30 @@ class BuildProfileController extends Controller
     public function Create(Request $request)
     {
         $user = $request->user();
-        $doctor = Doctor::Where('user_id', $user->id)->first();
+        $doctor = Doctor::where('user_id', $user->id)->first();
         if (!$doctor) {
             return response()->json(['errors' => 'Doctor not found'], 404);
         }
 
+        // $pendingRequest = DoctorApprovalRequest::where('doctor_id', $doctor->id)
+        //                     ->where('request_status', 'pending')
+        //                     ->first();
 
+        // $rejectedRequest = DoctorApprovalRequest::where('doctor_id', $doctor->id)
+        //                     ->where('request_status', 'rejected')
+        //                     ->first();
+
+        // $acceptedRequest = DoctorApprovalRequest::where('doctor_id', $doctor->id)
+        //                     ->where('request_status', 'accepted')
+        //                     ->first();
+
+        // if ($pendingRequest) {
+        //     return response()->json([
+        //         'message' => 'Your approval request is already pending. Please wait for a response.',
+        //         'approval_request' => $pendingRequest,
+        //         'doctor_name' => "Dr. " . $user->name,
+        //     ], 200);
+        // }
         $university = str_replace('"', '', $request->input('university'));
         $medical_degree = str_replace('"', '', $request->input('medical_degree'));
         $specialityName = str_replace('"', '', $request->input('medical_speciality'));
@@ -43,10 +62,6 @@ class BuildProfileController extends Controller
                 'string',
                 'regex:/^(010|011|012|015)[0-9]{8}$/',
             ],
-<<<<<<< HEAD
-            'profile_image' => 'nullable|string',
-=======
->>>>>>> 3dbc77a0c8b6d301d0779d5e1c3b4c5d1e194f1d
         ]);
 
         if ($validator->fails()) {
@@ -76,17 +91,9 @@ class BuildProfileController extends Controller
             return response()->json(['error' => 'Medical Degree not found'], 404);
         }
         // Handle file uploads
-<<<<<<< HEAD
-        $profileImagePath = $this->handleFileUpload($request, 'Profile_Picture',
-         'public/profile-pictures', 'storage/profile-pictures/');
-        $licenceInfoPath = $this->handleFileUpload($request, 'licence_information',
-         'public/doctor-licence-info-files', 'storage/doctor-licence-info-files/');
-    
-=======
         $profileImagePath = $this->handleFileUpload($request, 'Profile_Picture', 'public/profile-pictures', 'storage/profile-pictures/');
         $licenceInfoPath = $this->handleFileUpload($request, 'licence_information', 'public/doctor-licence-info-files', 'storage/doctor-licence-info-files/');
 
->>>>>>> 3dbc77a0c8b6d301d0779d5e1c3b4c5d1e194f1d
         // Create doctor record
         $user->profile_photo_path = $profileImagePath;
         $user->update($request->all());
@@ -125,7 +132,7 @@ class BuildProfileController extends Controller
                 "english name" => $medical_degree->english_name,
                 "arabic name" => $medical_degree->arabic_name,
             ];
-
+            //Mail::to($user->email)->send(new DoctorApprovalMail($doctorName));
         return response()->json([
             'message' => 'Doctor information saved successfully. Approval requested.',
             'approval_request' => $approvalRequest,

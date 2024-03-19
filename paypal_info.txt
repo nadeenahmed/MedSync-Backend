@@ -1,0 +1,18 @@
+paypal integration info
+dev account:
+ranagaballah88@gmail.com
+password : pwij/FQfDd33ey30
+
+Test MedSync App2:
+clint id : AXNnE0kd8BkWB9jtwa47BEMpvQma6nbTeqC0KPLYTmQoExBi_B6eZTOO48hiuqeLtZYtGYoGIsAvtvZ8
+secret : ECcU3BwUyMpPtu6FqcpwoXQAg7kuyrI7nH59NuIQJ7SVLSNm0tF8KbeM1rAPln_spSocf9tkqIdpF-sS
+
+
+personal account :
+email : sb-un98s29971194@personal.example.com
+password : Rana123456
+
+
+bussiness account :
+email : sb-a0gx729130453@business.example.com
+password : RD2L1%a]

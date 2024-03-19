@@ -60,8 +60,8 @@ class MedicalHistoryController extends Controller
 
         foreach ($combinedLabTestNames as $labTestName) {
             // Check if the lab test name is in English or Arabic
-            $isEnglish = preg_match('/^[A-Za-z0-9\s]+$/', $labTestName);
-            $isArabic = preg_match('/^[\p{Arabic}\s]+$/u', $labTestName);
+            $isEnglish = preg_match('/^[A-Za-z0-9\s()]+$/', $labTestName);
+            $isArabic = preg_match('/^[\p{Arabic}\s()]+$/u', $labTestName);
 
             // Create LabTest based on language
             if ($isEnglish) {
@@ -242,8 +242,9 @@ class MedicalHistoryController extends Controller
                 return response()->json(['error' => 'Patient not found'], 404);
             }
 
-            $medicalRecords = MedicalHistory::where('patient_id', $patient->id)->orderBy('created_at', 'desc') // Add this line to order by created_at in descending order
-                ->get();
+            $medicalRecords = MedicalHistory::where('patient_id', $patient->id)
+            ->orderBy('created_at', 'desc') 
+            ->get();
             if ($medicalRecords->isEmpty()) {
                 return response()->json([
                     'message' => 'Medical Records Retrieved Successfully',
@@ -321,6 +322,16 @@ class MedicalHistoryController extends Controller
                     ];
                 })->toArray();
                 $allSpecialities = array_merge($allSpecialities, $specialities->toArray());
+
+                $Files = DB::table('medical_history_images')
+                ->join('medical_histories', 'medical_history_images.medical_history_id', '=', 'medical_histories.id')
+                ->where('medical_history_images.medical_history_id', $medicalRecord->id)
+                ->select('image_path')
+                ->get();
+        
+            $medicalRecord->Files= $Files->pluck('image_path')->map(function ($filePath) {
+                return trim($filePath);
+            })->toArray();
             }
 
             $uniqueSpecialities = collect($allSpecialities)->unique()->values()->all();
@@ -331,16 +342,6 @@ class MedicalHistoryController extends Controller
                 ],
                 ...$uniqueSpecialities,
             ];
-
-
-            $Files = DB::table('medical_history_images')
-                ->join('medical_histories', 'medical_history_images.medical_history_id', '=', 'medical_histories.id')
-                ->where('medical_history_images.medical_history_id', $medicalRecord->id)
-                ->select('image_path')
-                ->get();
-            $medicalRecord["Files"] = $Files->pluck('image_path')->map(function ($filePath) {
-                return trim($filePath);
-            })->toArray();
 
             return response()->json([
                 'message' => 'Medical Records Retrieved Successfully',
@@ -388,10 +389,12 @@ class MedicalHistoryController extends Controller
             $filteredMedicalHistory = DB::table('medical_histories')
                 ->where('patient_id', $patient->id)
                 ->where('medical_speciality_id', $medicalSpeciality->id)
+                ->orderBy('created_at', 'desc')
                 ->get();
         } else {
             $filteredMedicalHistory = DB::table('medical_histories')
                 ->where('patient_id', $patient->id)
+                ->orderBy('created_at', 'desc')
                 ->get();
         }
 
@@ -416,7 +419,6 @@ class MedicalHistoryController extends Controller
                         'arabic_name' => $medicalSpecialityInALL->arabic_name,
                     ]];
                 } else {
-                    // Handle the case where the speciality is not found
                     $medicalRecord->medical_speciality = [[
                         'english_name' => 'Not Found',
                         'arabic_name' => 'غير موجود',

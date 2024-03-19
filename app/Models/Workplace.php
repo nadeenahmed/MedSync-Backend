@@ -15,7 +15,8 @@ class Workplace extends Model
         'street',
         'region',
         'country',
-        'description'
+        'description',
+        'work_days'
     ];
 
     public function doctor() {

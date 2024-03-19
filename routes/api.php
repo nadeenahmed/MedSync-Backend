@@ -57,6 +57,8 @@ use App\Http\Controllers\PayPalController;
 Route::post('paypal', [PayPalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PayPalController::class, 'success'])->name('success');
 Route::get('cancel', [PayPalController::class, 'cancel'])->name('cancel');
+
+
 Route::post('paymob/initiate-payment', [PaymobController::class, 'initiatePayment']);
 Route::post('paymob/confirm-payment', [PaymobController::class, 'confirmPayment']);
 
@@ -117,6 +119,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('doctor')->group(function () {
         Route::post('build/profile',[BuildProfileController::class,'Create']);
         Route::post('add/workplace',[WorkPlacesController::class,'AddWorkPlace']);
+        Route::put('update/workplace/{id}',[WorkPlacesController::class,'UpdateWorkPlace']);
+        Route::delete('delete/workplace/{id}',[WorkPlacesController::class,'DestroyWorkPlace']);
+        Route::get('get/workplaces/',[WorkPlacesController::class,'index']);
+        
     });
     
     
@@ -129,8 +135,8 @@ Route::prefix('admin')->group(function () {
     Route::get('get/all/approval/requests',[DoctorApprovalRequestController::class,'index']);
     Route::get('show/approval/request/{id}',[DoctorApprovalRequestController::class,'show']);
     Route::put('approve/request/{id}',[DoctorApprovalRequestController::class,'approve']);
-    Route::put('reject/request/{id}',[DoctorApprovalRequestController::class,'reject']);
-    Route::delete('delete/request/{id}',[DoctorApprovalRequestController::class,'destroy']);
+    Route::post('reject/request/{id}',[DoctorApprovalRequestController::class,'reject']);
+
 
 
     

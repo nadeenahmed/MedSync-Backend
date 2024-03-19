@@ -6,18 +6,20 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
 
 class DoctorApprovalMail extends Mailable
 {
     use Queueable, SerializesModels;
+    public $doctorName;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($doctorName)
     {
-        //
+        $this->doctorName = $doctorName;
     }
 
     /**
@@ -26,7 +28,8 @@ class DoctorApprovalMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Doctor Approval Mail',
+            from: new Address('medsync6@gmail.com'),
+            subject: 'Doctor Approval Request Mail',
         );
     }
 
@@ -36,7 +39,7 @@ class DoctorApprovalMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mails.doctor_approval',
+            markdown: 'mails.doctorApproval',
         );
     }
 
