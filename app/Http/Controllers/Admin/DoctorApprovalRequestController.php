@@ -7,8 +7,12 @@ use App\Models\DoctorApprovalRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Mail\DoctorApprovalMail;
+use App\Mail\DoctorRejectionMail;
+use App\Mail\DoctorRequestMail;
+use App\Mail\TemplateMail;
 use App\Models\Doctor;
 use App\Models\User;
+use App\View\Components\DoctorRequestComponent;
 use Illuminate\Support\Facades\Mail;
 
 class DoctorApprovalRequestController extends Controller
@@ -50,12 +54,17 @@ class DoctorApprovalRequestController extends Controller
         try {
             $approvalRequest = DoctorApprovalRequest::findOrFail($id);
             $approvalRequest->update(['request_status' => 'approved']);
-            $approvalRequest->delete();
+            //$approvalRequest->delete();
             $doctor_id = $approvalRequest->doctor_id;
             $doctor = Doctor::findOrFail($doctor_id);
             $user = User::where('id', $doctor->user_id)->first();
             $doctorName = $user->name;
-            //Mail::to($user->email)->send(new DoctorApprovalMail($doctorName));
+           
+
+            
+            //Mail::to($user->email)->send(new  DoctorApprovalMail($doctorNameComponent));
+            Mail::to($user->email)->send(new DoctorApprovalMail($doctorName));
+            Mail::to($user->email)->send(new TemplateMail());
             return response()->json(['message' => 'Approval request approved']);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             $response = [
@@ -78,22 +87,24 @@ class DoctorApprovalRequestController extends Controller
     {
         try {
             $reasons = [
-                'License Not Supported' => 'Your license provided does not meet the requirements for approval. Please ensure that the license you submit is valid and supports our approval criteria.',
-                'Unclear License' => 'The license you provided is not clear or legible, making it difficult for us to verify its authenticity. Please upload a clear copy of your license that is easy to read.',
-                'Other Reasons' => 'Your approval request was rejected. Please review the requirements and ensure all necessary documents are provided correctly before reapplying.',
+                'License Not Supported' => 'Your license provided does not meet the requirements for approval. Please ensure that the license you submit is valid and supports our approval criteria',
+                'Unclear License' => 'The license you provided is not clear or legible, making it difficult for us to verify its authenticity. Please upload a clear copy of your license that is easy to read',
+                'Other Reasons' => 'Your approval request was rejected. Please review the requirements and ensure all necessary documents are provided correctly before reapplying',
             ];
             $approvalRequest = DoctorApprovalRequest::findOrFail($id);
             $reasonCode = $request->input('reason');
             $reasonDescription = $reasons[$reasonCode] ?? '';
+            $rejectionReason = $reasonDescription;
             $approvalRequest->update(['request_status' => 'pendeing']);
-            $approvalRequest->delete();
+           // $approvalRequest->delete();
             $doctor_id = $approvalRequest->doctor_id;
             $doctor = Doctor::findOrFail($doctor_id);
             $user = User::where('id', $doctor->user_id)->first();
             $doctorName = $user->name;
-            //Mail::to($user->email)->send(new DoctorApprovalMail($doctorName));
+            Mail::to($user->email)->send(new DoctorRejectionMail($doctorName,$rejectionReason));
             return response()->json([
-                'message' => 'Approval request rejected','reason' => [
+                'message' => 'Approval request rejected',
+                'reason' => [
                 'code' => $reasonCode,
                 'description' => $reasonDescription
             ]]);

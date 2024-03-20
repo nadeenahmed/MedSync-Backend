@@ -10,22 +10,17 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
 
-class DoctorApprovalMail extends Mailable
+class TemplateMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public $doctorName;
-    /**
-     * Create a new message instance.
-     */
-    public function __construct($doctorName)
+    public function __construct()
     {
-        $this->doctorName = $doctorName;
+        //
     }
-
 
     /**
      * Get the message envelope.
@@ -34,19 +29,8 @@ class DoctorApprovalMail extends Mailable
     {
         return new Envelope(
             from: new Address('medsync6@gmail.com'),
-            subject: 'Request Approved',
+            subject: 'Welcome To MedSync',
         );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function build()
-    {
-        return $this->view('mails.approvalMail')
-                    ->with([
-                        'doctorName' => $this->doctorName
-                    ]);
     }
 
     /**
@@ -55,10 +39,9 @@ class DoctorApprovalMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.approvalMail',
+            view: 'mails.templateMail',
         );
     }
-
 
     /**
      * Get the attachments for the message.

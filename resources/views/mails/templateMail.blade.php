@@ -1,0 +1,1 @@
+<x-email-template/>

@@ -135,7 +135,7 @@
 														<tr>
 															<td class="pad" style="padding-bottom:5px;padding-top:5px;width:100%;padding-right:0px;padding-left:0px;">
 																<div class="alignment" align="center" style="line-height:10px">
-																	<div style="max-width: 193.5px;"><img src="https://35e7db6da2.imgdist.com/pub/bfra/v4i8m3a3/86j/pv1/a9w/Screenshot_5.png" style="display: block; height: auto; border: 0; width: 100%;" width="193.5" alt="Your Logo" title="Your Logo"></div>
+																	<div style="max-width: 161.25px;"><img src="https://35e7db6da2.imgdist.com/pub/bfra/v4i8m3a3/nj2/imv/3y5/Screenshot_5_1.png" style="display: block; height: auto; border: 0; width: 100%;" width="161.25" alt="Your Logo" title="Your Logo"></div>
 																</div>
 															</td>
 														</tr>
@@ -324,7 +324,7 @@
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;text-align:left;">
 																<div class="alignment" align="left"><!--[if mso]>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:48px;width:182px;v-text-anchor:middle;" arcsize="12%" strokeweight="1.5pt" strokecolor="#3e69fe" fill="false">
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:48px;width:165px;v-text-anchor:middle;" arcsize="12%" strokeweight="1.5pt" strokecolor="#3e69fe" fill="false">
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center style="color:#3e69fe; font-family:'Trebuchet MS', Tahoma, sans-serif; font-size:16px">
@@ -387,7 +387,7 @@
 															<tr>
 																<td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;text-align:right;">
 																	<div class="alignment" align="right"><!--[if mso]>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:48px;width:182px;v-text-anchor:middle;" arcsize="12%" strokeweight="1.5pt" strokecolor="#3e69fe" fill="false">
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:48px;width:165px;v-text-anchor:middle;" arcsize="12%" strokeweight="1.5pt" strokecolor="#3e69fe" fill="false">
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center style="color:#3e69fe; font-family:'Trebuchet MS', Tahoma, sans-serif; font-size:16px">
@@ -474,7 +474,7 @@
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;text-align:left;">
 																<div class="alignment" align="left"><!--[if mso]>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:48px;width:182px;v-text-anchor:middle;" arcsize="12%" strokeweight="1.5pt" strokecolor="#3e69fe" fillcolor="#ffffff">
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:48px;width:165px;v-text-anchor:middle;" arcsize="12%" strokeweight="1.5pt" strokecolor="#3e69fe" fillcolor="#ffffff">
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center style="color:#3e69fe; font-family:'Trebuchet MS', Tahoma, sans-serif; font-size:16px">
@@ -503,7 +503,7 @@
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;text-align:center;">
 																<div class="alignment" align="center"><!--[if mso]>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:38px;width:183px;v-text-anchor:middle;" arcsize="14%" stroke="false" fillcolor="#3e69fe">
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:38px;width:165px;v-text-anchor:middle;" arcsize="14%" stroke="false" fillcolor="#3e69fe">
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center style="color:#ffffff; font-family:'Trebuchet MS', Tahoma, sans-serif; font-size:16px">
@@ -598,7 +598,7 @@
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;text-align:center;">
 																<div class="alignment" align="center"><!--[if mso]>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:38px;width:173px;v-text-anchor:middle;" arcsize="14%" stroke="false" fillcolor="#ffffff">
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com" style="height:38px;width:156px;v-text-anchor:middle;" arcsize="14%" stroke="false" fillcolor="#ffffff">
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center style="color:#3e69fe; font-family:'Trebuchet MS', Tahoma, sans-serif; font-size:16px">
@@ -628,7 +628,7 @@
 														<tr>
 															<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
 																<div class="alignment" align="center" style="line-height:10px">
-																	<div class="fullWidth" style="max-width: 354.75px;"><img src="https://35e7db6da2.imgdist.com/pub/bfra/v4i8m3a3/86j/pv1/a9w/Screenshot_5.png" style="display: block; height: auto; border: 0; width: 100%;" width="354.75" alt="Your Logo" title="Your Logo"></div>
+																	<div class="fullWidth" style="max-width: 354.75px;"><img src="https://35e7db6da2.imgdist.com/pub/bfra/v4i8m3a3/nj2/imv/3y5/Screenshot_5_1.png" style="display: block; height: auto; border: 0; width: 100%;" width="354.75" alt="Your Logo" title="Your Logo"></div>
 																</div>
 															</td>
 														</tr>
@@ -696,12 +696,7 @@
 																	<tr>
 																		<td class="alignment" style="vertical-align: middle; text-align: center;"><!--[if vml]><table align="center" cellpadding="0" cellspacing="0" role="presentation" style="display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><![endif]-->
 																			<!--[if !vml]><!-->
-																			<table class="icons-inner" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; margin-right: -4px; padding-left: 0px; padding-right: 0px;" cellpadding="0" cellspacing="0" role="presentation"><!--<![endif]-->
-																				<tr>
-																					<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 6px;"><a href="http://designedwithbeefree.com/" target="_blank" style="text-decoration: none;"><img class="icon" alt="Beefree Logo" src="https://d1oco4z2z1fhwp.cloudfront.net/assets/Beefree-logo.png" height="32" width="34" align="center" style="display: block; height: auto; margin: 0 auto; border: 0;"></a></td>
-																					<td style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: undefined; color: #1e0e4b; vertical-align: middle; letter-spacing: undefined; text-align: center;"><a href="http://designedwithbeefree.com/" target="_blank" style="color: #1e0e4b; text-decoration: none;">Designed with Beefree</a></td>
-																				</tr>
-																			</table>
+																			
 																		</td>
 																	</tr>
 																</table>

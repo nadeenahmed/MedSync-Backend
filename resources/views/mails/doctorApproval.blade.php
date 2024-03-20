@@ -1,1 +1,1 @@
-<x-email-template />
+<x-doctor-request-component :doctorName="$doctorName" />
