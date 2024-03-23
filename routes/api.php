@@ -39,7 +39,7 @@ use App\Http\Controllers\Patient\{
 
 
 
-use App\Http\Controllers\Payment\PaymobController;
+use App\Http\Controllers\PaymobController;
 use App\Http\Controllers\EmailCheckController;
 use App\Http\Controllers\PayPalController;
 
