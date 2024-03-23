@@ -13,8 +13,8 @@ class Workplace extends Model
     [
         'doctor_id',
         'street',
-        'region',
-        'country',
+        'region_id',
+        'country_id',
         'description',
         'work_days'
     ];

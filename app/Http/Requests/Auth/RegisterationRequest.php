@@ -24,7 +24,7 @@ class RegisterationRequest extends FormRequest
         return [
             
             'email' => 'unique:users,email',
-            'password' => 'confirmed', // 'confirmed' checks if password and password_confirmation match
+            'password' => 'confirmed',
 
         ];
     }
