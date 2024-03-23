@@ -1,0 +1,1 @@
+<x-doctor-request-component :doctorName="$doctorName" />

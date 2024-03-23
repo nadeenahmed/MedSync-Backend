@@ -1,0 +1,1 @@
+<x-doctor-rejection :doctorName="$doctorName" :rejectionReason="$rejectionReason" />

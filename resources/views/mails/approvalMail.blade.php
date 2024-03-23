@@ -1,0 +1,1 @@
+<x-doctor-approval :doctorName="$doctorName" />

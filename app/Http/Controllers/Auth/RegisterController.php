@@ -131,46 +131,44 @@ class RegisterController extends Controller
         
     public function DeleteAccount(Request $request)
     {
-        try{
-
+        try {
+            $user = $request->user();
             auth()->user()->tokens()->delete();
-            $user=$request->user();
-            $patient = Patient::where('user_id', $user['id'])->first();
-            $patientEmergencyData = EmergencyData::where('patient_id',$patient['id'])->first();
-            $doctor = Doctor::where('user_id' , $user['id'])->first();
-            if($user)
-            {
-                if ($user->profile_photo_path) {
-                    $path = storage_path('app/public/' . str_replace('storage/', '', $user->profile_photo_path));
-                    if (File::exists($path)) {
-                        File::delete($path);
+            
+            if ($user) {
+                if ($user['role'] === 'patient') {
+                    $patient = Patient::where('user_id', $user->id)->first();
+                    $patientEmergencyData = EmergencyData::where('patient_id', $patient->id)->first();
+                    
+                    if ($patient) {
+                        $patient->delete();
+                    }else{
                     }
-                }
-                if($user['role']==='patient')
-                {
+                    if ($patientEmergencyData) {
+                        $patientEmergencyData->delete();
+                    }
                     $user->delete();
-                    $patient->delete();
-                    $patientEmergencyData->delete();
-                    return response()->json(['message' => 'Account deleted successfully'],200);
-
-                }else{
+                    
+                    return response()->json(['message' => 'Account deleted successfully'], 200);
+                } elseif ($user['role'] === 'doctor') {
+                    $doctor = Doctor::where('user_id', $user->id)->first();
+                    
+                    if ($doctor) {
+                        $doctor->delete();
+                    }
                     $user->delete();
-                    $doctor->delete();
-                    return response()->json(['message' => 'Account deleted successfully'],200);
+                    
+                    return response()->json(['message' => 'Account deleted successfully'], 200);
                 }
-
-            }else{
+            } else {
                 return response()->json(['message' => 'User not found'], 404);
             }
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $response = [
                 'message' => 'Internal Server Error',
-                'errors' => 'error : '.$e,
+                'errors' => 'error : ' . $e,
             ];
             return response()->json($response, 500);
         }
-        
-        
     }
 }

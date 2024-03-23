@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Doctor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Doctor\DoctorRequest;
 use App\Mail\DoctorApprovalMail;
+use App\Mail\DoctorRequestMail;
 use App\Models\Doctor;
 use App\Models\DoctorApprovalRequest;
 use App\Models\MedicalCollege;
@@ -132,12 +133,13 @@ class BuildProfileController extends Controller
                 "english name" => $medical_degree->english_name,
                 "arabic name" => $medical_degree->arabic_name,
             ];
-            //Mail::to($user->email)->send(new DoctorApprovalMail($doctorName));
+            Mail::to($user->email)->send(new DoctorRequestMail($doctorName));
         return response()->json([
             'message' => 'Doctor information saved successfully. Approval requested.',
             'approval_request' => $approvalRequest,
             'doctor name' => "Dr." . $doctorName,
             'doctor' => $doctor,
             'user' => $user
-        ],200);
-    }}
+        ], 200);
+    }
+}
