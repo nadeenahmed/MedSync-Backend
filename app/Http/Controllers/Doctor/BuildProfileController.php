@@ -69,7 +69,6 @@ class BuildProfileController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-
         $medicalSpeciality = Specialities::where(function ($query) use ($specialityName) {
             $query->where('english_name', $specialityName)
                 ->orWhere('arabic_name', $specialityName);

@@ -11,6 +11,9 @@ use App\Mail\DoctorRejectionMail;
 use App\Mail\DoctorRequestMail;
 use App\Mail\TemplateMail;
 use App\Models\Doctor;
+use App\Models\MedicalCollege;
+use App\Models\MedicalDegree;
+use App\Models\Specialities;
 use App\Models\User;
 use App\View\Components\DoctorRequestComponent;
 use Illuminate\Support\Facades\Mail;
@@ -33,7 +36,32 @@ class DoctorApprovalRequestController extends Controller
     {
         try{
             $approvalRequest = DoctorApprovalRequest::findOrFail($id);
-            return response()->json(['approvalRequest' => $approvalRequest]);
+            $doctor = Doctor::where('id',$approvalRequest->doctor_id)->first();
+            $user = User::where('id',$doctor->user_id)->first();
+            $university = MedicalCollege::where('id', $doctor->university_id)->first();
+            $medical_degree = MedicalDegree::where('id', $doctor->medical_degree_id)->first();
+            $speciality = Specialities::where('id',$doctor->speciality_id)->first();
+            $doctor["Medical Speciality"] =
+            [
+                "english name" => $speciality->english_name,
+                "arabic name" => $speciality->arabic_name,
+            ];
+            $doctor["university"] =
+                [
+                    "english name" => $university->english_name,
+                    "arabic name" => $university->arabic_name,
+                ];
+            $doctor["medical Degree"] =
+                [
+                    "english name" => $medical_degree->english_name,
+                    "arabic name" => $medical_degree->arabic_name,
+                ];
+            return response()->json([
+                'approvalRequest' => $approvalRequest,
+                'user' => $user,
+                'doctor' => $doctor,
+
+            ]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             $response = [
                 'message' => 'Approval request not found',
@@ -58,17 +86,13 @@ class DoctorApprovalRequestController extends Controller
             $doctor_id = $approvalRequest->doctor_id;
             $doctor = Doctor::findOrFail($doctor_id);
             $user = User::where('id', $doctor->user_id)->first();
-            $doctorName = $user->name;
-           
-
-            
-            //Mail::to($user->email)->send(new  DoctorApprovalMail($doctorNameComponent));
+            $doctorName = $user->name;    
             Mail::to($user->email)->send(new DoctorApprovalMail($doctorName));
             Mail::to($user->email)->send(new TemplateMail());
-            return response()->json(['message' => 'Approval request approved']);
+            return response()->json(['message' => 'Doctor request approved'],200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             $response = [
-                'message' => 'Approval request not found',
+                'message' => 'Doctor request not found',
                 'errors' => 'error : ' . $e,
             ];
             return response()->json($response, 404);
@@ -103,7 +127,7 @@ class DoctorApprovalRequestController extends Controller
             $doctorName = $user->name;
             Mail::to($user->email)->send(new DoctorRejectionMail($doctorName,$rejectionReason));
             return response()->json([
-                'message' => 'Approval request rejected',
+                'message' => 'Doctor request rejected',
                 'reason' => [
                 'code' => $reasonCode,
                 'description' => $reasonDescription
