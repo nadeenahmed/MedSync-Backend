@@ -41,7 +41,7 @@ class DoctorApprovalRequestController extends Controller
             $university = MedicalCollege::where('id', $doctor->university_id)->first();
             $medical_degree = MedicalDegree::where('id', $doctor->medical_degree_id)->first();
             $speciality = Specialities::where('id',$doctor->speciality_id)->first();
-            $doctor["Medical Speciality"] =
+            $doctor["Medical_Speciality"] =
             [
                 "english name" => $speciality->english_name,
                 "arabic name" => $speciality->arabic_name,
@@ -51,7 +51,7 @@ class DoctorApprovalRequestController extends Controller
                     "english name" => $university->english_name,
                     "arabic name" => $university->arabic_name,
                 ];
-            $doctor["medical Degree"] =
+            $doctor["medical_Degree"] =
                 [
                     "english name" => $medical_degree->english_name,
                     "arabic name" => $medical_degree->arabic_name,
@@ -119,7 +119,7 @@ class DoctorApprovalRequestController extends Controller
             $reasonCode = $request->input('reason');
             $reasonDescription = $reasons[$reasonCode] ?? '';
             $rejectionReason = $reasonDescription;
-            $approvalRequest->update(['request_status' => 'pendeing']);
+            $approvalRequest->update(['request_status' => 'rejected']);
            // $approvalRequest->delete();
             $doctor_id = $approvalRequest->doctor_id;
             $doctor = Doctor::findOrFail($doctor_id);
