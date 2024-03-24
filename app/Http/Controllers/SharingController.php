@@ -9,57 +9,116 @@ use App\Models\MedicalHistory;
 
 class SharingController extends Controller
 {
-    public function requestSharing(Request $request, Patient $patient)
+    public function index(Request $request)
     {
-        $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:doctors,id',
-        ]);
-        
-        $patient = Patient::findOrFail($request->patient_id);
-
-        $medicalHistories = MedicalHistory::where('patient_id', $patient->id)->pluck('id')->toArray();
-        $serializedMedicalHistoryIds = json_encode($medicalHistories);
+        return $request->user();
+    }
+    public function requestSharing(Request $request, $doctor_id)
+    {
+        try{
+            $user = $this->index($request);
+            $patient = Patient::where('user_id', $user->id)->first();
+            if (!$patient) {
+                return response()->json(['errors' => 'Patient not found'], 404);
+            }
         SharingRequest::create([
             'patient_id' => $patient->id,
-            'doctor_id' => $request->doctor_id,
-            'medical_history_ids' => $serializedMedicalHistoryIds, 
+            'doctor_id' => $doctor_id,
             'status' => 'pending',
         ]);
-
         return response()->json(['message' => 'Sharing request sent successfully'], 200);
     }
-
-    public function approveSharing(Request $request, SharingRequest $sharingRequest)
-    {
-        $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'sharing_request_id' => 'required|exists:sharing_requests,id',
-        ]);
-
-        $sharingRequest = SharingRequest::findOrFail($request->sharing_request_id);
-        $sharingRequest->update(['status' => 'approved']);
-
-        // Additional logic if needed, such as notifying the patient
-
-        return response()->json(['message' => 'Sharing request approved'], 200);
+    catch (\Exception $e) {
+        $response = [
+            'message' => 'Sharing History Failed',
+            'errors' => $e->getMessage(),
+        ];
+        return response()->json($response, 500);
+    }
     }
 
-    public function rejectSharing(Request $request, SharingRequest $sharingRequest)
+    public function approvedRequests(Request $request)
     {
-        $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'sharing_request_id' => 'required|exists:sharing_requests,id',
-        ]);
+        try{
+            $user = $this->index($request);
+            $doctor = Doctor::where('user_id', $user->id)->first();
+            if (!$doctor) {
+                return response()->json(['errors' => 'Doctor not found'], 404);
+            }
+        $approvedSharingRequests = SharingRequest::where('doctor_id', $doctor->id)
+            ->where('status', 'approved')
+            ->get();
 
-        // Retrieve the sharing request
-        $sharingRequest = SharingRequest::findOrFail($request->sharing_request_id);
+        return response()->json(['approved_sharing_requests' => $approvedSharingRequests], 200);
+    }catch (\Exception $e) {
+    $response = [
+        'message' => 'Server Error',
+        'errors' => $e->getMessage(),
+    ];
+    return response()->json($response, 500);
+}
+    }
 
-        // Update the status of the sharing request to rejected
-        $sharingRequest->update(['status' => 'rejected']);
+    public function pendingRequests(Request $request)
+    {
+        try{
+            $user = $this->index($request);
+            $doctor = Doctor::where('user_id', $user->id)->first();
+            if (!$doctor) {
+                return response()->json(['errors' => 'Doctor not found'], 404);
+            }
+        $pendingSharingRequests = SharingRequest::where('doctor_id', $doctor->id)
+            ->where('status', 'pending')
+            ->get();
 
-        // Additional logic if needed, such as notifying the patient
+        return response()->json(['pending_sharing_requests' => $pendingSharingRequests], 200);
+    }catch (\Exception $e) {
+        $response = [
+            'message' => 'Server Error',
+            'errors' => $e->getMessage(),
+        ];
+        return response()->json($response, 500);
+    }
+    }
+    public function approveSharing(Request $request, $sharing_request_id)
+    {
+        try{
+            $user = $this->index($request);
+            $doctor = Doctor::where('user_id', $user->id)->first();
+            if (!$doctor) {
+                return response()->json(['errors' => 'Doctor not found'], 404);
+            }
+            $sharingRequest = SharingRequest::findOrFail($sharing_request_id);
+            $sharingRequest->update(['status' => 'approved']);
+    
+            return response()->json(['message' => 'Sharing request approved'], 200);
+    }catch (\Exception $e) {
+    $response = [
+        'message' => 'Server Error',
+        'errors' => $e->getMessage(),
+    ];
+    return response()->json($response, 500);
+}      
+    }
 
-        return response()->json(['message' => 'Sharing request rejected'], 200);
+    public function rejectSharing(Request $request, $sharing_request_id)
+    {
+        try{
+            $user = $this->index($request);
+            $doctor = Doctor::where('user_id', $user->id)->first();
+            if (!$doctor) {
+                return response()->json(['errors' => 'Doctor not found'], 404);
+            }
+            $sharingRequest = SharingRequest::findOrFail($sharing_request_id);
+            $sharingRequest->update(['status' => 'rejected']);
+    
+            return response()->json(['message' => 'Sharing request rejected'], 200);
+    }catch (\Exception $e) {
+    $response = [
+        'message' => 'Server Error',
+        'errors' => $e->getMessage(),
+    ];
+    return response()->json($response, 500);
+}      
     }
 }

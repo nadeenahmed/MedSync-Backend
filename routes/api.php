@@ -128,7 +128,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/doctors/search', [SearchForDoctor::class, 'search']);
         Route::get('/find/all/doctors', [SearchForDoctor::class, 'index']);
         Route::post('/filter/doctors', [SearchForDoctor::class, 'filterBySpecialty']);
-        Route::post('/share-history', [SharingController::class, 'requestSharing']);
+        Route::post('/share-history/{doctor_id}', [SharingController::class, 'requestSharing']);
         
 
     });
@@ -142,8 +142,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('update/workplace/{id}',[WorkPlacesController::class,'UpdateWorkPlace']);
         Route::delete('delete/workplace/{id}',[WorkPlacesController::class,'DestroyWorkPlace']);
         Route::get('get/workplaces/',[WorkPlacesController::class,'index']);
-        Route::post('approve-sharing', [SharingController::class, 'approveSharing']);
-        Route::post('reject-sharing', [SharingController::class, 'rejectSharing']);
+        Route::get('/approved-requests', [SharingController::class, 'approvedRequests']);
+        Route::get('/pending-requests', [SharingController::class, 'pendingRequests']);
+        Route::post('/approve-sharing/{sharing_request_id}', [SharingController::class, 'approveSharing']);
+        Route::post('reject-sharing/{sharing_request_id}', [SharingController::class, 'rejectSharing']);
         
     });
     //--------------------------------------doctor------------------------------------------
