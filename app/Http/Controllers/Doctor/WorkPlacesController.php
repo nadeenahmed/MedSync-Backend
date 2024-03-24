@@ -63,8 +63,8 @@ class WorkPlacesController extends Controller
                 'region' => 'required|string',
                 'country' => 'required|string',
                 'description' => 'nullable|string',
-                'work_days' => 'required',
-                'work_days.*' => 'required|string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Saturday',
+                //'work_days' => 'required',
+                //'work_days.*' => 'required|string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Saturday',
             ]);
             $workplace = Workplace::create([
                 'doctor_id' => $doctor->id,
@@ -72,7 +72,7 @@ class WorkPlacesController extends Controller
                 'region_id' => $region->id,
                 'country_id' => $country->id,
                 'description' => $validatedData['description'],
-                'work_days' => $validatedData['work_days'],
+                'work_days' => $request['work_days'],
             ]);
             $workplace->work_days = json_decode($workplace->work_days);
             $workplace["Region"] =

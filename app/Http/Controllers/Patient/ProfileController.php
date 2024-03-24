@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Models\Doctor;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +17,7 @@ class ProfileController extends Controller
     {
         try{
             $user = $request->user();
+            if($user->role === 'patient'){
             $patient = Patient::where('user_id', $user->id)->first();
             if (!$patient) {
                 return response()->json(['errors' => 'Patient not found'], 404);
@@ -35,7 +37,27 @@ class ProfileController extends Controller
                 'user' => $user,
                 'patient' => $patient,
             ];
-            return response()->json($response,200);
+            return response()->json($response,200);}else if ($user->role === 'doctor'){
+
+                $doctor = Doctor::where('user_id', $user->id)->first();
+                if (!$doctor) {
+                    return response()->json(['errors' => 'Doctor not found'], 404);
+                }
+                $image = $this->handleFileUpload($request, 'image', 'public/profile-pictures', 'storage/profile-pictures/');
+                $user->profile_photo_path = $image;
+               
+                $user->update($request->all());
+                $doctor->update([
+                    'gender' => $request->gender,
+                    'phone' => $request->input('phone'),
+                ]);
+                $response=[
+                    'user' => $user,
+                    'doctor' => $doctor,
+                ];
+                return response()->json($response,200);
+
+            }
            
         }catch (\Exception $e) {
             $response = [
