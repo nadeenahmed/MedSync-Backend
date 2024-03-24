@@ -29,7 +29,7 @@ class DoctorApprovalRequestController extends Controller
             ];
             return response()->json($response, 200);
         }
-        return response()->json(['approvalRequests' => $approvalRequests],200);
+        return response()->json($approvalRequests ,200);
     }
 
     public function show($id)

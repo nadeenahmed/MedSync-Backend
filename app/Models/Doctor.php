@@ -42,4 +42,9 @@ class Doctor extends Model
     {
         return $this->hasMany(DoctorApprovalRequest::class);
     }
+
+    public function receivedSharingRequests()
+    {
+    return $this->hasMany(SharingRequest::class, 'doctor_id');
+    }
 }

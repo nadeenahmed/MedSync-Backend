@@ -2,63 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use PayMob\Facades\PayMob;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 
-class PaymobController extends Controller
+class PayMobController extends Controller
 {
-    protected $httpClient;
-    protected $apiKey;
-
-    public function __construct()
+    public static function pay(float $total_price, int $order_id)
     {
-        $this->httpClient = new Client([
-            'base_uri' => 'https://accept.paymob.com/api/',
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . config('services.paymob.api_key'),
-            ],
+        $auth = PayMob::AuthenticationRequest();
+        $order = PayMob::OrderRegistrationAPI([
+            'auth_token' => $auth->token,
+            'amount_cents' => $total_price * 100, //put your price
+            'currency' => 'EGP',
+            'delivery_needed' => false, // another option true
+            'merchant_order_id' => $order_id, //put order id from your database must be unique id
+            'items' => [] // all items information or leave it empty
+        ]);
+        $PaymentKey = PayMob::PaymentKeyRequest([
+            'auth_token' => $auth->token,
+            'amount_cents' => $total_price * 100, //put your price
+            'currency' => 'EGP',
+            'order_id' => $order->id,
+            "billing_data" => [ // put your client information
+                "apartment" => "803",
+                "email" => "claudette09@exa.com",
+                "floor" => "42",
+                "first_name" => "Clifford",
+                "street" => "Ethan Land",
+                "building" => "8028",
+                "phone_number" => "+86(8)9135210487",
+                "shipping_method" => "PKG",
+                "postal_code" => "01898",
+                "city" => "Jaskolskiburgh",
+                "country" => "CR",
+                "last_name" => "Nicolas",
+                "state" => "Utah"
+            ]
         ]);
 
-        $this->apiKey = config('services.paymob.api_key');
-    }
-
-    public function initiatePayment(request $orderData)
-    {
-        $response = $this->httpClient->post('paymob/initiate-payment', [
-            'json' => [
-                'auth_token' => $this->apiKey,
-                'delivery_needed' => 'false',
-                'amount_cents' => $orderData['amount'] * 100,
-                'currency' => 'EGP',
-                'items' => [],
-                'merchant_order_id' => $orderData['order_id'],
-            ],
-        ]);
-    
-        $responseData = json_decode($response->getBody()->getContents(), true);
-    
-        return $responseData['token'];
-    }
-    
-    public function confirmPayment($paymentToken, $orderID)
-    {
-        $response = $this->httpClient->post('paymob/confirm-payment', [
-            'json' => [
-                'auth_token' => $this->apiKey,
-                'delivery_needed' => 'false',
-                'amount_cents' => $orderID['amount'] * 100,
-                'currency' => 'EGP',
-                'payment_token' => $paymentToken,
-            ],
-        ]);
-    
-        if ($response->getStatusCode() === 200) {
-            $responseData = json_decode($response->getBody()->getContents(), true);
-            return $responseData;
-        } else {
-            throw new \Exception('Error processing payment: ' . $response->getBody()->getContents());
-        }
+        return $PaymentKey->token;
     }
 }
