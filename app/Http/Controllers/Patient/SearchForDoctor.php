@@ -22,24 +22,14 @@ class SearchForDoctor extends Controller
         if ($doctors->isEmpty()) {
             return response()->json(['message' => 'No doctors found'], 404);
         }
-
-        // Retrieve unique specialty IDs from doctors
         $medicalSpecialtyIds = $doctors->pluck('speciality_id')->unique()->toArray();
-
-        // Prepend the "All" option to the IDs
-        array_unshift($medicalSpecialtyIds, 0); // Assuming 0 represents "All"
-
-        // Get medical specialties corresponding to unique IDs
+        array_unshift($medicalSpecialtyIds, 0); 
         $medicalSpecialties = Specialities::whereIn('id', $medicalSpecialtyIds)->get();
-
-        // Create the default "All" option
         $defaultSpecialty = [
             'english_name' => 'All',
             'arabic_name' => 'الكل',
             'photo' => null,
         ];
-
-        // Prepend the "All" option to the medical specialties
         $medicalSpecialties->prepend($defaultSpecialty);
 
         foreach ($doctors as $doctor) {
