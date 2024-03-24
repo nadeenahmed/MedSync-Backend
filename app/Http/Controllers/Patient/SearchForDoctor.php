@@ -36,6 +36,7 @@ class SearchForDoctor extends Controller
         $defaultSpecialty = [
             'english_name' => 'All',
             'arabic_name' => 'الكل',
+            'photo' => null,
         ];
 
         // Prepend the "All" option to the medical specialties
