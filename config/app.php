@@ -173,6 +173,7 @@ return [
 
         Ichtrojan\Otp\OtpServiceProvider::class,
         Srmklive\PayPal\Providers\PayPalServiceProvider::class,
+        PayMob\PayMobServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -189,6 +190,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Otp' => Ichtrojan\Otp\Otp::class,
+        'PayMob' => PayMob\Facades\PayMob::class,
     ])->toArray(),
 
 ];
