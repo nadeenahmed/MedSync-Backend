@@ -35,6 +35,7 @@ use App\Http\Controllers\Patient\{
     HomeController,
     PatientSatisticsController,
     ProfileController,
+    SearchForDoctor,
 };
 
 use App\Http\Controllers\MedicalHistory\{
@@ -46,6 +47,7 @@ use App\Http\Controllers\MedicalHistory\{
 
 use App\Http\Controllers\Payment\PaymobController;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\Recommendation\TopDoctorsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +95,10 @@ Route::post('password/verify-otp', [ResetPasswordController::class, 'verifyOtp']
 ->name('User-verifyOtp-API');
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])
 ->name('User-ResetPassword-API');
+
+Route::get('/find/top/doctors', [TopDoctorsController::class, 'getTopDoctors']);
+      
+        
 //----------------reset password---------------
 
 //--------------------------------------authentication------------------------------------------
@@ -118,7 +124,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('get/medical/record/{medicalRecordId}', [GetController::class,'getMedicalRecordDetails']);
         Route::delete('delete/medical/record/{id}', [DeleteController::class, 'deleteMedicalRecord']);
        // Route::put('update/medical/record/{id}', [MedicalHistoryController::class, 'update']);
-        
+        Route::post('/doctors/search', [SearchForDoctor::class, 'search']);
+        Route::get('/find/all/doctors', [SearchForDoctor::class, 'index']);
+        Route::post('/filter/doctors', [SearchForDoctor::class, 'filterBySpecialty']);
         
         
 
