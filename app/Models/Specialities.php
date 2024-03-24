@@ -12,5 +12,6 @@ class Specialities extends Model
     protected $fillable = [
         'english_name',
         'arabic_name',
+        'photo'
     ];
 }
