@@ -48,6 +48,7 @@ use App\Http\Controllers\MedicalHistory\{
 use App\Http\Controllers\Payment\PaymobController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\Recommendation\TopDoctorsController;
+use App\Http\Controllers\SharingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,7 +128,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/doctors/search', [SearchForDoctor::class, 'search']);
         Route::get('/find/all/doctors', [SearchForDoctor::class, 'index']);
         Route::post('/filter/doctors', [SearchForDoctor::class, 'filterBySpecialty']);
-        
+        Route::post('/share-history', [SharingController::class, 'requestSharing']);
         
 
     });
@@ -141,6 +142,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('update/workplace/{id}',[WorkPlacesController::class,'UpdateWorkPlace']);
         Route::delete('delete/workplace/{id}',[WorkPlacesController::class,'DestroyWorkPlace']);
         Route::get('get/workplaces/',[WorkPlacesController::class,'index']);
+        Route::post('approve-sharing', [SharingController::class, 'approveSharing']);
+        Route::post('reject-sharing', [SharingController::class, 'rejectSharing']);
         
     });
     //--------------------------------------doctor------------------------------------------

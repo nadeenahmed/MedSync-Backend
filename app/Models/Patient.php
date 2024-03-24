@@ -30,4 +30,8 @@ class Patient extends Model
     {
         return $this->hasOne(EmergencyData::class);
     }
+    public function sharingRequests()
+    {
+    return $this->hasMany(SharingRequest::class);
+    }
 }
