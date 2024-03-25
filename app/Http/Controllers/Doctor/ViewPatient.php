@@ -29,20 +29,80 @@ class ViewPatient extends Controller
         $user = User::where('id', $patient->user_id)->first();
 
         $existingEmergencyData = EmergencyData::where('patient_id', $patient->id)->first();
+        $bloodPressureHistory = DB::table('blood_pressure_changes')
+                ->join('emergency_data', 'blood_pressure_changes.emergency_data_id', '=', 'emergency_data.id')
+                ->where('emergency_data.patient_id', $patient->id)
+                ->orderByDesc('blood_pressure_changes.date')
+                ->orderByDesc('blood_pressure_changes.time')
+                ->groupBy(
+                    'blood_pressure_changes.date',
+                    'blood_pressure_changes.time',
+                    'blood_pressure_changes.systolic',
+                    'blood_pressure_changes.diastolic',
+                    'blood_pressure_changes.color',
+                    'blood_pressure_changes.color_description',
+                    'blood_pressure_changes.emergency_data_id'
+                )
+                ->select(
+                    'blood_pressure_changes.date',
+                    'blood_pressure_changes.time',
+                    'blood_pressure_changes.systolic',
+                    'blood_pressure_changes.diastolic',
+                    'blood_pressure_changes.color',
+                    'blood_pressure_changes.color_description'
+                )
+                ->distinct()
+                ->get();
+        $bloodSugarHistory = DB::table('blood_sugar_changes')
+                ->join('emergency_data', 'blood_sugar_changes.emergency_data_id', '=', 'emergency_data.id')
+                ->where('emergency_data.patient_id', $patient->id)
+                ->orderByDesc('blood_sugar_changes.date')
+                ->orderByDesc('blood_sugar_changes.time')
+                ->groupBy(
+                    'blood_sugar_changes.date',
+                    'blood_sugar_changes.time',
+                    'blood_sugar_changes.blood_sugar',
+                    'blood_sugar_changes.emergency_data_id'
+                )
+                ->select(
+                    'blood_sugar_changes.date',
+                    'blood_sugar_changes.time',
+                    'blood_sugar_changes.blood_sugar',
+                    
+                )
+                ->distinct()
+                ->get();
 
-        $bloodPressureChange = BloodPressureChange::where('emergency_data_id', $existingEmergencyData->id)->first();
+        // $bloodSugarChange = BloodSugarChange::where('emergency_data_id', $existingEmergencyData->id)->first();
 
-        $bloodSugarChange = BloodSugarChange::where('emergency_data_id', $existingEmergencyData->id)->first();
-
-        $weightHeightChange = WeightHeightChange::where('emergency_data_id', $existingEmergencyData->id)->first();
-
+        // $weightHeightChange = WeightHeightChange::where('emergency_data_id', $existingEmergencyData->id)->first();
+        $weightHistory = DB::table('weight_height_changes')
+        ->join('emergency_data', 'weight_height_changes.emergency_data_id', '=', 'emergency_data.id')
+        ->where('emergency_data.patient_id', $patient->id)
+        ->orderByDesc('weight_height_changes.date')
+        ->orderByDesc('weight_height_changes.time')
+        ->groupBy(
+            'weight_height_changes.date',
+            'weight_height_changes.time',
+            'weight_height_changes.weight',
+            'weight_height_changes.height',
+            'weight_height_changes.emergency_data_id'
+        )
+        ->select(
+            'weight_height_changes.date',
+            'weight_height_changes.time',
+            'weight_height_changes.weight',
+            'weight_height_changes.height'
+        )
+        ->distinct()
+        ->get();
         return response()->json([
             'user' => $user,
             'patient' => $patient,
             'emergency_data' => $existingEmergencyData,
-            'pressure_history' => $bloodPressureChange,
-            'sugar_history' => $bloodSugarChange,
-            'weight_height_history' => $weightHeightChange
+            'pressure_history' => $bloodPressureHistory,
+            'sugar_history' => $bloodSugarHistory,
+            'weight_height_history' => $weightHistory
         ], 200);
     } catch (\Exception $e) {
         $response = [
