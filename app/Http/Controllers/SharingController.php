@@ -55,8 +55,11 @@ class SharingController extends Controller
             if (!$doctor) {
                 return response()->json(['errors' => 'Doctor not found'], 404);
             }
-        $approvedSharingRequests = SharingRequest::where('doctor_id', $doctor->id)
+            $approvedSharingRequests = SharingRequest::where('doctor_id', $doctor->id)
             ->where('status', 'approved')
+            ->with(['patient.user' => function ($query) use ($user) {
+                $query->where('id', '!=', $user->id); // Exclude the current logged-in user
+            }])
             ->get();
 
         return response()->json(['approved_sharing_requests' => $approvedSharingRequests], 200);
@@ -77,9 +80,13 @@ class SharingController extends Controller
             if (!$doctor) {
                 return response()->json(['errors' => 'Doctor not found'], 404);
             }
-        $pendingSharingRequests = SharingRequest::where('doctor_id', $doctor->id)
+            $pendingSharingRequests = SharingRequest::where('doctor_id', $doctor->id)
             ->where('status', 'pending')
+            ->with(['patient.user' => function ($query) use ($user) {
+                $query->where('id', '!=', $user->id); // Exclude the current logged-in user
+            }])
             ->get();
+
 
         return response()->json(['pending_sharing_requests' => $pendingSharingRequests], 200);
     }catch (\Exception $e) {
