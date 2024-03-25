@@ -23,6 +23,7 @@ class SpecialitiesController extends Controller
             'arabic_name' => 'required|string|max:255',
             'english_name' => 'required|string|max:255',
         ]);
+        
 
     
         $specialities = Specialities::create([
