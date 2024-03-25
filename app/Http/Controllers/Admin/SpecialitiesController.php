@@ -18,10 +18,11 @@ class SpecialitiesController extends Controller
 
     public function create(Request $request)
     {
-        $specialityImagePath = $this->handleFileUpload($request, 'photo', 'public/Specialities-photos', 'storage/Specialities-photos/');
+        
         $validatedData = $request->validate([
             'arabic_name' => 'required|string|max:255',
             'english_name' => 'required|string|max:255',
+            'photo' => 'nullable',
         ]);
         
 
@@ -29,7 +30,7 @@ class SpecialitiesController extends Controller
         $specialities = Specialities::create([
             'arabic_name' => $validatedData['arabic_name'],
             'english_name' => $validatedData['english_name'],
-            'photo' => $specialityImagePath,
+            'photo' => $validatedData['photo'],
         ]);
     
         return response()->json($specialities, 201);
@@ -43,10 +44,10 @@ class SpecialitiesController extends Controller
     public function update(Request $request, $id)
     {
         $specialities = Specialities::findOrFail($id);
-
         $validatedData = $request->validate([
             'arabic_name' => 'required|string|max:255',
             'english_name' => 'required|string|max:255',
+            'photo' => 'nullable',
         ]);
 
         $specialities->update($validatedData);
