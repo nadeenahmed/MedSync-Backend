@@ -13,9 +13,14 @@ use Illuminate\Support\Facades\DB;
 
 class WorkPlacesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $workplaces = Workplace::all();
+        $user = $request->user();
+        $doctor = Doctor::where('user_id', $user->id)->first();
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
+        $workplaces = Workplace::where('doctor_id', $doctor->id)->get();
         if ($workplaces->isEmpty()) {
             return response()->json(['message' => 'No Clinics Available'], 200);
         }
