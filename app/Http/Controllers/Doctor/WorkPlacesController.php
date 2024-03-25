@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class WorkPlacesController extends Controller
 {
-    public function index(Request $request)
+    public function GetDoctorWorkPlaces(Request $request)
     {
         $user = $request->user();
         $doctor = Doctor::where('user_id', $user->id)->first();
@@ -126,6 +126,11 @@ class WorkPlacesController extends Controller
 
     public function UpdateWorkPlace(Request $request, $id)
     {
+        $user = $request->user();
+        $doctor = Doctor::where('user_id', $user->id)->first();
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
         $workplace = Workplace::find($id);
         if (!$workplace) {
             return response()->json(['error' => 'Clinic not found'], 404);
@@ -154,15 +159,18 @@ class WorkPlacesController extends Controller
     }
 
 
-    public function DestroyWorkPlace($id)
+    public function DestroyWorkPlace(Request $request,$id)
     {
+        $user = $request->user();
+        $doctor = Doctor::where('user_id', $user->id)->first();
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
         $workplace = Workplace::find($id);
         if (!$workplace) {
             return response()->json(['error' => 'Clinic not found'], 404);
         }
-
         $workplace->delete();
-
         return response()->json(['message' => 'Clinic deleted successfully']);
     }
 }
