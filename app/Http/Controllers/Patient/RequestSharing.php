@@ -37,4 +37,27 @@ class RequestSharing extends Controller
         return response()->json($response, 500);
     }
     }
+
+    public function cancelSharing(Request $request, $doctor_id)
+    {
+        try {
+            $user = $this->index($request);
+            $patient = Patient::where('user_id', $user->id)->first();
+            $patient_id = $patient->id;
+            $sharingRequest = SharingRequest::where('patient_id', $patient_id)
+                ->where('doctor_id', $doctor_id)
+                ->first();
+    
+            if (!$sharingRequest) {
+                return response()->json(['error' => 'Sharing request not found.'], 404);
+            }
+
+            $sharingRequest->delete();
+    
+            return response()->json(['message' => 'Sharing request canceled successfully.'], 200);
+        } catch (\Exception $e) {
+
+            return response()->json(['error' => 'Server error', 'message' => $e->getMessage()], 500);
+        }
+}
 }
