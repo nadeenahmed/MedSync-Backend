@@ -27,14 +27,21 @@ use App\Http\Controllers\Auth\{
     EmailCheckController,
 };
 use App\Http\Controllers\Doctor\{
+    AddRecord,
+    ApproveRequests,
     BuildProfileController ,
+    RejectRequests,
+    ViewPatient,
     WorkPlacesController,
+    ViewRequests,
+
 };
 use App\Http\Controllers\Patient\{
     BuildHomeController,
     HomeController,
     PatientSatisticsController,
     ProfileController,
+    RequestSharing,
     SearchForDoctor,
 };
 
@@ -128,7 +135,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/doctors/search', [SearchForDoctor::class, 'search']);
         Route::get('/find/all/doctors', [SearchForDoctor::class, 'index']);
         Route::post('/filter/doctors', [SearchForDoctor::class, 'filterBySpecialty']);
-        Route::post('/share-history/{doctor_id}', [SharingController::class, 'requestSharing']);
+        Route::post('/share-history/{doctor_id}', [RequestSharing::class, 'requestSharing']);
         
 
     });
@@ -142,13 +149,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('update/workplace/{id}',[WorkPlacesController::class,'UpdateWorkPlace']);
         Route::delete('delete/workplace/{id}',[WorkPlacesController::class,'DestroyWorkPlace']);
         Route::get('get/workplaces/',[WorkPlacesController::class,'index']);
-        Route::get('/approved-requests', [SharingController::class, 'approvedRequests']);
-        Route::get('/pending-requests', [SharingController::class, 'pendingRequests']);
-        Route::post('/approve-sharing/{sharing_request_id}', [SharingController::class, 'approveSharing']);
-        Route::post('reject-sharing/{sharing_request_id}', [SharingController::class, 'rejectSharing']);
-        Route::get('patient-profile/{sharing_request_id}', [SharingController::class, 'patientProfile']);
-        Route::get('patient-history/{sharing_request_id}', [SharingController::class, 'patientHistory']);
-        Route::post('filter-history/{sharing_request_id}', [SharingController::class, 'filterHistory']);
+        Route::get('/approved-requests', [ViewRequests::class, 'approvedRequests']);
+        Route::get('/pending-requests', [ViewRequests::class, 'pendingRequests']);
+        Route::post('/approve-sharing/{sharing_request_id}', [ApproveRequests::class, 'approveSharing']);
+        Route::post('reject-sharing/{sharing_request_id}', [RejectRequests::class, 'rejectSharing']);
+        Route::get('patient-profile/{sharing_request_id}', [ViewPatient::class, 'patientProfile']);
+        Route::get('patient-history/{sharing_request_id}', [ViewPatient::class, 'patientHistory']);
+        Route::post('filter-history/{sharing_request_id}', [ViewPatient::class, 'filterHistory']);
+        Route::post('add-record/{patient_id}', [AddRecord::class, 'addRecord']);
         
     });
     //--------------------------------------doctor------------------------------------------
