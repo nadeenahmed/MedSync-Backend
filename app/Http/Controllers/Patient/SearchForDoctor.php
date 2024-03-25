@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Doctor;
 use App\Models\MedicalCollege;
 use App\Models\MedicalDegree;
+use App\Models\Patient;
 use App\Models\Region;
 use App\Models\Specialities;
 use App\Models\User;
@@ -17,11 +18,15 @@ use Illuminate\Http\Request;
 
 class SearchForDoctor extends Controller
 {
-    public function index()
+    public function GetAllDoctors(Request $request)
     {
         try {
+            $user = $request->user();
+            $patient = Patient::where('user_id', $user->id)->first();
+            if (!$patient) {
+                return response()->json(['errors' => 'Patient not found'], 404);
+            }
             $doctors = Doctor::all();
-
             if ($doctors->isEmpty()) {
                 return response()->json(['message' => 'No doctors found'], 404);
             }
@@ -81,6 +86,11 @@ class SearchForDoctor extends Controller
     public function filterBySpecialty(Request $request)
     {
         try {
+            $user = $request->user();
+            $patient = Patient::where('user_id', $user->id)->first();
+            if (!$patient) {
+                return response()->json(['errors' => 'Patient not found'], 404);
+            }
             $specialtyEnglishName = str_replace('"', '', $request->input('medical_speciality_english'));
             $specialtyArabicName = str_replace('"', '', $request->input('medical_speciality_arabic'));
             $isAllSpecialityEnglish = in_array($specialtyEnglishName, ['All']) && empty($specialtyArabicName);
@@ -180,6 +190,11 @@ class SearchForDoctor extends Controller
 
     public function search(Request $request)
     {
+        $user = $request->user();
+        $patient = Patient::where('user_id', $user->id)->first();
+        if (!$patient) {
+            return response()->json(['errors' => 'Patient not found'], 404);
+        }
         $query = $request->input('query');
         $users = User::where('name', 'like', "%$query%")->get();
         $doctorIds = $users->pluck('id');

@@ -133,7 +133,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('delete/medical/record/{id}', [DeleteController::class, 'deleteMedicalRecord']);
        // Route::put('update/medical/record/{id}', [MedicalHistoryController::class, 'update']);
         Route::post('/doctors/search', [SearchForDoctor::class, 'search']);
-        Route::get('/find/all/doctors', [SearchForDoctor::class, 'index']);
+        Route::get('/find/all/doctors', [SearchForDoctor::class, 'GetAllDoctors']);
         Route::post('/filter/doctors', [SearchForDoctor::class, 'filterBySpecialty']);
         Route::post('/share-history/{doctor_id}', [RequestSharing::class, 'requestSharing']);
         Route::post('/cancel-sharing/{doctor_id}', [RequestSharing::class, 'cancelSharing']);
@@ -149,7 +149,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('add/workplace',[WorkPlacesController::class,'AddWorkPlace']);
         Route::put('update/workplace/{id}',[WorkPlacesController::class,'UpdateWorkPlace']);
         Route::delete('delete/workplace/{id}',[WorkPlacesController::class,'DestroyWorkPlace']);
-        Route::get('get/workplaces/',[WorkPlacesController::class,'index']);
+        Route::get('get/workplaces/',[WorkPlacesController::class,'GetDoctorWorkPlaces']);
         Route::get('/approved-requests', [ViewRequests::class, 'approvedRequests']);
         Route::get('/pending-requests', [ViewRequests::class, 'pendingRequests']);
         Route::post('/approve-sharing/{sharing_request_id}', [ApproveRequests::class, 'approveSharing']);
