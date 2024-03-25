@@ -20,7 +20,24 @@ class WorkPlacesController extends Controller
             return response()->json(['message' => 'No Clinics Available'], 200);
         }
         foreach ($workplaces as $workplace) {
+            $workplace->TodayPatient=0;
+            $workplace->PatientVisits=[];
             $workplace->work_days = json_decode($workplace->work_days);
+            $region = Region::find($workplace->region_id);
+            $country = Country::find($workplace->country_id);
+            $workplace["Clinic_Name"] = $region->english_name . ' Clinic';
+            $workplace["region" ] = $region
+                ? [
+                    "english_name" => $region->english_name,
+                    "arabic_name" => $region->arabic_name,
+                ]
+                : null;
+                $workplace["country"] = $country
+                ? [
+                    "english_name" => $country->english_name,
+                    "arabic_name" => $country->arabic_name,
+                ]
+                : null;    
         }
         return response()->json(['workplaces' => $workplaces], 200);
     }
