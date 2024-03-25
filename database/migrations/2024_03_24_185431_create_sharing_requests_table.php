@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sharing_requests', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('patient_id')->constrained()->onDelete('cascade');
-            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
-            $table->string('status');
-            $table->timestamps();
+        // Schema::create('sharing_requests', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('patient_id')->constrained()->onDelete('cascade');
+        //     $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+        //     $table->string('status');
+        //     $table->timestamps();
 
-        });
+        // });
     }
 
     /**
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sharing_requests');
+        // Schema::dropIfExists('sharing_requests');
     }
 };

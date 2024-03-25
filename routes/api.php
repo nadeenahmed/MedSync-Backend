@@ -146,6 +146,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/pending-requests', [SharingController::class, 'pendingRequests']);
         Route::post('/approve-sharing/{sharing_request_id}', [SharingController::class, 'approveSharing']);
         Route::post('reject-sharing/{sharing_request_id}', [SharingController::class, 'rejectSharing']);
+        Route::get('patient-profile/{sharing_request_id}', [SharingController::class, 'patientProfile']);
+        Route::get('patient-history/{sharing_request_id}', [SharingController::class, 'patientHistory']);
+        Route::post('filter-history/{sharing_request_id}', [SharingController::class, 'filterHistory']);
         
     });
     //--------------------------------------doctor------------------------------------------

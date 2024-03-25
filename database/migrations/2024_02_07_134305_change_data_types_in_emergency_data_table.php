@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('emergency_data', function (Blueprint $table) {
-            $table->string('bloodPressure_change_date')->change();
-            $table->string('bloodPressure_change_time')->change();
-            $table->string('bloodSugar_change_date')->change();
-            $table->string('bloodSugar_change_time')->change();
-            $table->string('weightHeight_change_date')->change();
-            $table->string('weightHeight_change_time')->change();
+            // $table->string('bloodPressure_change_date')->change();
+            // $table->string('bloodPressure_change_time')->change();
+            // $table->string('bloodSugar_change_date')->change();
+            // $table->string('bloodSugar_change_time')->change();
+            // $table->string('weightHeight_change_date')->change();
+            // $table->string('weightHeight_change_time')->change();
         });
     }
 
@@ -27,12 +27,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('emergency_data', function (Blueprint $table) {
-            $table->date('bloodPressure_change_date')->change();
-            $table->time('bloodPressure_change_time')->change();
-            $table->date('bloodSugar_change_date')->change();
-            $table->time('bloodSugar_change_time')->change();
-            $table->date('weightHeight_change_date')->change();
-            $table->time('weightHeight_change_time')->change();
+            // $table->date('bloodPressure_change_date')->change();
+            // $table->time('bloodPressure_change_time')->change();
+            // $table->date('bloodSugar_change_date')->change();
+            // $table->time('bloodSugar_change_time')->change();
+            // $table->date('weightHeight_change_date')->change();
+            // $table->time('weightHeight_change_time')->change();
         });
     }
 };

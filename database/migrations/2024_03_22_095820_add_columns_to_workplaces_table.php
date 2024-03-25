@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('workplaces', function (Blueprint $table) {
-            $table->unsignedBigInteger('country_id')->nullable(); 
-            $table->unsignedBigInteger('region_id')->nullable(); 
-            $table->foreign('country_id')->references('id')->on('countries');
-            $table->foreign('region_id')->references('id')->on('regions');
-        });
+        // Schema::table('workplaces', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('country_id')->nullable(); 
+        //     $table->unsignedBigInteger('region_id')->nullable(); 
+        //     $table->foreign('country_id')->references('id')->on('countries');
+        //     $table->foreign('region_id')->references('id')->on('regions');
+        // });
     }
 
     /**
@@ -24,8 +24,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('workplaces', function (Blueprint $table) {
-            //
-        });
+        // Schema::table('workplaces', function (Blueprint $table) {
+        //     //
+        // });
     }
 };

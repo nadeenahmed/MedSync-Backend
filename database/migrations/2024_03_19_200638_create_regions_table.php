@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('regions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('country_id')->constrained()->onDelete('cascade');
-            $table->string('arabic_name');
-            $table->string('english_name');
-            $table->timestamps();
+            // $table->id();
+            // $table->foreignId('country_id')->constrained()->onDelete('cascade');
+            // $table->string('arabic_name');
+            // $table->string('english_name');
+            // $table->timestamps();
         });
     }
 

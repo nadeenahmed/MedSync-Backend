@@ -13,42 +13,42 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('medical_degrees', function (Blueprint $table) {
-            $table->id();
-            $table->string('arabic_name')->nullable();
-            $table->string('english_name')->nullable();
-            $table->timestamps();
+            // $table->id();
+            // $table->string('arabic_name')->nullable();
+            // $table->string('english_name')->nullable();
+            // $table->timestamps();
         });
 
-        $arabic_data = [
-            'طبيب الامتياز/ طبيب متدرب/ طبيب متمرن',
-            'طبيب مقيم',
-            'أخصائي',
-            'أخصائي أول',
-            'إستشاري',
-            'استشاري أول',
-            'دكتوراه / بروفيسور',
+        // $arabic_data = [
+        //     'طبيب الامتياز/ طبيب متدرب/ طبيب متمرن',
+        //     'طبيب مقيم',
+        //     'أخصائي',
+        //     'أخصائي أول',
+        //     'إستشاري',
+        //     'استشاري أول',
+        //     'دكتوراه / بروفيسور',
 
 
-        ];
+        // ];
 
-        $data = [
-            'Intern',
-            'Resident',
-            'Specialist',
-            'Senior Specialist',
-            'Consultant',
-            'Senior Consultant',
-            'Professor',
-        ];
+        // $data = [
+        //     'Intern',
+        //     'Resident',
+        //     'Specialist',
+        //     'Senior Specialist',
+        //     'Consultant',
+        //     'Senior Consultant',
+        //     'Professor',
+        // ];
 
-        foreach ($arabic_data as $index => $arabic_college) {
-            DB::table('medical_degrees')->insert([
-                'arabic_name' => $arabic_college,
-                'english_name' => $data[$index],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        // foreach ($arabic_data as $index => $arabic_college) {
+        //     DB::table('medical_degrees')->insert([
+        //         'arabic_name' => $arabic_college,
+        //         'english_name' => $data[$index],
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ]);
+        // }
     }
 
     /**
@@ -56,6 +56,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('medical_degrees');
+        // Schema::dropIfExists('medical_degrees');
     }
 };

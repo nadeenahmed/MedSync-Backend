@@ -13,80 +13,80 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('countries', function (Blueprint $table) {
-            $table->id();
-            $table->string('arabic_name');
-            $table->string('english_name');
-            $table->timestamps();
+            // $table->id();
+            // $table->string('arabic_name');
+            // $table->string('english_name');
+            // $table->timestamps();
         });
 
-        $arabic_data = [
-            'القاهرة',
-            'الجيزة',
-            'الإسكندرية',
-            'أسوان',
-            'أسيوط',
-            'البحيرة',
-            'بني سويف',
-            'الدقهلية',
-            'دمياط',
-            'الفيوم',
-            'الغربية',
-            'الإسماعيلية',
-            'كفر الشيخ',
-            'الأقصر',
-            'مطروح',
-            'المنيا',
-            'المنوفية',
-            'شمال سيناء',
-            'بور سعيد',
-            'القليوبية',
-            'قنا',
-            'البحر الاحمر',
-            'الشرقية',
-            'سوهاج',
-            'جنوب سيناء',
-            'السويس',
-            'طنطا'
-        ];
+        // $arabic_data = [
+        //     'القاهرة',
+        //     'الجيزة',
+        //     'الإسكندرية',
+        //     'أسوان',
+        //     'أسيوط',
+        //     'البحيرة',
+        //     'بني سويف',
+        //     'الدقهلية',
+        //     'دمياط',
+        //     'الفيوم',
+        //     'الغربية',
+        //     'الإسماعيلية',
+        //     'كفر الشيخ',
+        //     'الأقصر',
+        //     'مطروح',
+        //     'المنيا',
+        //     'المنوفية',
+        //     'شمال سيناء',
+        //     'بور سعيد',
+        //     'القليوبية',
+        //     'قنا',
+        //     'البحر الاحمر',
+        //     'الشرقية',
+        //     'سوهاج',
+        //     'جنوب سيناء',
+        //     'السويس',
+        //     'طنطا'
+        // ];
 
-        $english_data = [
-            'Cairo',
-            'Giza',
-            'Alexandria',
-            'Aswan',
-            'Asyut',
-            'Elbehera',
-            'Bani Sweif',
-            'Dakahlia',
-            'Damietta',
-            'Fayoum',
-            'Gharbia',
-            'Ismailia',
-            'Kafr El-Sheikh',
-            'Oqsur',
-            'Matrooh',
-            'Minya',
-            'Menoufia',
-            'North Sinai',
-            'Port Said',
-            'Qalyubia',
-            'Qna',
-            'The Red Sea',
-            'Sharqia',
-            'Sohag',
-            'South of Sinaa',
-            'Suez',
-            'Tanta'
-        ];
+        // $english_data = [
+        //     'Cairo',
+        //     'Giza',
+        //     'Alexandria',
+        //     'Aswan',
+        //     'Asyut',
+        //     'Elbehera',
+        //     'Bani Sweif',
+        //     'Dakahlia',
+        //     'Damietta',
+        //     'Fayoum',
+        //     'Gharbia',
+        //     'Ismailia',
+        //     'Kafr El-Sheikh',
+        //     'Oqsur',
+        //     'Matrooh',
+        //     'Minya',
+        //     'Menoufia',
+        //     'North Sinai',
+        //     'Port Said',
+        //     'Qalyubia',
+        //     'Qna',
+        //     'The Red Sea',
+        //     'Sharqia',
+        //     'Sohag',
+        //     'South of Sinaa',
+        //     'Suez',
+        //     'Tanta'
+        // ];
 
-        foreach ($arabic_data as $index => $arabic_countries) {
-            DB::table('countries')->insert([
-                'arabic_name' => $arabic_countries,
-                'english_name' => $english_data[$index],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        // foreach ($arabic_data as $index => $arabic_countries) {
+        //     DB::table('countries')->insert([
+        //         'arabic_name' => $arabic_countries,
+        //         'english_name' => $english_data[$index],
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ]);
+        // }
     }
 
     /**
@@ -94,6 +94,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('countries');
+        // Schema::dropIfExists('countries');
     }
 };

@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('visits', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('patient_id')->nullable();
-            $table->unsignedBigInteger('workplace_id')->nullable();
-            $table->timestamps();
+        // Schema::create('visits', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('patient_id')->nullable();
+        //     $table->unsignedBigInteger('workplace_id')->nullable();
+        //     $table->timestamps();
 
-            $table->foreign('patient_id')->references('id')->on('patients');
-            $table->foreign('workplace_id')->references('id')->on('workplaces');
-        });
+        //     $table->foreign('patient_id')->references('id')->on('patients');
+        //     $table->foreign('workplace_id')->references('id')->on('workplaces');
+        // });
     }
 
     /**
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('visits');
+        // Schema::dropIfExists('visits');
     }
 };

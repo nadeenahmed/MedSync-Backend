@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('emergency_data', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->unsignedBigInteger('patient_id');
-            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
-            $table->integer('systolic')->nullable();
-            $table->integer('diastolic')->nullable();
-            $table->integer('blood_sugar')->nullable();
-            $table->integer('weight')->nullable();
-            $table->integer('height')->nullable();
-            $table->string('blood_type')->nullable();
-            $table->json('chronic_diseases_bad_habits')->nullable();
+            // $table->id();
+            // $table->timestamps();
+            // $table->unsignedBigInteger('patient_id');
+            // $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
+            // $table->integer('systolic')->nullable();
+            // $table->integer('diastolic')->nullable();
+            // $table->integer('blood_sugar')->nullable();
+            // $table->integer('weight')->nullable();
+            // $table->integer('height')->nullable();
+            // $table->string('blood_type')->nullable();
+            // $table->json('chronic_diseases_bad_habits')->nullable();
             
             
         });
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('emergency_data');
+        // Schema::dropIfExists('emergency_data');
     }
 };

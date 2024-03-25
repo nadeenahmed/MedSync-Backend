@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('workplaces', function (Blueprint $table) {
-            $table->json('work_days')->nullable()->after('description');
+            // $table->json('work_days')->nullable()->after('description');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('workplaces', function (Blueprint $table) {
-            $table->dropColumn('work_days');
+            // $table->dropColumn('work_days');
         });
     }
 };
