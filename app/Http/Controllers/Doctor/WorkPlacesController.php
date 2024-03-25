@@ -59,20 +59,23 @@ class WorkPlacesController extends Controller
             //     return response()->json(['error' => 'country not found'], 404);
             // }
             $validatedData = $request->validate([
-                'street' => 'required|string',
-                'region' => 'required|string',
-                'country' => 'required|string',
-                'description' => 'nullable|string',
+                // 'street' => 'required|string',
+                // 'region' => 'required|string',
+                // 'country' => 'required|string',
+                // 'description' => 'nullable|string',
                 //'work_days' => 'required',
                 //'work_days.*' => 'required|string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Saturday',
             ]);
+            $workDaysString = json_encode($request['work_days']);
+            
+          
             $workplace = Workplace::create([
                 'doctor_id' => $doctor->id,
-                'street' => $validatedData['street'],
+                'street' => $request['street'],
                 'region_id' => $region->id,
                 'country_id' => $country->id,
-                'description' => $validatedData['description'],
-                'work_days' => $request['work_days'],
+                'description' => $request['description'],
+                'work_days' => $workDaysString,
             ]);
             $workplace->work_days = json_decode($workplace->work_days);
             $workplace["Region"] =

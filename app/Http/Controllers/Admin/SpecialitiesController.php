@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Specialities;
+use App\Traits\FileUploadTrait;
+
 class SpecialitiesController extends Controller
 {
+    use FileUploadTrait;
     public function index()
     {
         $specialities = Specialities::all();
@@ -15,12 +18,18 @@ class SpecialitiesController extends Controller
 
     public function create(Request $request)
     {
+        $specialityImagePath = $this->handleFileUpload($request, 'photo', 'public/Specialities-photos', 'storage/Specialities-photos/');
         $validatedData = $request->validate([
             'arabic_name' => 'required|string|max:255',
             'english_name' => 'required|string|max:255',
         ]);
+
     
-        $specialities = Specialities::create($validatedData);
+        $specialities = Specialities::create([
+            'arabic_name' => $validatedData['arabic_name'],
+            'english_name' => $validatedData['english_name'],
+            'photo' => $request['photo'],
+        ]);
     
         return response()->json($specialities, 201);
     }
