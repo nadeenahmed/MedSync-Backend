@@ -136,6 +136,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/find/all/doctors', [SearchForDoctor::class, 'index']);
         Route::post('/filter/doctors', [SearchForDoctor::class, 'filterBySpecialty']);
         Route::post('/share-history/{doctor_id}', [RequestSharing::class, 'requestSharing']);
+        Route::post('/cancel-sharing/{doctor_id}', [RequestSharing::class, 'cancelSharing']);
         
 
     });
