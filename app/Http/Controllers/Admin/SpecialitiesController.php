@@ -29,7 +29,7 @@ class SpecialitiesController extends Controller
         $specialities = Specialities::create([
             'arabic_name' => $validatedData['arabic_name'],
             'english_name' => $validatedData['english_name'],
-            'photo' => $request['photo'],
+            'photo' => $specialityImagePath,
         ]);
     
         return response()->json($specialities, 201);
