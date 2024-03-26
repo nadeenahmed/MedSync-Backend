@@ -154,7 +154,7 @@ class SearchForDoctor extends Controller
                     $region = Region::find($workplace->region_id);
                     $country = Country::find($workplace->country_id);
                     return [
-                        "Clinic_Name" => $region->english_name . ' Clinic',
+                        "Clinic_Name" => $region->english_name,
                         "street" => $workplace->street,
                         "region" => $region
                             ? [

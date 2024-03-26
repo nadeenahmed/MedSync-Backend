@@ -30,7 +30,7 @@ class WorkPlacesController extends Controller
             $workplace->work_days = json_decode($workplace->work_days);
             $region = Region::find($workplace->region_id);
             $country = Country::find($workplace->country_id);
-            $workplace["Clinic_Name"] = $region->english_name . ' Clinic';
+            $workplace["Clinic_Name"] = $region->english_name;
             $workplace["region" ] = $region
                 ? [
                     "english_name" => $region->english_name,
