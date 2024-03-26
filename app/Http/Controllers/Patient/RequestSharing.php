@@ -22,10 +22,18 @@ class RequestSharing extends Controller
             if (!$patient) {
                 return response()->json(['errors' => 'Patient not found'], 404);
             }
+        //     $sharing_duration = $request->input('sharing_duration');
+
+        // if ($sharing_duration) {
+        //     $expiration_time = now()->addHours($sharing_duration);
+        // } else {
+        //     $expiration_time = now()->addHours(1);
+        // }
         SharingRequest::create([
             'patient_id' => $patient->id,
             'doctor_id' => $doctor_id,
             'status' => 'pending',
+            // 'expiration_time' => $expiration_time,
         ]);
         return response()->json(['message' => 'Sharing request sent successfully'], 200);
     }
