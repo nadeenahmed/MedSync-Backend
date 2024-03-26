@@ -123,7 +123,6 @@ class WorkPlacesController extends Controller
         // }
     }
 
-
     public function UpdateWorkPlace(Request $request, $id)
     {
         $user = $request->user();
@@ -131,29 +130,69 @@ class WorkPlacesController extends Controller
         if (!$doctor) {
             return response()->json(['error' => 'Doctor not found'], 404);
         }
+
         $workplace = Workplace::find($id);
+
         if (!$workplace) {
             return response()->json(['error' => 'Clinic not found'], 404);
         }
 
+        // Validate the incoming request data
         $validatedData = $request->validate([
             'street' => 'required|string',
             'region' => 'required|string',
             'country' => 'required|string',
             'description' => 'nullable|string',
-            'work_days' => 'required',
-            'work_days.*' => 'required|string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Saturday',
+            'work_days' => 'nullable', 
         ]);
 
-        $workplace->street = $validatedData['street'];
-        $workplace->region = $validatedData['region'];
-        $workplace->country = $validatedData['country'];
-        $workplace->description = $validatedData['description'];
+        // Update the workplace attributes
+        if (isset($validatedData['street'])) {
+            $workplace->street = $validatedData['street'];
+        }
+        if (isset($validatedData['description'])) {
+            $workplace->description = $validatedData['description'];
+        }
+    
+        if (isset($validatedData['region'])) {
+            $region = Region::where('english_name', $validatedData['region'])
+                            ->orWhere('arabic_name', $validatedData['region'])
+                            ->first();
+            if (!$region) {
+                return response()->json(['error' => 'Region not found'], 404);
+            }
+            $workplace->region_id = $region->id;
+        }
+    
+        if (isset($validatedData['country'])) {
+            $country = Country::where('english_name', $validatedData['country'])
+                            ->orWhere('arabic_name', $validatedData['country'])
+                            ->first();
+            if (!$country) {
+                return response()->json(['error' => 'Country not found'], 404);
+            }
+            $workplace->country_id = $country->id;
+        }
+    
+        if (isset($validatedData['work_days'])) {
+            $workplace->work_days = json_encode($validatedData['work_days']);
+        }
         $workplace->work_days = json_encode($validatedData['work_days']);
         $workplace->save();
         $workplace->work_days = json_decode($workplace->work_days);
+        $workplace["Region"] =
+            [
+                "english name" => $region->english_name,
+                "arabic name" => $region->arabic_name,
+            ];
+        $workplace["Country"] =
+            [
+                "english name" => $country->english_name,
+                "arabic name" => $country->arabic_name,
+            ];
+        $workplace["Clinic Name"] = $region->english_name;
         return response()->json([
-            'message' => 'Clinic updated successfully',
+            'message' => 'Workplace updated successfully',
             'workplace' => $workplace,
         ]);
     }
