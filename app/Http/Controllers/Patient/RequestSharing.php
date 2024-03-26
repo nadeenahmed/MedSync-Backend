@@ -68,4 +68,26 @@ class RequestSharing extends Controller
             return response()->json(['error' => 'Server error', 'message' => $e->getMessage()], 500);
         }
 }
+public function isShared(Request $request, $doctor_id)
+{
+    try {
+        $user = $this->index($request);
+        $patient = Patient::where('user_id', $user->id)->first();
+        $patient_id = $patient->id;
+
+        // Use whereIn() to check for multiple statuses
+        $sharingRequest = SharingRequest::where('patient_id', $patient_id)
+            ->where('doctor_id', $doctor_id)
+            ->whereIn('status', ['pending', 'approved']) 
+            ->first();
+
+        if (!$sharingRequest) {
+            return response()->json(['message' => 'Not Shared'], 404);
+        }
+
+        return response()->json(['message' => 'Shared'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Server error', 'message' => $e->getMessage()], 500);
+    }
+}
 }

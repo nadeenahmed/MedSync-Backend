@@ -55,8 +55,6 @@ use App\Http\Controllers\MedicalHistory\{
 use App\Http\Controllers\Payment\PaymobController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\Recommendation\TopDoctorsController;
-use App\Http\Controllers\SharingController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -137,6 +135,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/filter/doctors', [SearchForDoctor::class, 'filterBySpecialty']);
         Route::post('/share-history/{doctor_id}', [RequestSharing::class, 'requestSharing']);
         Route::post('/cancel-sharing/{doctor_id}', [RequestSharing::class, 'cancelSharing']);
+        Route::post('/is-shared/{doctor_id}', [RequestSharing::class, 'isShared']);
         
 
     });
